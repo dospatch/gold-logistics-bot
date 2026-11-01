@@ -1,6 +1,6 @@
 const {SlashCommandBuilder,ChannelType,PermissionFlagsBits}=require("discord.js");
+const {buildApplicationPanel,APPLY_BUTTON_ID}=require("./apply");
 
-// Gold/black fleet-inspired colors for every company role.
 const roles=[
  {name:"Owner",color:0xD4AF37},
  {name:"Chief Executive Officer",color:0xF1C40F},
@@ -20,16 +20,19 @@ const layout={
  "🔊 VOICE":["Driver Lounge","ATS Convoy","ETS2 Convoy","Management"]
 };
 const data=new SlashCommandBuilder().setName("setup-company").setDescription("Create/update BC Gold Logistics roles and channels; never deletes existing content.").setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
+
 async function execute(i){
  await i.deferReply({ephemeral:true});
  const g=i.guild, me=await g.members.fetchMe();
  if(!me.permissions.has(PermissionFlagsBits.ManageChannels)||!me.permissions.has(PermissionFlagsBits.ManageRoles)) return i.editReply("I need Manage Channels and Manage Roles. Place my bot role above the company roles and retry.");
+
  let rc=0,colors=0,cc=0;
  for(const roleInfo of roles){
   let role=g.roles.cache.find(r=>r.name===roleInfo.name);
   if(!role){role=await g.roles.create({name:roleInfo.name,color:roleInfo.color,reason:"BC Gold Logistics setup"});rc++;}
   else if(role.color!==roleInfo.color){await role.setColor(roleInfo.color,"Apply BC Gold Logistics role colors");colors++;}
  }
+
  const owner=g.roles.cache.find(r=>r.name==="Owner");
  for(const [cat,names] of Object.entries(layout)){
   let parent=g.channels.cache.find(c=>c.type===ChannelType.GuildCategory&&c.name===cat);
@@ -41,9 +44,26 @@ async function execute(i){
   ]:[];
   for(const name of names){
    const type=cat==="🔊 VOICE"?ChannelType.GuildVoice:ChannelType.GuildText;
-   if(!g.channels.cache.some(c=>c.parentId===parent.id&&c.name===name)){await g.channels.create({name,type,parent:parent.id,permissionOverwrites:overwrites,reason:"BC Gold Logistics setup"});cc++;}
+   if(!g.channels.cache.some(c=>c.parentId===parent.id&&c.name===name)){
+    await g.channels.create({name,type,parent:parent.id,permissionOverwrites:overwrites,reason:"BC Gold Logistics setup"});
+    cc++;
+   }
   }
  }
- await i.editReply(`Setup complete: created ${rc} roles, updated ${colors} role colors, and created ${cc} channels. Existing channels/messages were not changed. The Management category remains private; assign yourself the Owner role for access.`);
+
+ const applyChannel=g.channels.cache.find(c=>c.name==="apply-to-join"&&c.isTextBased());
+ let panelCreated=false;
+ if(applyChannel){
+  const recent=await applyChannel.messages.fetch({limit:50});
+  const panelExists=recent.some(message=>message.components.some(row=>row.components.some(component=>component.customId===APPLY_BUTTON_ID)));
+  if(!panelExists){await applyChannel.send(buildApplicationPanel());panelCreated=true;}
+ }
+
+ if(owner && !i.member.roles.cache.has(owner.id)){
+  const invoker=await g.members.fetch(i.user.id);
+  await invoker.roles.add(owner,"Administrator ran BC Gold Logistics initial setup");
+ }
+
+ await i.editReply("Setup complete: created " + rc + " roles, updated " + colors + " role colors, created " + cc + " channels, and " + (panelCreated?"posted":"checked") + " the application panel. Existing channels/messages were not deleted.");
 }
 module.exports={data,execute};

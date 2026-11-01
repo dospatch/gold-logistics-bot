@@ -1,12 +1,11 @@
 const {
   SlashCommandBuilder, EmbedBuilder, ModalBuilder, TextInputBuilder,
-  TextInputStyle, ActionRowBuilder, ButtonBuilder, ButtonStyle, PermissionFlagsBits
+  TextInputStyle, ActionRowBuilder, ButtonBuilder, ButtonStyle
 } = require("discord.js");
 
 const APPLY_BUTTON_ID = "bcgold_apply_start";
 const APPLY_MODAL_ID = "bcgold_apply_modal";
 const REVIEW_PREFIX = "bcgold_review";
-const MANAGER_ROLES = ["Owner", "Chief Executive Officer", "Operations Manager", "Fleet Manager"];
 
 const data = new SlashCommandBuilder()
   .setName("apply")
@@ -37,68 +36,6 @@ async function handleButton(i) {
 
   if (!i.customId.startsWith(REVIEW_PREFIX + ":")) return false;
   await i.reply({ content: "Company management now reviews applications on the BC Gold Logistics website dashboard.", ephemeral: true });
-  return true;
-  if (!i.inGuild() || !i.memberPermissions?.has(PermissionFlagsBits.Administrator)) {
-    const hasManagerRole = i.member?.roles?.cache?.some(role => MANAGER_ROLES.includes(role.name));
-    if (!hasManagerRole) {
-      await i.reply({ content: "Only company management can review applications.", ephemeral: true });
-      return true;
-    }
-  }
-
-  const [, action, applicantId] = i.customId.split(":");
-  if (!["approve", "deny"].includes(action) || !/^\d{17,20}$/.test(applicantId)) {
-    await i.reply({ content: "This application review button is invalid.", ephemeral: true });
-    return true;
-  }
-
-  const original = i.message.embeds[0];
-  if (!original) {
-    await i.reply({ content: "The application details could not be found.", ephemeral: true });
-    return true;
-  }
-  const statusField = original.fields?.find(field => field.name === "Status");
-  if (statusField && statusField.value !== "Pending") {
-    await i.reply({ content: "This application has already been reviewed.", ephemeral: true });
-    return true;
-  }
-
-  await i.deferUpdate();
-  const approved = action === "approve";
-  const status = approved ? "Approved" : "Denied";
-  const color = approved ? 0x2ECC71 : 0xE74C3C;
-  const updatedEmbed = EmbedBuilder.from(original)
-    .setColor(color)
-    .setFields(
-      ...(original.fields || []).filter(field => field.name !== "Status" && field.name !== "Decision"),
-      { name: "Status", value: status, inline: true },
-      { name: "Decision", value: "Reviewed by " + i.user.tag, inline: true }
-    );
-
-  await i.message.edit({ embeds: [updatedEmbed], components: [] });
-
-  let dmDelivered = true;
-  try {
-    const applicant = await i.client.users.fetch(applicantId);
-    const dmEmbed = new EmbedBuilder()
-      .setColor(color)
-      .setTitle(approved ? "🎉 Your BC Gold Logistics application was approved!" : "BC Gold Logistics Application Update")
-      .setDescription(approved
-        ? "Congratulations! Company management has approved your driver application. Welcome to BC Gold Logistics! Please check the server for your next steps."
-        : "Thank you for your interest in BC Gold Logistics. After reviewing your application, company management has decided not to move forward at this time. We appreciate the time you took to apply.")
-      .addFields({ name: "Application status", value: status })
-      .setFooter({ text: "Driven by Excellence. United by the Road." })
-      .setTimestamp();
-    await applicant.send({ embeds: [dmEmbed] });
-  } catch (error) {
-    dmDelivered = false;
-    console.error("Could not DM applicant " + applicantId + ":", error);
-  }
-
-  await i.followUp({
-    content: status + " application for <@" + applicantId + ">." + (dmDelivered ? " The applicant was notified by DM." : " I could not deliver the DM; the applicant may have DMs disabled."),
-    ephemeral: true
-  });
   return true;
 }
 

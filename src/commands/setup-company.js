@@ -33,7 +33,7 @@ async function execute(i){
   else if(role.color!==roleInfo.color){await role.setColor(roleInfo.color,"Apply BC Gold Logistics role colors");colors++;}
  }
 
- const owner=g.roles.cache.find(r=>r.name==="Owner");
+ const managementRoles=roles.filter(r=>["Owner","Chief Executive Officer","Operations Manager","Fleet Manager"].includes(r.name)).map(info=>g.roles.cache.find(existing=>existing.name===info.name)).filter(Boolean);
  for(const [cat,names] of Object.entries(layout)){
   let parent=g.channels.cache.find(c=>c.type===ChannelType.GuildCategory&&c.name===cat);
   if(!parent) parent=await g.channels.create({name:cat,type:ChannelType.GuildCategory,reason:"BC Gold Logistics setup"});

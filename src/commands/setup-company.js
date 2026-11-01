@@ -39,7 +39,7 @@ async function execute(i){
   if(!parent) parent=await g.channels.create({name:cat,type:ChannelType.GuildCategory,reason:"BC Gold Logistics setup"});
   const overwrites=cat.includes("MANAGEMENT")?[
    {id:g.roles.everyone.id,deny:[PermissionFlagsBits.ViewChannel]},
-   ...(owner?[{id:owner.id,allow:[PermissionFlagsBits.ViewChannel,PermissionFlagsBits.SendMessages,PermissionFlagsBits.ReadMessageHistory]}]:[]),
+   ...managementRoles.map(role=>({id:role.id,allow:[PermissionFlagsBits.ViewChannel,PermissionFlagsBits.SendMessages,PermissionFlagsBits.ReadMessageHistory]})),
    {id:me.id,allow:[PermissionFlagsBits.ViewChannel,PermissionFlagsBits.SendMessages,PermissionFlagsBits.ReadMessageHistory,PermissionFlagsBits.ManageChannels]}
   ]:[];
   for(const name of names){
@@ -48,6 +48,11 @@ async function execute(i){
     await g.channels.create({name,type,parent:parent.id,permissionOverwrites:overwrites,reason:"BC Gold Logistics setup"});
     cc++;
    }
+  }
+  if(cat.includes("MANAGEMENT")){
+   await parent.permissionOverwrites.edit(g.roles.everyone,{ViewChannel:false});
+   for(const role of managementRoles) await parent.permissionOverwrites.edit(role,{ViewChannel:true,SendMessages:true,ReadMessageHistory:true});
+   await parent.permissionOverwrites.edit(me,{ViewChannel:true,SendMessages:true,ReadMessageHistory:true,ManageChannels:true});
   }
  }
 
@@ -59,6 +64,7 @@ async function execute(i){
   if(!panelExists){await applyChannel.send(buildApplicationPanel());panelCreated=true;}
  }
 
+ const owner=g.roles.cache.find(r=>r.name==="Owner");
  if(owner && !i.member.roles.cache.has(owner.id)){
   const invoker=await g.members.fetch(i.user.id);
   await invoker.roles.add(owner,"Administrator ran BC Gold Logistics initial setup");

@@ -2,9 +2,10 @@ require("dotenv").config();
 const http = require("node:http");
 const { Client, GatewayIntentBits, Collection, Events, REST, Routes } = require("discord.js");
 
+const applyCommand = require("./commands/apply");
 const commandModules = [
   require("./commands/setup-company"),
-  require("./commands/apply"),
+  applyCommand,
   require("./commands/convoy"),
   require("./commands/delivery"),
   require("./commands/roster"),
@@ -13,26 +14,34 @@ const commandModules = [
 const commandPayload = commandModules.map(command => command.data.toJSON());
 
 for (const key of ["DISCORD_TOKEN", "CLIENT_ID", "GUILD_ID"]) {
-  if (!process.env[key]) throw new Error(`Missing ${key} environment variable.`);
+  if (!process.env[key]) throw new Error("Missing " + key + " environment variable.");
 }
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 client.commands = new Collection(commandModules.map(command => [command.data.name, command]));
 client.once(Events.ClientReady, readyClient => {
-  console.log(`BC Gold Logistics Bot online as ${readyClient.user.tag}`);
+  console.log("BC Gold Logistics Bot online as " + readyClient.user.tag);
 });
 
 client.on(Events.InteractionCreate, async interaction => {
-  if (!interaction.isChatInputCommand()) return;
-  const command = client.commands.get(interaction.commandName);
-  if (!command) return;
   try {
+    if (interaction.isButton()) {
+      await applyCommand.handleButton(interaction);
+      return;
+    }
+    if (interaction.isModalSubmit()) {
+      await applyCommand.handleModal(interaction);
+      return;
+    }
+    if (!interaction.isChatInputCommand()) return;
+    const command = client.commands.get(interaction.commandName);
+    if (!command) return;
     await command.execute(interaction);
   } catch (error) {
-    console.error(error);
-    const message = { content: "Something went wrong. Contact company management.", ephemeral: true };
-    if (interaction.replied || interaction.deferred) await interaction.followUp(message);
-    else await interaction.reply(message);
+    console.error("Interaction failed:", error);
+    const message = { content: "Something went wrong. Please try again or contact company management.", ephemeral: true };
+    if (interaction.replied || interaction.deferred) await interaction.followUp(message).catch(() => {});
+    else if (interaction.isRepliable()) await interaction.reply(message).catch(() => {});
   }
 });
 
@@ -44,7 +53,7 @@ http.createServer((req, res) => {
   }
   res.writeHead(200, { "content-type": "text/plain" });
   res.end("BC Gold Logistics Bot is running.");
-}).listen(port, "0.0.0.0", () => console.log(`Health server listening on ${port}`));
+}).listen(port, "0.0.0.0", () => console.log("Health server listening on " + port));
 
 async function start() {
   const rest = new REST({ version: "10" }).setToken(process.env.DISCORD_TOKEN);

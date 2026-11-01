@@ -76,7 +76,8 @@ function sessionFor(req) {
 function setCookie(res, name, value, maxAge) {
   res.setHeader("Set-Cookie", name + "=" + encodeURIComponent(value) + "; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=" + maxAge);
 }
-function getReviewChannel(guild) {
+async function getReviewChannel(guild) {
+  await guild.channels.fetch();
   return guild.channels.cache.find(channel => channel.name === "applications-review" && channel.isTextBased());
 }
 function parseApplication(message) {
@@ -174,7 +175,7 @@ async function handleRequest(req, res) {
     if (req.method === "GET" && url.pathname === "/api/me") return send(res, 200, { user: { username: session.username, roles: session.roles } });
     if (req.method === "GET" && url.pathname === "/api/applications") {
       const guild = await client.guilds.fetch(process.env.GUILD_ID);
-      const channel = getReviewChannel(guild);
+      const channel = await getReviewChannel(guild);
       if (!channel) return send(res, 404, { error: "Private applications-review channel was not found." });
       const messages = await channel.messages.fetch({ limit: 100 });
       const applications = messages.map(parseApplication).filter(Boolean).sort((a,b) => b.createdAt.localeCompare(a.createdAt));

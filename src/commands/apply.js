@@ -36,6 +36,8 @@ async function handleButton(i) {
   }
 
   if (!i.customId.startsWith(REVIEW_PREFIX + ":")) return false;
+  await i.reply({ content: "Company management now reviews applications on the BC Gold Logistics website dashboard.", ephemeral: true });
+  return true;
   if (!i.inGuild() || !i.memberPermissions?.has(PermissionFlagsBits.Administrator)) {
     const hasManagerRole = i.member?.roles?.cache?.some(role => MANAGER_ROLES.includes(role.name));
     if (!hasManagerRole) {
@@ -123,7 +125,7 @@ async function handleModal(i) {
   const applicationEmbed = new EmbedBuilder()
     .setColor(0xD4AF37)
     .setTitle("🚛 New BC Gold Logistics Driver Application")
-    .setDescription("A driver application has been submitted for management review.")
+    .setDescription("A driver application has been submitted for review in the management website.")
     .addFields(
       { name: "Applicant", value: i.user.tag + " (ID: " + i.user.id + ")" },
       { name: "Game", value: answers.games, inline: true },
@@ -136,11 +138,7 @@ async function handleModal(i) {
     .setFooter({ text: "BC Gold Logistics • Recruitment" })
     .setTimestamp();
 
-  const reviewButtons = new ActionRowBuilder().addComponents(
-    new ButtonBuilder().setCustomId(REVIEW_PREFIX + ":approve:" + i.user.id).setLabel("Approve").setStyle(ButtonStyle.Success).setEmoji("✅"),
-    new ButtonBuilder().setCustomId(REVIEW_PREFIX + ":deny:" + i.user.id).setLabel("Deny").setStyle(ButtonStyle.Danger).setEmoji("❌")
-  );
-  await reviewChannel.send({ embeds: [applicationEmbed], components: [reviewButtons] });
+  await reviewChannel.send({ embeds: [applicationEmbed] });
 
   const confirmation = new EmbedBuilder()
     .setColor(0xD4AF37)
@@ -176,7 +174,7 @@ function buildApplicationPanel() {
     .setDescription("Ready to hit the road with us? We welcome ATS and ETS2 drivers who value teamwork, professionalism, and safe driving.")
     .addFields(
       { name: "How to apply", value: "Click **Start Your Application** below and complete the private application form." },
-      { name: "What happens next?", value: "Your application is sent to company management in a private review channel. The bot will DM you when management approves or denies it." }
+      { name: "What happens next?", value: "Company management reviews applications in the secure website dashboard. The bot will DM you when management makes a decision." }
     )
     .setFooter({ text: "Driven by Excellence. United by the Road." });
 

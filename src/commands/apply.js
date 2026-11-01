@@ -1,6 +1,6 @@
 const {
   SlashCommandBuilder, EmbedBuilder, ModalBuilder, TextInputBuilder,
-  TextInputStyle, ActionRowBuilder, ButtonBuilder, ButtonStyle
+  TextInputStyle, ActionRowBuilder, ButtonBuilder, ButtonStyle, PermissionFlagsBits
 } = require("discord.js");
 
 const APPLY_BUTTON_ID = "bcgold_apply_start";
@@ -36,7 +36,7 @@ async function handleButton(i) {
   }
 
   if (!i.customId.startsWith(REVIEW_PREFIX + ":")) return false;
-  if (!i.inGuild() || !i.memberPermissions?.has("Administrator")) {
+  if (!i.inGuild() || !i.memberPermissions?.has(PermissionFlagsBits.Administrator)) {
     const hasManagerRole = i.member?.roles?.cache?.some(role => MANAGER_ROLES.includes(role.name));
     if (!hasManagerRole) {
       await i.reply({ content: "Only company management can review applications.", ephemeral: true });

@@ -19,29 +19,36 @@ for (const key of ["DISCORD_TOKEN", "CLIENT_ID", "GUILD_ID"]) {
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 client.commands = new Collection(commandModules.map(command => [command.data.name, command]));
+
 client.once(Events.ClientReady, readyClient => {
   console.log("BC Gold Logistics Bot online as " + readyClient.user.tag);
 });
 
 client.on(Events.InteractionCreate, async interaction => {
   try {
+    if (interaction.isChatInputCommand()) {
+      const command = client.commands.get(interaction.commandName);
+      if (command) await command.execute(interaction);
+      return;
+    }
     if (interaction.isButton()) {
       await applyCommand.handleButton(interaction);
       return;
     }
     if (interaction.isModalSubmit()) {
       await applyCommand.handleModal(interaction);
-      return;
     }
-    if (!interaction.isChatInputCommand()) return;
-    const command = client.commands.get(interaction.commandName);
-    if (!command) return;
-    await command.execute(interaction);
   } catch (error) {
     console.error("Interaction failed:", error);
-    const message = { content: "Something went wrong. Please try again or contact company management.", ephemeral: true };
-    if (interaction.replied || interaction.deferred) await interaction.followUp(message).catch(() => {});
-    else if (interaction.isRepliable()) await interaction.reply(message).catch(() => {});
+    const message = {
+      content: "Something went wrong while processing that action. Please contact company management.",
+      ephemeral: true
+    };
+    if (interaction.replied || interaction.deferred) {
+      await interaction.followUp(message).catch(console.error);
+    } else if (interaction.isRepliable()) {
+      await interaction.reply(message).catch(console.error);
+    }
   }
 });
 

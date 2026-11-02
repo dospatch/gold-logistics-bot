@@ -1,0 +1,10 @@
+{
+  "name": "bc-gold-logistics-telemetry",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Local ATS and ETS2 telemetry companion for BC Gold Logistics",
+  "main": "index.js",
+  "scripts": { "start": "node index.js" },
+  "engines": { "node": ">=20" },
+  "dependencies": { "trucksim-telemetry": "^1.0.0" }
+}

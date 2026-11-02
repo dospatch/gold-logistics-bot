@@ -23,7 +23,7 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 client.commands = new Collection(commandModules.map(command => [command.data.name, command]));
 const sessions = new Map();
 const oauthStates = new Map();
-const MANAGER_ROLES = ["Owner", "Chief Executive Officer", "Operations Manager", "Fleet Manager"];
+const MANAGER_ROLES = ["Owner","President","Chief Executive Officer","Chief Operating Officer","Chief Financial Officer","Executive Director","HR Director","Transportation Director","Fleet Director","Dispatch Director","Business Development Director","Department Manager","Supervisor"];
 const BASE_URL = (process.env.WEB_BASE_URL || "https://bc-gold-logistics-bot.onrender.com").replace(/\/$/, "");
 
 client.once(Events.ClientReady, readyClient => {
@@ -150,7 +150,7 @@ async function handleRequest(req, res) {
     const guild = await client.guilds.fetch(process.env.GUILD_ID);
     const roles = await guild.roles.fetch();
     const roleNames = (member.roles || []).map(id => roles.get(id)?.name).filter(Boolean);
-    if (!roleNames.some(role => MANAGER_ROLES.includes(role))) return send(res, 403, { error: "Access denied. The management dashboard is limited to Owner, CEO, Operations Manager, and Fleet Manager." });
+    if (!roleNames.some(role => MANAGER_ROLES.includes(role))) return send(res, 403, { error: "Access denied. The management dashboard is limited to authorized BC Gold Logistics management roles." });
     const key = crypto.randomBytes(32).toString("hex");
     sessions.set(key, { userId: user.id, username: user.global_name || user.username, roles: roleNames, expiresAt: Date.now() + 8 * 60 * 60 * 1000 });
     setCookie(res, "bcgl_session", key + "." + sign(key), 8 * 60 * 60);

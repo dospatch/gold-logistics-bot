@@ -25,3 +25,11 @@ Requires Node.js 20+.
 4. Start: `npm start`
 
 Never commit the bot token. Invite permissions: Manage Channels, Manage Roles, View Channels, Send Messages, Embed Links, Read Message History, and Use Application Commands. Move the bot role above the company roles it needs to assign.
+
+
+## Automatic ATS / ETS2 delivery tracking
+- `telemetry-companion/` — local Windows companion for each driver. It listens for SCS SDK `job-started` and `job-delivered` events and posts them to the bot automatically.
+- `POST /api/telemetry/event` — authenticated telemetry intake; the bot posts start/completion embeds in `#delivery-logs`.
+- Add `TELEMETRY_API_KEY` as a secret environment variable in Render. Generate a strong random value and use the same value in each driver's local `telemetry-companion/.env`. Never commit the real key.
+- Drivers configure their own Discord user ID and select ATS or ETS2 in their local `.env`.
+- Each driver's PC needs the SCS telemetry SDK plugin and Node.js 20+. See `telemetry-companion/README.md`.

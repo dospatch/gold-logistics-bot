@@ -22,7 +22,7 @@ export async function POST(request:NextRequest) {
   const staffRoles=roles.filter((r:any)=>staffNames.includes(r.name));
   const overwrites=[
    {id:process.env.GUILD_ID,type:0,deny:"1024"},
-   ...staffRoles.map((r:any)=>({id:r.id,type:0,allow:"1024"})),
+   ...staffRoles.map((r:any)=>({id:r.id,type:0,allow:"68608"})),
    {id:applicant.id,type:1,allow:"68608"},
   ];
   const botId=process.env.CLIENT_ID;

@@ -31,12 +31,16 @@ const layout = {
     "load-assignments",
     "active-deliveries",
     "delivery-confirmations",
-    "dispatch-reports"
+    "dispatch-reports",
+    "delivery-logs",
+    "mileage-reports"
   ],
   "🚛 BC GOLD FREIGHT": [
     "freight-announcements",
     "freight-dispatch",
-    "freight-drivers"
+    "freight-drivers",
+    "ats-drivers",
+    "ets2-drivers"
   ],
   "🏗️ BC GOLD HEAVY HAUL": [
     "heavy-haul-announcements",
@@ -91,13 +95,35 @@ const layout = {
   ],
   "🔊 COMPANY VOICE": [
     "company-operations",
+    "ats-company-session",
+    "ets2-company-session",
     "freight-dispatch-voice",
     "heavy-haul-operations",
     "refrigerated-operations",
     "passenger-operations",
     "management-meetings",
     "afk"
+  ],
+  "🎮 COMPANY MULTIPLAYER SESSIONS": [
+    "company-session-announcements",
+    "company-session-schedule",
+    "company-session-media"
   ]
+};
+const legacyChannelNames = {
+  "company-announcements": "announcements",
+  "employee-directory": "driver-roster",
+  "employment-applications": "apply-to-join",
+  "general-chat": "driver-chat",
+  "management-discussions": "management-chat",
+  "department-reports": "staff-reports",
+  "company-session-announcements": "convoy-announcements",
+  "company-session-schedule": "convoy-schedule",
+  "company-session-media": "convoy-media",
+  "company-operations": "Driver Lounge",
+  "ats-company-session": "ATS Convoy",
+  "ets2-company-session": "ETS2 Convoy",
+  "management-meetings": "Management"
 };
 const privateCategoryRoles = {
   "🔒 EXECUTIVE OFFICE": new Set(["Owner","President","Chief Executive Officer","Chief Operating Officer","Chief Financial Officer","Executive Director"]),
@@ -122,7 +148,20 @@ async function execute(interaction) {
     let category=guild.channels.cache.find(c=>c.type===ChannelType.GuildCategory&&c.name===categoryName);
     if(!category){category=await guild.channels.create({name:categoryName,type:ChannelType.GuildCategory,permissionOverwrites:overwrites,reason:"BC Gold Logistics corporate rebuild"});categoriesCreated++;}
     else if(isPrivate){await category.permissionOverwrites.set(overwrites,"Secure BC Gold Logistics staff category");}
-    for(const name of channelNames){const type=categoryName==="🔊 COMPANY VOICE"?ChannelType.GuildVoice:ChannelType.GuildText;const exists=guild.channels.cache.some(c=>c.parentId===category.id&&c.name===name&&c.type===type);if(!exists){await guild.channels.create({name,type,parent:category.id,reason:"BC Gold Logistics corporate rebuild"});channelsCreated++;}}
+    for(const name of channelNames){
+      const type=categoryName==="🔊 COMPANY VOICE"?ChannelType.GuildVoice:ChannelType.GuildText;
+      let channel=guild.channels.cache.find(c=>c.name===name&&c.type===type);
+      if(!channel&&legacyChannelNames[name]) {
+        channel=guild.channels.cache.find(c=>c.name===legacyChannelNames[name]&&c.type===type);
+        if(channel) await channel.setName(name,"Rename legacy BC Gold Logistics channel");
+      }
+      if(channel) {
+        if(channel.parentId!==category.id) await channel.setParent(category.id,{lockPermissions:true,reason:"Move existing channel into new BC Gold Logistics structure"});
+      } else {
+        await guild.channels.create({name,type,parent:category.id,reason:"BC Gold Logistics corporate rebuild"});
+        channelsCreated++;
+      }
+    }
   }
   const recruitment=guild.channels.cache.find(c=>c.name==="employment-applications"&&c.isTextBased());
   let panelPosted=false;

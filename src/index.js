@@ -201,11 +201,11 @@ async function handleRequest(req, res) {
       { name: "Driver", value: "<@" + body.driverId + ">", inline: true },
       { name: "Game", value: body.game, inline: true },
       { name: "Cargo", value: pick("cargo", "cargoName", "name", "jobCargo"), inline: false },
-      { name: "Route", value: pick("route", "sourceCity", "source", "origin") + " → " + pick("destinationCity", "destination", "destinationName"), inline: false }
+      { name: "Route", value: pick("route", "citySrc", "sourceCity", "source", "origin") + " → " + pick("cityDst", "destinationCity", "destination", "destinationName"), inline: false }
     ];
     if (!started) {
-      fields.push({ name: "Distance", value: pick("distance", "plannedDistance", "jobDistance"), inline: true });
-      fields.push({ name: "Revenue", value: pick("revenue", "income", "jobIncome"), inline: true });
+      fields.push({ name: "Distance", value: pick("jobDeliveredDistanceKm", "plannedDistanceKm", "distance", "plannedDistance", "jobDistance"), inline: true });
+      fields.push({ name: "Revenue", value: pick("jobDeliveredRevenue", "revenue", "income", "jobIncome"), inline: true });
     }
     const embed = createEmbed({
       title: started ? "🚚 Delivery Started Automatically" : "🏁 Delivery Completed Automatically",

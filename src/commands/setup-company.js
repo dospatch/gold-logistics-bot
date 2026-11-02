@@ -99,7 +99,12 @@ const layout = {
     "afk"
   ]
 };
-const privateCategories = new Set(["🔒 EXECUTIVE OFFICE","🔒 HUMAN RESOURCES STAFF","🔒 DISPATCH STAFF"]);
+const privateCategoryRoles = {
+  "🔒 EXECUTIVE OFFICE": new Set(["Owner","President","Chief Executive Officer","Chief Operating Officer","Chief Financial Officer","Executive Director"]),
+  "🔒 HUMAN RESOURCES STAFF": new Set(["Owner","President","Chief Executive Officer","Chief Operating Officer","HR Director"]),
+  "🔒 DISPATCH STAFF": new Set(["Owner","President","Chief Executive Officer","Chief Operating Officer","Transportation Director","Dispatch Director"]),
+  "📊 FINANCE & ADMINISTRATION": new Set(["Owner","President","Chief Executive Officer","Chief Operating Officer","Chief Financial Officer"])
+};
 const managementNames = new Set(["Owner","President","Chief Executive Officer","Chief Operating Officer","Chief Financial Officer","Executive Director","HR Director","Transportation Director","Fleet Director","Dispatch Director","Business Development Director","Department Manager","Supervisor"]);
 const data = new SlashCommandBuilder().setName("setup-company").setDescription("Create/update BC Gold Logistics corporate roles and channels without deleting existing content.").setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
 async function execute(interaction) {

@@ -37,8 +37,8 @@
 ## Categories
 - 🏢 CORPORATE HEADQUARTERS: welcome, company-announcements, company-information, company-handbook, company-rules, company-updates
 - 👥 HUMAN RESOURCES: employment-applications, application-status, employee-directory, employee-support, loa-requests, resignation-requests, promotions
-- 📋 DISPATCH OPERATIONS: driver-check-in, company-load-board, load-assignments, active-deliveries, delivery-confirmations, dispatch-reports
-- 🚛 BC GOLD FREIGHT: freight-announcements, freight-dispatch, freight-drivers
+- 📋 DISPATCH OPERATIONS: driver-check-in, company-load-board, load-assignments, active-deliveries, delivery-confirmations, dispatch-reports, delivery-logs, mileage-reports
+- 🚛 BC GOLD FREIGHT: freight-announcements, freight-dispatch, freight-drivers, ats-drivers, ets2-drivers
 - 🏗️ BC GOLD HEAVY HAUL: heavy-haul-announcements, heavy-haul-dispatch, heavy-haul-drivers
 - ❄️ BC GOLD REFRIGERATED: reefer-announcements, reefer-dispatch, reefer-drivers
 - 🚌 BC GOLD PASSENGER TRANSPORT: passenger-division, bus-fleet, route-development
@@ -48,7 +48,8 @@
 - 🔒 HUMAN RESOURCES STAFF: hr-staff-chat, applications-review, employee-records, hr-reports
 - 🔒 DISPATCH STAFF: dispatch-staff-chat, dispatch-logs, dispatch-planning
 - 💬 COMPANY COMMUNITY: general-chat, truck-showcase, company-media, suggestions
-- 🔊 COMPANY VOICE: company-operations, freight-dispatch-voice, heavy-haul-operations, refrigerated-operations, passenger-operations, management-meetings, afk
+- 🔊 COMPANY VOICE: company-operations, ats-company-session, ets2-company-session, freight-dispatch-voice, heavy-haul-operations, refrigerated-operations, passenger-operations, management-meetings, afk
+- 🎮 COMPANY MULTIPLAYER SESSIONS: company-session-announcements, company-session-schedule, company-session-media
 
 ## Operating rules
 1. Official company deliveries must take place in an approved multiplayer environment.
@@ -58,12 +59,12 @@
 5. Passenger Transport remains future-ready until suitable buses and multiplayer compatibility are verified.
 6. Company activity, mileage, deliveries, and fleet assignments must be recorded honestly.
 
+## Safe rebuild policy
+The setup command creates missing roles, categories, and channels, updates managed role colors, and moves/renames matching legacy channels into the new structure while preserving their message history. It does not delete existing channels, messages, roles, or categories. Empty legacy categories remain for later review.
+
 ## Permissions and security
-- Keep Executive Office, HR Staff, and Dispatch Staff private.
-- Only authorized management roles receive private staff access.
+- Executive Office, HR Staff, Dispatch Staff, and Finance & Administration are private.
+- Each private department is limited to its relevant executive or department leadership roles.
 - The bot needs View Channels, Send Messages, Embed Links, Read Message History, Use Application Commands, Manage Channels, and Manage Roles for setup.
 - Move the bot role above company roles it must assign.
 - Never commit bot tokens, OAuth secrets, session keys, .env files, or private member data.
-
-## Safe rebuild policy
-The setup command is additive: it creates missing roles, categories, and channels and updates managed role colors. It does not delete existing channels, messages, roles, or categories. Legacy channels remain in place until a separate review explicitly authorizes cleanup.

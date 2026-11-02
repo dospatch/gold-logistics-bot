@@ -36,4 +36,10 @@ function buildApplicationPanel() {
   return { embeds: [embed], components: [new ActionRowBuilder().addComponents(button)] };
 }
 
-module.exports = { data, execute, buildApplicationPanel, APPLY_BUTTON_ID };
+async function handleButton(i) {
+  if (i.customId !== APPLY_BUTTON_ID) return false;
+  const row = new ActionRowBuilder().addComponents(new ButtonBuilder().setLabel("Open Website Application").setStyle(ButtonStyle.Link).setURL(APPLY_URL));
+  await i.reply({ content: "Applications are now completed on the BC Gold Logistics website. Use the button below.", components: [row], ephemeral: true });
+  return true;
+}
+module.exports = { data, execute, buildApplicationPanel, APPLY_BUTTON_ID, handleButton };

@@ -16,7 +16,7 @@ const layout={
  "📝 RECRUITMENT":["apply-to-join","application-status","recruitment-support"],
  "🚛 DRIVER OPERATIONS":["driver-chat","ats-drivers","ets2-drivers","delivery-logs","mileage-reports"],
  "🏁 CONVOY OPERATIONS":["convoy-announcements","convoy-schedule","convoy-media"],
- "🔒 MANAGEMENT":["management-chat","applications-review","staff-reports"],
+ "🔒 MANAGEMENT":["management-chat","staff-reports"],
  "🔊 VOICE":["Driver Lounge","ATS Convoy","ETS2 Convoy","Management"]
 };
 const data=new SlashCommandBuilder().setName("setup-company").setDescription("Create/update BC Gold Logistics roles and channels; never deletes existing content.").setDefaultMemberPermissions(PermissionFlagsBits.Administrator);

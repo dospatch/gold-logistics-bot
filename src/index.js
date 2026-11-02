@@ -169,6 +169,56 @@ async function handleRequest(req, res) {
     return res.end();
   }
 
+  // Authenticated telemetry intake from each driver's local ATS/ETS2 companion.
+  if (req.method === "POST" && url.pathname === "/api/telemetry/event") {
+    const expectedKey = process.env.TELEMETRY_API_KEY || "";
+    const suppliedKey = (req.headers.authorization || "").replace(/^Bearer\\s+/i, "");
+    if (!expectedKey || suppliedKey.length !== expectedKey.length ||
+        !crypto.timingSafeEqual(Buffer.from(suppliedKey), Buffer.from(expectedKey))) {
+      return send(res, 401, { error: "Telemetry authentication failed." });
+    }
+    const body = await readBody(req);
+    const allowedTypes = ["job-started", "job-finished"];
+    if (!allowedTypes.includes(body.type) || !/^\\d{17,20}$/.test(String(body.driverId || "")) ||
+        !["ATS", "ETS2"].includes(body.game) || typeof body.eventId !== "string" || body.eventId.length > 100) {
+      return send(res, 400, { error: "Invalid telemetry event." });
+    }
+    if (!global.telemetryEventIds) global.telemetryEventIds = new Map();
+    const now = Date.now();
+    for (const [id, time] of global.telemetryEventIds) if (now - time > 6 * 60 * 60 * 1000) global.telemetryEventIds.delete(id);
+    if (global.telemetryEventIds.has(body.eventId)) return send(res, 200, { ok: true, duplicate: true });
+    const guild = await client.guilds.fetch(process.env.GUILD_ID);
+    const channel = guild.channels.cache.find(c => c.name === "delivery-logs" && c.isTextBased());
+    if (!channel) return send(res, 404, { error: "delivery-logs channel was not found." });
+    const data = body.data && typeof body.data === "object" ? body.data : {};
+    const pick = (...keys) => {
+      for (const key of keys) if (data[key] !== undefined && data[key] !== null && String(data[key]).trim()) return String(data[key]).slice(0, 900);
+      return "Not provided by game telemetry";
+    };
+    const started = body.type === "job-started";
+    const { createEmbed } = require("./lib/embeds");
+    const fields = [
+      { name: "Driver", value: "<@" + body.driverId + ">", inline: true },
+      { name: "Game", value: body.game, inline: true },
+      { name: "Cargo", value: pick("cargo", "cargoName", "name", "jobCargo"), inline: false },
+      { name: "Route", value: pick("route", "sourceCity", "source", "origin") + " → " + pick("destinationCity", "destination", "destinationName"), inline: false }
+    ];
+    if (!started) {
+      fields.push({ name: "Distance", value: pick("distance", "plannedDistance", "jobDistance"), inline: true });
+      fields.push({ name: "Revenue", value: pick("revenue", "income", "jobIncome"), inline: true });
+    }
+    const embed = createEmbed({
+      title: started ? "🚚 Delivery Started Automatically" : "🏁 Delivery Completed Automatically",
+      description: "Recorded directly from " + body.game + " telemetry.",
+      color: started ? 0x3498DB : 0x2ECC71,
+      fields,
+      timestamp: true
+    });
+    await channel.send({ embeds: [embed] });
+    global.telemetryEventIds.set(body.eventId, now);
+    return send(res, 200, { ok: true });
+  }
+
   if (url.pathname.startsWith("/api/")) {
     const session = await requireManager(req, res);
     if (!session) return;

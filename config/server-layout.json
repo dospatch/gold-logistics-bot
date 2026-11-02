@@ -1,0 +1,85 @@
+{
+  "company": "BC Gold Logistics",
+  "tagline": "Driven by Excellence. United by the Road.",
+  "games": [
+    "ATS",
+    "ETS2"
+  ],
+  "roles": [
+    {
+      "name": "Owner",
+      "color": "#D4AF37"
+    },
+    {
+      "name": "Chief Executive Officer",
+      "color": "#F1C40F"
+    },
+    {
+      "name": "Operations Manager",
+      "color": "#E67E22"
+    },
+    {
+      "name": "Fleet Manager",
+      "color": "#3498DB"
+    },
+    {
+      "name": "Convoy Manager",
+      "color": "#9B59B6"
+    },
+    {
+      "name": "Senior Driver",
+      "color": "#2ECC71"
+    },
+    {
+      "name": "Company Driver",
+      "color": "#1ABC9C"
+    },
+    {
+      "name": "Trainee Driver",
+      "color": "#95A5A6"
+    }
+  ],
+  "categories": {
+    "📌 INFORMATION": [
+      "welcome",
+      "announcements",
+      "company-information",
+      "company-rules",
+      "driver-roster"
+    ],
+    "📝 RECRUITMENT": [
+      "apply-to-join",
+      "application-status",
+      "recruitment-support"
+    ],
+    "🚛 DRIVER OPERATIONS": [
+      "driver-chat",
+      "ats-drivers",
+      "ets2-drivers",
+      "delivery-logs",
+      "mileage-reports"
+    ],
+    "🏁 CONVOY OPERATIONS": [
+      "convoy-announcements",
+      "convoy-schedule",
+      "convoy-media"
+    ],
+    "🔒 MANAGEMENT": [
+      "management-chat",
+      "applications-review",
+      "staff-reports"
+    ],
+    "🔊 VOICE": [
+      "Driver Lounge",
+      "ATS Convoy",
+      "ETS2 Convoy",
+      "Management"
+    ]
+  },
+  "managementRoles": [
+    "Owner",
+    "Chief Executive Officer",
+    "Operations Manager",
+    "Fleet Manager"
+  ]
+}

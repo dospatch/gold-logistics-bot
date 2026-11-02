@@ -60,7 +60,7 @@ async function execute(i){
  let panelCreated=false;
  if(applyChannel){
   const recent=await applyChannel.messages.fetch({limit:50});
-  const panelExists=recent.some(message=>message.components.some(row=>row.components.some(component=>component.customId===APPLY_BUTTON_ID)));
+  const panelExists=recent.some(message=>message.components.some(row=>row.components.some(component=>component.url?.includes("/apply"))));
   if(!panelExists){await applyChannel.send(buildApplicationPanel());panelCreated=true;}
  }
 

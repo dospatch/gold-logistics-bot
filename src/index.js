@@ -23,7 +23,7 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 client.commands = new Collection(commandModules.map(command => [command.data.name, command]));
 const sessions = new Map();
 const oauthStates = new Map();
-const MANAGER_ROLES = ["Owner","President","Chief Executive Officer","Chief Operating Officer","Chief Financial Officer","Executive Director","HR Director","Transportation Director","Fleet Director","Dispatch Director","Business Development Director","Department Manager","Supervisor"];
+const MANAGER_ROLES = ["Owner","President","Chief Executive Officer","Chief Operating Officer","Chief Financial Officer","Executive Director","HR Director","Transportation Director","Fleet Director","Dispatch Director","Business Development Director","Department Manager","Supervisor","Operations Manager","Fleet Manager","Convoy Manager"];
 const BASE_URL = (process.env.WEB_BASE_URL || "https://bc-gold-logistics-bot.onrender.com").replace(/\/$/, "");
 
 client.once(Events.ClientReady, readyClient => {

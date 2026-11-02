@@ -135,12 +135,16 @@
       "load-assignments",
       "active-deliveries",
       "delivery-confirmations",
-      "dispatch-reports"
+      "dispatch-reports",
+      "delivery-logs",
+      "mileage-reports"
     ],
     "🚛 BC GOLD FREIGHT": [
       "freight-announcements",
       "freight-dispatch",
-      "freight-drivers"
+      "freight-drivers",
+      "ats-drivers",
+      "ets2-drivers"
     ],
     "🏗️ BC GOLD HEAVY HAUL": [
       "heavy-haul-announcements",
@@ -195,12 +199,19 @@
     ],
     "🔊 COMPANY VOICE": [
       "company-operations",
+      "ats-company-session",
+      "ets2-company-session",
       "freight-dispatch-voice",
       "heavy-haul-operations",
       "refrigerated-operations",
       "passenger-operations",
       "management-meetings",
       "afk"
+    ],
+    "🎮 COMPANY MULTIPLAYER SESSIONS": [
+      "company-session-announcements",
+      "company-session-schedule",
+      "company-session-media"
     ]
   },
   "managementRoles": [

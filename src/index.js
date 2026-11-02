@@ -12,7 +12,6 @@ const commandModules = [
   require("./commands/convoy"),
   require("./commands/delivery"),
   require("./commands/roster"),
-  ...Object.values(require("./commands/review"))
 ];
 const commandPayload = commandModules.map(command => command.data.toJSON());
 
@@ -38,11 +37,11 @@ client.on(Events.InteractionCreate, async interaction => {
       if (command) await command.execute(interaction);
       return;
     }
-    if (interaction.isButton()) {
+    if (interaction.isButton() && applyCommand.handleButton) {
       await applyCommand.handleButton(interaction);
       return;
     }
-    if (interaction.isModalSubmit()) await applyCommand.handleModal(interaction);
+    if (interaction.isModalSubmit() && applyCommand.handleModal) await applyCommand.handleModal(interaction);
   } catch (error) {
     console.error("Interaction failed:", error);
     const message = { content: "Something went wrong while processing that action. Please contact company management.", ephemeral: true };

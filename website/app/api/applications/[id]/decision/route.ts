@@ -1,44 +1,32 @@
-import { NextRequest, NextResponse } from "next/server";
-import { discordApi, requireManager, reviewChannelId } from "@/lib/management";
-export const runtime = "nodejs";
-export async function POST(request: NextRequest, context: { params: Promise<{ id: string }> }) {
-  const { session, response } = await requireManager(request);
-  if (!session) return response!;
-  try {
-    const { id } = await context.params;
-    if (!/^\d{17,20}$/.test(id)) return NextResponse.json({ error: "Invalid application ID." }, { status: 400 });
-    const body = await request.json();
-    if (!["approve", "deny"].includes(body.decision)) return NextResponse.json({ error: "Choose approve or deny." }, { status: 400 });
-    const channelId = await reviewChannelId();
-    const messageResponse = await discordApi("/channels/" + channelId + "/messages/" + id);
-    if (!messageResponse.ok) return NextResponse.json({ error: "Application record was not found." }, { status: 404 });
-    const message = await messageResponse.json();
-    const fields = message.embeds?.[0]?.fields || [];
-    const get = (name: string) => fields.find((field: any) => field.name === name)?.value || "";
-    const applicantId = get("Applicant").match(/ID:\s*(\d{17,20})/)?.[1];
-    if (!applicantId) return NextResponse.json({ error: "Applicant information is missing." }, { status: 422 });
-    if ((get("Status") || "Pending") !== "Pending") return NextResponse.json({ error: "This application has already been reviewed." }, { status: 409 });
-    const approved = body.decision === "approve";
-    const status = approved ? "Approved" : "Denied";
-    const embed = { ...message.embeds[0], color: approved ? 0x2ecc71 : 0xe74c3c,
-      fields: [...fields.filter((field: any) => !["Status", "Decision"].includes(field.name)),
-        { name: "Status", value: status, inline: true },
-        { name: "Decision", value: "Reviewed by " + session.username + " (website)", inline: true }] };
-    const edit = await discordApi("/channels/" + channelId + "/messages/" + id, { method: "PATCH", body: JSON.stringify({ embeds: [embed], components: [] }) });
-    if (!edit.ok) return NextResponse.json({ error: "Could not update the Discord application record." }, { status: 502 });
-    let dmDelivered = true;
-    try {
-      const dm = await discordApi("/users/@me/channels", { method: "POST", body: JSON.stringify({ recipient_id: applicantId }) });
-      if (!dm.ok) throw new Error("Could not open applicant DM.");
-      const dmChannel = await dm.json();
-      const content = approved
-        ? "🎉 Congratulations! Company management has approved your BC Gold Logistics driver application. Welcome to BC Gold Logistics! Please check the server for your next steps."
-        : "Thank you for your interest in BC Gold Logistics. After reviewing your application, company management has decided not to move forward at this time. We appreciate the time you took to apply.";
-      const sent = await discordApi("/channels/" + dmChannel.id + "/messages", { method: "POST", body: JSON.stringify({ content: content + "\n\nApplication status: **" + status + "**" }) });
-      if (!sent.ok) throw new Error("Could not deliver applicant DM.");
-    } catch { dmDelivered = false; }
-    return NextResponse.json({ ok: true, status, dmDelivered });
-  } catch (error) {
-    return NextResponse.json({ error: error instanceof Error ? error.message : "Decision failed." }, { status: 500 });
-  }
+import { NextRequest,NextResponse } from "next/server";
+import { discordApi,requireManager } from "@/lib/management";
+export const runtime="nodejs";
+export async function POST(request:NextRequest,context:{params:Promise<{id:string}>}){
+ const {session,response}=await requireManager(request);if(!session)return response!;
+ try{
+  const {id}=await context.params;if(!/^\\d{17,20}$/.test(id))return NextResponse.json({error:"Invalid application ticket."},{status:400});
+  const body=await request.json();const decisions=["approve","deny","request-info","hold"];
+  if(!decisions.includes(body.decision))return NextResponse.json({error:"Choose a valid staff decision."},{status:400});
+  const guildId=process.env.GUILD_ID;
+  const channelsResponse=await discordApi("/guilds/"+guildId+"/channels");if(!channelsResponse.ok)throw new Error("Could not load Discord channels.");
+  const channels=await channelsResponse.json();const channel=channels.find((c:any)=>c.id===id&&String(c.topic||"").startsWith("BCGL_APP|"));
+  if(!channel)return NextResponse.json({error:"Application ticket was not found."},{status:404});
+  const messagesResponse=await discordApi("/channels/"+id+"/messages?limit=1");if(!messagesResponse.ok)return NextResponse.json({error:"Application record was not found."},{status:404});
+  const messages=await messagesResponse.json();const message=messages[0];if(!message?.embeds?.[0])return NextResponse.json({error:"Application details are missing."},{status:422});
+  const fields=message.embeds[0].fields||[];const get=(name:string)=>fields.find((f:any)=>f.name===name)?.value||"";
+  const applicantId=channel.topic.split("|")[1];const oldStatus=get("Status")||"Pending";
+  if(oldStatus!=="Pending"&&body.decision!=="request-info"&&body.decision!=="hold")return NextResponse.json({error:"This application has already received a final decision."},{status:409});
+  const statusMap:any={approve:"Approved",deny:"Denied","request-info":"More Information Requested",hold:"On Hold"};
+  const status=statusMap[body.decision];const approved=body.decision==="approve";
+  const staffNote=String(body.note||"").trim().slice(0,1000);
+  const embed={...message.embeds[0],color:approved?0x2ecc71:body.decision==="deny"?0xe74c3c:0xd4af37,fields:[...fields.filter((f:any)=>!["Status","Decision","Staff note"].includes(f.name)),{name:"Status",value:status,inline:true},{name:"Decision",value:"Reviewed by "+session.username+" on the website",inline:true},...(staffNote?[{name:"Staff note (private management record)",value:staffNote}]:[])]};
+  const edit=await discordApi("/channels/"+id+"/messages/"+message.id,{method:"PATCH",body:JSON.stringify({embeds:[embed]})});
+  if(!edit.ok)return NextResponse.json({error:"Could not update the application ticket."},{status:502});
+  const topicParts=String(channel.topic).split("|");topicParts[3]=status;
+  await discordApi("/channels/"+id,{method:"PATCH",body:JSON.stringify({topic:topicParts.join("|")})});
+  const publicMessage=body.decision==="approve"?"🎉 Your BC Gold Logistics application has been approved. Welcome to the fleet!":body.decision==="deny"?"Thank you for applying. Management has decided not to move forward with your application at this time.":body.decision==="request-info"?"Management needs a little more information. Please reply in this ticket so we can continue reviewing your application.":"Your application has been placed on hold. Management will update this ticket when review resumes.";
+  const post=await discordApi("/channels/"+id+"/messages",{method:"POST",body:JSON.stringify({content:"<@"+applicantId+"> "+publicMessage,allowed_mentions:{users:[applicantId]}})});
+  if(!post.ok)return NextResponse.json({ok:true,status,warning:"Decision saved, but ticket notification could not be posted."});
+  return NextResponse.json({ok:true,status,notification:"posted-in-ticket"});
+ }catch(error){return NextResponse.json({error:error instanceof Error?error.message:"Decision failed."},{status:500});}
 }

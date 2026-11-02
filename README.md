@@ -11,6 +11,12 @@ Discord management bot for the BC Gold Logistics ATS / ETS2 VTC.
 - `/delivery` — records completed deliveries.
 - `/roster` — shows members assigned to company roles.
 
+## Discord server backup and embeds
+- `config/server-layout.json` — version-controlled snapshot of company roles, categories, channels, and management roles.
+- `docs/DISCORD-SERVER.md` — server structure, application workflow, permissions, and security notes.
+- `src/lib/embeds.js` — shared black-and-gold embed builder for consistent bot messages.
+- Convoy, delivery, and roster commands use the shared embed builder; use it for future embeds too.
+
 ## Setup
 Requires Node.js 20+.
 1. Install dependencies: `npm install`

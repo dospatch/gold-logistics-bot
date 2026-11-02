@@ -1,9 +1,33 @@
 {
   "company": "BC Gold Logistics",
-  "tagline": "Driven by Excellence. United by the Road.",
+  "tagline": "Driven by Excellence. Delivered with Pride.",
+  "operatingModel": "Multiplayer-only ATS/ETS2 virtual transportation company. TruckersMP is not required.",
   "games": [
-    "ATS",
-    "ETS2"
+    "American Truck Simulator",
+    "Euro Truck Simulator 2"
+  ],
+  "fleetModel": "Company-owned virtual fleet managed through company records and driver assignments.",
+  "divisions": [
+    {
+      "name": "BC Gold Freight",
+      "status": "active"
+    },
+    {
+      "name": "BC Gold Heavy Haul",
+      "status": "active"
+    },
+    {
+      "name": "BC Gold Refrigerated",
+      "status": "active"
+    },
+    {
+      "name": "BC Gold Fleet Services",
+      "status": "active"
+    },
+    {
+      "name": "BC Gold Passenger Transport",
+      "status": "future-ready"
+    }
   ],
   "roles": [
     {
@@ -11,75 +35,187 @@
       "color": "#D4AF37"
     },
     {
-      "name": "Chief Executive Officer",
+      "name": "President",
       "color": "#F1C40F"
     },
     {
-      "name": "Operations Manager",
+      "name": "Chief Executive Officer",
+      "color": "#E5B83B"
+    },
+    {
+      "name": "Chief Operating Officer",
       "color": "#E67E22"
     },
     {
-      "name": "Fleet Manager",
+      "name": "Chief Financial Officer",
+      "color": "#16A085"
+    },
+    {
+      "name": "Executive Director",
+      "color": "#C49A35"
+    },
+    {
+      "name": "HR Director",
+      "color": "#9B59B6"
+    },
+    {
+      "name": "Transportation Director",
+      "color": "#2980B9"
+    },
+    {
+      "name": "Fleet Director",
       "color": "#3498DB"
     },
     {
-      "name": "Convoy Manager",
-      "color": "#9B59B6"
+      "name": "Dispatch Director",
+      "color": "#1F8A70"
+    },
+    {
+      "name": "Business Development Director",
+      "color": "#8E6E53"
+    },
+    {
+      "name": "Department Manager",
+      "color": "#B8860B"
+    },
+    {
+      "name": "Supervisor",
+      "color": "#A67C52"
     },
     {
       "name": "Senior Driver",
       "color": "#2ECC71"
     },
     {
+      "name": "Driver Trainer",
+      "color": "#27AE60"
+    },
+    {
       "name": "Company Driver",
       "color": "#1ABC9C"
     },
     {
-      "name": "Trainee Driver",
+      "name": "Probationary Driver",
       "color": "#95A5A6"
+    },
+    {
+      "name": "Applicant",
+      "color": "#7F8C8D"
+    },
+    {
+      "name": "LOA",
+      "color": "#5865F2"
+    },
+    {
+      "name": "Guest",
+      "color": "#777777"
     }
   ],
   "categories": {
-    "📌 INFORMATION": [
+    "🏢 CORPORATE HEADQUARTERS": [
       "welcome",
-      "announcements",
+      "company-announcements",
       "company-information",
+      "company-handbook",
       "company-rules",
-      "driver-roster"
+      "company-updates"
     ],
-    "📝 RECRUITMENT": [
-      "apply-to-join",
+    "👥 HUMAN RESOURCES": [
+      "employment-applications",
       "application-status",
-      "recruitment-support"
+      "employee-directory",
+      "employee-support",
+      "loa-requests",
+      "resignation-requests",
+      "promotions"
     ],
-    "🚛 DRIVER OPERATIONS": [
-      "driver-chat",
-      "ats-drivers",
-      "ets2-drivers",
-      "delivery-logs",
-      "mileage-reports"
+    "📋 DISPATCH OPERATIONS": [
+      "driver-check-in",
+      "company-load-board",
+      "load-assignments",
+      "active-deliveries",
+      "delivery-confirmations",
+      "dispatch-reports"
     ],
-    "🏁 CONVOY OPERATIONS": [
-      "convoy-announcements",
-      "convoy-schedule",
-      "convoy-media"
+    "🚛 BC GOLD FREIGHT": [
+      "freight-announcements",
+      "freight-dispatch",
+      "freight-drivers"
     ],
-    "🔒 MANAGEMENT": [
-      "management-chat",
-      
-      "staff-reports"
+    "🏗️ BC GOLD HEAVY HAUL": [
+      "heavy-haul-announcements",
+      "heavy-haul-dispatch",
+      "heavy-haul-drivers"
     ],
-    "🔊 VOICE": [
-      "Driver Lounge",
-      "ATS Convoy",
-      "ETS2 Convoy",
-      "Management"
+    "❄️ BC GOLD REFRIGERATED": [
+      "reefer-announcements",
+      "reefer-dispatch",
+      "reefer-drivers"
+    ],
+    "🚌 BC GOLD PASSENGER TRANSPORT": [
+      "passenger-division",
+      "bus-fleet",
+      "route-development"
+    ],
+    "🛠️ FLEET MANAGEMENT": [
+      "company-fleet",
+      "vehicle-assignments",
+      "fleet-inspections",
+      "maintenance-reports",
+      "fleet-purchases"
+    ],
+    "📊 FINANCE & ADMINISTRATION": [
+      "virtual-financial-ledger",
+      "company-budget",
+      "department-requests"
+    ],
+    "🔒 EXECUTIVE OFFICE": [
+      "executive-office",
+      "management-discussions",
+      "department-reports",
+      "company-strategy",
+      "executive-decisions"
+    ],
+    "🔒 HUMAN RESOURCES STAFF": [
+      "hr-staff-chat",
+      "applications-review",
+      "employee-records",
+      "hr-reports"
+    ],
+    "🔒 DISPATCH STAFF": [
+      "dispatch-staff-chat",
+      "dispatch-logs",
+      "dispatch-planning"
+    ],
+    "💬 COMPANY COMMUNITY": [
+      "general-chat",
+      "truck-showcase",
+      "company-media",
+      "suggestions"
+    ],
+    "🔊 COMPANY VOICE": [
+      "company-operations",
+      "freight-dispatch-voice",
+      "heavy-haul-operations",
+      "refrigerated-operations",
+      "passenger-operations",
+      "management-meetings",
+      "afk"
     ]
   },
   "managementRoles": [
     "Owner",
+    "President",
     "Chief Executive Officer",
-    "Operations Manager",
-    "Fleet Manager"
+    "Chief Operating Officer",
+    "Chief Financial Officer",
+    "Executive Director",
+    "HR Director",
+    "Transportation Director",
+    "Fleet Director",
+    "Dispatch Director",
+    "Business Development Director",
+    "Department Manager",
+    "Supervisor"
   ]
 }

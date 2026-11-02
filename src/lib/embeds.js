@@ -1,5 +1,5 @@
 const { EmbedBuilder } = require("discord.js");
-const BRAND = Object.freeze({ name: "BC Gold Logistics", tagline: "Driven by Excellence. United by the Road.", gold: 0xD4AF37, black: 0x111111, yellow: 0xF1C40F });
+const BRAND = Object.freeze({ name: "BC Gold Logistics", tagline: "Driven by Excellence. Delivered with Pride.", gold: 0xD4AF37, black: 0x111111, yellow: 0xF1C40F });
 function createEmbed({ title, description, color = BRAND.gold, fields = [], timestamp = false, thumbnail, image, footer = BRAND.tagline } = {}) {
   const embed = new EmbedBuilder().setColor(color);
   if (title) embed.setTitle(title);

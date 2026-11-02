@@ -140,11 +140,11 @@ async function execute(interaction) {
   let rolesCreated=0, roleColorsUpdated=0, categoriesCreated=0, channelsCreated=0;
   for(const [name,color] of roles){ let role=guild.roles.cache.find(r=>r.name===name); if(!role){await guild.roles.create({name,color,reason:"BC Gold Logistics corporate rebuild"});rolesCreated++;} else if(role.color!==color){await role.setColor(color,"Apply BC Gold Logistics branding");roleColorsUpdated++;} }
   await guild.roles.fetch(); await guild.channels.fetch();
-  const managers=guild.roles.cache.filter(r=>managementNames.has(r.name));
   const botPerms=[PermissionFlagsBits.ViewChannel,PermissionFlagsBits.SendMessages,PermissionFlagsBits.ReadMessageHistory,PermissionFlagsBits.EmbedLinks,PermissionFlagsBits.ManageChannels];
   for(const [categoryName,channelNames] of Object.entries(layout)){
-    const isPrivate=privateCategories.has(categoryName);
-    const overwrites=isPrivate?[{id:guild.roles.everyone.id,deny:[PermissionFlagsBits.ViewChannel]},...managers.map(r=>({id:r.id,allow:[PermissionFlagsBits.ViewChannel,PermissionFlagsBits.SendMessages,PermissionFlagsBits.ReadMessageHistory]})),{id:botMember.id,allow:botPerms}]:[];
+    const allowedNames=privateCategoryRoles[categoryName];
+    const isPrivate=Boolean(allowedNames);
+    const overwrites=isPrivate?[{id:guild.roles.everyone.id,deny:[PermissionFlagsBits.ViewChannel]},...guild.roles.cache.filter(r=>allowedNames.has(r.name)).map(r=>({id:r.id,allow:[PermissionFlagsBits.ViewChannel,PermissionFlagsBits.SendMessages,PermissionFlagsBits.ReadMessageHistory]})),{id:botMember.id,allow:botPerms}]:[];
     let category=guild.channels.cache.find(c=>c.type===ChannelType.GuildCategory&&c.name===categoryName);
     if(!category){category=await guild.channels.create({name:categoryName,type:ChannelType.GuildCategory,permissionOverwrites:overwrites,reason:"BC Gold Logistics corporate rebuild"});categoriesCreated++;}
     else if(isPrivate){await category.permissionOverwrites.set(overwrites,"Secure BC Gold Logistics staff category");}

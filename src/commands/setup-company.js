@@ -1,12 +1,12 @@
 const { SlashCommandBuilder, ChannelType, PermissionFlagsBits } = require("discord.js");
-const roles = [[
-  "Owner",0xD4AF37],["President",0xF1C40F],["Chief Executive Officer",0xE5B83B],
+const roles = [
+  ["Owner",0xD4AF37],["President",0xF1C40F],["Chief Executive Officer",0xE5B83B],
   ["Chief Operating Officer",0xE67E22],["Chief Financial Officer",0x16A085],["Executive Director",0xC49A35],
   ["HR Director",0x9B59B6],["Transportation Director",0x2980B9],["Fleet Director",0x3498DB],
   ["Dispatch Director",0x1F8A70],["Business Development Director",0x8E6E53],["Department Manager",0xB8860B],
   ["Supervisor",0xA67C52],["Senior Driver",0x2ECC71],["Driver Trainer",0x27AE60],["Company Driver",0x1ABC9C],
   ["Probationary Driver",0x95A5A6],["Applicant",0x7F8C8D],["LOA",0x5865F2],["Guest",0x777777]
-]];
+];
 const layout = {
   "🏢 CORPORATE HEADQUARTERS": [
     "welcome",

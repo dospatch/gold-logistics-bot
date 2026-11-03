@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+<title id="title">BC Gold Logistics</title><desc id="desc">Gold front-facing semi truck emblem on a black geometric background.</desc>
+<defs><linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff0a0"/><stop offset=".38" stop-color="#f0c84f"/><stop offset=".72" stop-color="#b97b13"/><stop offset="1" stop-color="#ffe27a"/></linearGradient><pattern id="lines" width="80" height="80" patternUnits="userSpaceOnUse"><path d="M0 0L80 80M-20 20L20-20M60 100L100 60" stroke="#171717" stroke-width="12"/></pattern></defs>
+<rect width="512" height="512" rx="24" fill="#050505"/><rect width="512" height="512" rx="24" fill="url(#lines)" opacity=".72"/>
+<g fill="url(#gold)" stroke="#8b5c0a" stroke-width="2" stroke-linejoin="round">
+<path d="M172 65V35q0-13 13-13t13 13v38h116V35q0-13 13-13t13 13v38l20 22v73H152V87z"/>
+<path d="M154 168h204l19 37 26 16 22 112-18 20H105l-18-20 22-112 26-16z"/>
+<path d="M128 213 76 239 48 375h39l30-105 35-17zm256 0 52 26 28 136h-39l-30-105-35-17z"/>
+<path d="M170 167h75v39h-75zm97 0h75v39h-75z"/>
+<path d="M153 236q0-15 15-15h176q15 0 15 15v113H153z"/>
+<path d="M178 250h156v92H178z" fill="#080808" stroke="#d7a82f" stroke-width="5"/>
+<path d="M191 260h10v73h-10zm25 0h10v73h-10zm25 0h10v73h-10zm25 0h10v73h-10zm25 0h10v73h-10zm25 0h10v73h-10z" stroke="none" fill="url(#gold)"/>
+<path d="M105 290h47v20h-47zm255 0h47v20h-47z"/>
+<path d="M150 351h212v36q0 12-12 12h-24v-16H186v16h-24q-12 0-12-12z"/>
+</g>
+<path d="M155 425h202l-25 25H180z" fill="url(#gold)"/>
+<text x="256" y="480" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="900" font-size="33" letter-spacing="1.5" fill="url(#gold)">BC GOLD LOGISTICS</text>
+</svg>

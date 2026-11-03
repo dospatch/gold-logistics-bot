@@ -75,3 +75,33 @@
 @media(max-width:850px){.mobile-menu{display:block}.nav-inner{gap:10px}.nav-inner nav{display:none}}
 @media(max-width:600px){.topline{padding:0 8px;text-align:center;line-height:1.3}.main-nav{height:76px}.nav-brand{gap:7px}.nav-brand img{width:46px;height:46px}.nav-brand b{font-size:9px;letter-spacing:1px}.nav-brand small{font-size:6px;letter-spacing:1px}.nav-apply{min-height:44px;display:flex;align-items:center;gap:5px;padding:8px;font-size:7px;letter-spacing:.4px}.mobile-menu summary{padding:10px;font-size:8px}.new-hero-inner{padding-top:58px}.new-hero-photo{background-position:58% center}.hero-copy h1{font-size:clamp(48px,13vw,70px)}.hero-copy h2{font-size:22px}.hero-emblem{width:min(230px,80%)}.gold-button,.dark-button{min-height:48px}.footer-nav a{min-height:40px;display:flex;align-items:center}.under-link{min-height:44px;display:inline-flex;align-items:center}.join-action .gold-button{width:100%;justify-content:space-between}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+
+/* Convoy schedule and driver portal */
+.convoy-empty,.driver-panel{margin:34px 0;padding:32px;border:1px solid #51421f;background:linear-gradient(145deg,#19170f,#101114)}
+.convoy-icon{display:grid;place-items:center;width:42px;height:42px;border:1px solid #8c7131;color:#e4c15b;font-size:20px;margin-bottom:22px}
+.convoy-empty h2,.driver-panel h2{font:800 24px Manrope;margin:12px 0;color:#f2ead5}
+.convoy-empty p,.driver-panel p{color:#aaa9a2;line-height:1.85;font-size:13px;max-width:650px}
+.convoy-status,.driver-connected{display:inline-block;margin-top:14px;padding:8px 11px;border:1px solid #665321;color:#e4c15b;font-size:9px;font-weight:900;letter-spacing:1.3px}
+.convoy-info{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:35px 0}
+.convoy-info article{padding:22px;border:1px solid #303136;background:#111215}
+.convoy-info article>b,.driver-roles>small{color:#d8b64f;font-size:9px;letter-spacing:1.3px}
+.convoy-info h3{font:700 17px Manrope;margin:22px 0 8px}
+.convoy-info p{font-size:12px;line-height:1.8;color:#a8a7a0}
+.driver-profile-top{display:flex;align-items:center;gap:17px;flex-wrap:wrap}
+.driver-avatar{width:58px;height:58px;display:grid;place-items:center;background:#d7b34a;color:#17130a;font:900 24px Manrope}
+.driver-profile-top h2{margin:6px 0 0}
+.driver-profile-top p{margin:4px 0}
+.driver-connected{margin:0 0 0 auto}
+.driver-facts{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:30px 0;padding-top:24px;border-top:1px solid #333}
+.driver-facts small,.driver-roles>small{display:block;color:#d8b64f;font-size:9px;letter-spacing:1.2px}
+.driver-facts b{display:block;margin-top:8px;font-size:12px;overflow-wrap:anywhere;color:#e6e2d7}
+.driver-roles>div{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.driver-roles span{padding:8px 11px;border:1px solid #5d4c25;background:#19170f;color:#e6d28e;font-size:11px}
+.driver-shortcuts{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:25px 0}
+.driver-shortcuts a{display:flex;flex-direction:column;gap:12px;padding:20px;border:1px solid #333;background:#111215}
+.driver-shortcuts a b{font:800 11px Manrope;color:#e3c15d;letter-spacing:1px}
+.driver-shortcuts a span{font-size:11px;line-height:1.6;color:#aaa}
+.driver-panel small{display:block;color:#888;font-size:10px;margin-top:16px}
+.driver-note{padding:16px;border-left:2px solid #b9973c;background:#111215;color:#aaa;font-size:11px;line-height:1.8}
+@media(max-width:700px){.convoy-empty,.driver-panel{padding:22px}.convoy-info,.driver-shortcuts{grid-template-columns:1fr}.driver-facts{grid-template-columns:1fr;gap:18px}.driver-connected{margin:8px 0 0}.driver-profile-top{align-items:flex-start}.convoy-page .btn{width:100%}}

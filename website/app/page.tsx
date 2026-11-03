@@ -13,9 +13,10 @@ const standards = [
 
 export default function Home() {
   return <main className="home-redesign">
+    <a className="skip-link" href="#main-content">Skip to content</a>
     <div className="topline"><span className="topline-dot"/> VIRTUAL TRUCKING COMPANY <span className="topline-sep">/</span> AMERICAN TRUCK SIMULATOR <span className="topline-sep">/</span> EURO TRUCK SIMULATOR 2</div>
-    <header className="main-nav"><div className="nav-inner"><Link href="/" className="nav-brand"><img src="/bc-gold-logistics-logo.svg" alt="BC Gold Logistics" /><span><b>BC GOLD LOGISTICS</b><small>DRIVEN BY EXCELLENCE</small></span></Link><nav><a href="#company">Company</a><a href="#operations">Operations</a><a href="#standard">Our Standard</a><Link href="/careers">Careers</Link></nav><Link className="nav-apply" href="/careers">JOIN THE COMPANY <span>↗</span></Link></div></header>
-    <section className="new-hero">
+    <header className="main-nav"><div className="nav-inner"><Link href="/" className="nav-brand"><img src="/bc-gold-logistics-logo.svg" alt="BC Gold Logistics" /><span><b>BC GOLD LOGISTICS</b><small>DRIVEN BY EXCELLENCE</small></span></Link><nav aria-label="Main navigation"><a href="#company">Company</a><a href="#operations">Operations</a><a href="#standard">Our Standard</a><Link href="/careers">Careers</Link></nav><details className="mobile-menu"><summary aria-label="Open navigation menu">MENU <span aria-hidden="true">☰</span></summary><div className="mobile-menu-panel"><a href="#company">Company</a><a href="#operations">Operations</a><a href="#standard">Our Standard</a><Link href="/about">About</Link><Link href="/careers">Careers</Link><Link href="/standards">Standards</Link><Link href="/management">Management</Link></div></details><Link className="nav-apply" href="/careers">JOIN THE COMPANY <span>↗</span></Link></div></header>
+    <section className="new-hero" id="main-content">
       <div className="new-hero-photo"/>
       <div className="new-hero-shade"/>
       <div className="new-hero-inner">

@@ -12,7 +12,7 @@ const MANAGERS = new Set([
 const data = new SlashCommandBuilder()
   .setName("company-embed")
   .setDescription("Post a company information embed in the channel you choose.")
-  .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
+  .setDefaultMemberPermissions(null)
   .addChannelOption(option => option.setName("channel").setDescription("Where this embed should be posted").setRequired(true)
     .addChannelTypes(ChannelType.GuildText, ChannelType.GuildAnnouncement))
   .addStringOption(option => option.setName("title").setDescription("Embed heading").setRequired(true).setMaxLength(256))

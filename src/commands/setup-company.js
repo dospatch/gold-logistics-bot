@@ -34,11 +34,21 @@ const layout = {
  "🚚 LEGACY VTC & SIMULATOR COMMUNITY":["ats-drivers","ets2-drivers","ats-company-session","ets2-company-session","company-session-announcements","company-session-schedule","company-session-media","truck-showcase","convoy-announcements","convoy-schedule"]
 };
 const management = new Set(["Owner","President","Chief Executive Officer","Chief Operating Officer","Chief Financial Officer","Executive Director","HR Director","HR Manager","Transportation Director","Transportation Manager","Fleet Director","Dispatch Director","Dispatch Supervisor","Warehouse Director","Warehouse Manager","Carrier Services Director","Safety & Compliance Director","Security Director","Security Supervisor","Finance Director","IT & Facilities Director","IT Manager","Facilities Manager","Department Manager","Shift Manager","Supervisor"]);
-const privateRoles = {
- "🔒 EXECUTIVE OFFICE":new Set(["Owner","President","Chief Executive Officer","Chief Operating Officer","Chief Financial Officer","Executive Director"]),
- "🔒 HR STAFF":new Set(["Owner","President","Chief Executive Officer","Chief Operating Officer","HR Director"]),
- "🔒 DISPATCH & WAREHOUSE LEADERSHIP":new Set(["Owner","President","Chief Executive Officer","Chief Operating Officer","Transportation Director","Dispatch Director","Warehouse Director","Department Manager","Shift Manager"]),
- "🔒 SAFETY & FINANCE STAFF":new Set(["Owner","President","Chief Executive Officer","Chief Operating Officer","Safety & Compliance Director","Finance Director"])
+const departmentAccess = {
+ "👥 HUMAN RESOURCES":["Owner","President","Chief Executive Officer","Chief Operating Officer","HR Director","HR Manager","Recruiter","Training Coordinator","Employee","Department Manager"],
+ "🚛 TRANSPORTATION & FLEET":["Owner","President","Chief Executive Officer","Chief Operating Officer","Transportation Director","Transportation Manager","Fleet Director","Fleet Manager","Company Driver","Senior Driver","Probationary Driver","Driver Trainer","Diesel Technician","Diesel Mechanic","Parts Specialist","Safety Officer","Department Manager","Shift Manager","Supervisor"],
+ "📋 DISPATCH & LOAD PLANNING":["Owner","President","Chief Executive Officer","Chief Operating Officer","Transportation Director","Transportation Manager","Dispatch Director","Dispatch Supervisor","Dispatcher","Load Planner","Company Driver","Senior Driver","Probationary Driver","Warehouse Director","Warehouse Manager","Department Manager","Shift Manager","Supervisor"],
+ "🏭 DISTRIBUTION CENTER":["Owner","President","Chief Executive Officer","Chief Operating Officer","Warehouse Director","Warehouse Manager","Dock Supervisor","Warehouse Associate","Forklift Operator","Inventory Control Specialist","Receiving Clerk","Shipping Clerk","Cold Storage Technician","Dispatcher","Load Planner","Company Driver","Department Manager","Shift Manager","Supervisor"],
+ "🏢 WHOLESALE CUSTOMER SERVICES":["Owner","President","Chief Executive Officer","Chief Operating Officer","Wholesale Account Manager","Wholesale Account Representative","Carrier Services Director","Carrier Relations Coordinator","Dispatch Director","Dispatch Supervisor","Department Manager","Supervisor"],
+ "🤝 CARRIER SERVICES":["Owner","President","Chief Executive Officer","Chief Operating Officer","Carrier Services Director","Carrier Relations Coordinator","Carrier Partner","Dispatch Director","Dispatch Supervisor","Department Manager","Supervisor"],
+ "🦺 SAFETY & COMPLIANCE":["Owner","President","Chief Executive Officer","Chief Operating Officer","Safety & Compliance Director","Safety Officer","Safety Coordinator","Compliance Specialist","Driver Trainer","HR Director","HR Manager","Company Driver","Senior Driver","Probationary Driver","Warehouse Associate","Forklift Operator","Diesel Technician","Diesel Mechanic","Department Manager","Supervisor"],
+ "🔐 FACILITY SECURITY":["Owner","President","Chief Executive Officer","Chief Operating Officer","Security Director","Security Supervisor","Security Officer","Facilities Manager","IT & Facilities Director","Department Manager"],
+ "📊 FINANCE & ADMINISTRATION":["Owner","President","Chief Executive Officer","Chief Operating Officer","Chief Financial Officer","Finance Director","Payroll Specialist","Accountant","Procurement Specialist","IT & Facilities Director","IT Manager","Facilities Manager","Department Manager"],
+ "🔒 EXECUTIVE OFFICE":["Owner","President","Chief Executive Officer","Chief Operating Officer","Chief Financial Officer","Executive Director"],
+ "🔒 HR STAFF":["Owner","President","Chief Executive Officer","Chief Operating Officer","HR Director","HR Manager","Recruiter"],
+ "🔒 DISPATCH & WAREHOUSE LEADERSHIP":["Owner","President","Chief Executive Officer","Chief Operating Officer","Transportation Director","Transportation Manager","Fleet Director","Dispatch Director","Dispatch Supervisor","Warehouse Director","Warehouse Manager","Dock Supervisor","Department Manager","Shift Manager","Supervisor"],
+ "🔒 SAFETY & FINANCE STAFF":["Owner","President","Chief Executive Officer","Chief Operating Officer","Safety & Compliance Director","Safety Coordinator","Compliance Specialist","Finance Director","Chief Financial Officer","Payroll Specialist","Accountant"],
+ "🔊 COMPANY VOICE":["Owner","President","Chief Executive Officer","Chief Operating Officer","Executive Director","HR Director","HR Manager","Transportation Director","Transportation Manager","Fleet Director","Dispatch Director","Dispatch Supervisor","Dispatcher","Load Planner","Warehouse Director","Warehouse Manager","Dock Supervisor","Warehouse Associate","Forklift Operator","Company Driver","Senior Driver","Probationary Driver","Driver Trainer","Diesel Technician","Diesel Mechanic","Safety & Compliance Director","Safety Officer","Security Director","Security Officer","Finance Director","IT & Facilities Director","Department Manager","Shift Manager","Supervisor","Employee"]
 };
 const data = new SlashCommandBuilder().setName("setup-company").setDescription("Set up BC Logistics LLC roles, channels, and company overview without deleting existing content.").setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
 async function execute(interaction) {
@@ -50,15 +60,18 @@ async function execute(interaction) {
  await guild.roles.fetch();await guild.channels.fetch();
  const botPerms=[PermissionFlagsBits.ViewChannel,PermissionFlagsBits.SendMessages,PermissionFlagsBits.ReadMessageHistory,PermissionFlagsBits.EmbedLinks,PermissionFlagsBits.ManageChannels];
  for(const [categoryName,channelNames] of Object.entries(layout)){
-  const allowed=privateRoles[categoryName],isPrivate=Boolean(allowed);
-  const overwrites=isPrivate?[{id:guild.roles.everyone.id,deny:[PermissionFlagsBits.ViewChannel]},...guild.roles.cache.filter(r=>allowed.has(r.name)).map(r=>({id:r.id,allow:[PermissionFlagsBits.ViewChannel,PermissionFlagsBits.SendMessages,PermissionFlagsBits.ReadMessageHistory]})),{id:botMember.id,allow:botPerms}]:[];
+  const allowedNames=departmentAccess[categoryName],isRestricted=Array.isArray(allowedNames);
+  const overwrites=isRestricted?[{id:guild.roles.everyone.id,deny:[PermissionFlagsBits.ViewChannel]},...guild.roles.cache.filter(r=>allowedNames.includes(r.name)).map(r=>({id:r.id,allow:[PermissionFlagsBits.ViewChannel,PermissionFlagsBits.SendMessages,PermissionFlagsBits.ReadMessageHistory,PermissionFlagsBits.AttachFiles,PermissionFlagsBits.EmbedLinks]})),{id:botMember.id,allow:botPerms}]:[];
   let category=guild.channels.cache.find(c=>c.type===ChannelType.GuildCategory&&c.name===categoryName);
   if(!category){category=await guild.channels.create({name:categoryName,type:ChannelType.GuildCategory,permissionOverwrites:overwrites,reason:"BC Logistics LLC company setup"});categoriesCreated++;}
-  else if(isPrivate) await category.permissionOverwrites.set(overwrites,"Secure BC Logistics LLC staff category");
+  else if(isRestricted) await category.permissionOverwrites.set(overwrites,"Apply BC Logistics LLC department access controls");
   for(const name of channelNames){
    const type=categoryName==="🔊 COMPANY VOICE"?ChannelType.GuildVoice:ChannelType.GuildText;
    let channel=guild.channels.cache.find(c=>c.name===name&&c.type===type);
-   if(channel){if(channel.parentId!==category.id)await channel.setParent(category.id,{lockPermissions:true,reason:"Organize BC Logistics LLC channels"});}
+   if(channel){
+    if(channel.parentId!==category.id)await channel.setParent(category.id,{lockPermissions:isRestricted,reason:"Organize BC Logistics LLC channels"});
+    else if(isRestricted&&!channel.permissionsLocked)await channel.lockPermissions();
+   }
    else {await guild.channels.create({name,type,parent:category.id,reason:"BC Logistics LLC company setup"});channelsCreated++;}
   }
  }

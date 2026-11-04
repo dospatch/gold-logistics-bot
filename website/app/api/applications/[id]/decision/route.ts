@@ -12,7 +12,7 @@ export async function POST(request:NextRequest,context:{params:Promise<{id:strin
   const channels=await channelsResponse.json();const channel=channels.find((c:any)=>c.id===id&&String(c.topic||"").startsWith("BCGL_APP|"));
   if(!channel)return NextResponse.json({error:"Application ticket was not found."},{status:404});
   const messagesResponse=await discordApi("/channels/"+id+"/messages?limit=50");if(!messagesResponse.ok)return NextResponse.json({error:"Application record was not found."},{status:404});
-  const messages=await messagesResponse.json();const message=messages.find((m:any)=>m.embeds?.[0]?.title==="🚛 BC Gold Logistics — Driver Application");if(!message?.embeds?.[0])return NextResponse.json({error:"Application details are missing."},{status:422});
+  const messages=await messagesResponse.json();const message=messages.find((m:any)=>["🚛 BC Gold Logistics — Driver Application","🏢 BC Logistics LLC — Employment Application"].includes(m.embeds?.[0]?.title));if(!message?.embeds?.[0])return NextResponse.json({error:"Application details are missing."},{status:422});
   const fields=message.embeds[0].fields||[];const get=(name:string)=>fields.find((f:any)=>f.name===name)?.value||"";
   const applicantId=channel.topic.split("|")[1];const oldStatus=get("Status")||"Pending";
   if(oldStatus!=="Pending"&&body.decision!=="request-info"&&body.decision!=="hold")return NextResponse.json({error:"This application has already received a final decision."},{status:409});
@@ -26,8 +26,13 @@ export async function POST(request:NextRequest,context:{params:Promise<{id:strin
   await discordApi("/channels/"+id,{method:"PATCH",body:JSON.stringify({topic:topicParts.join("|")})});
   if(staffNote){const management=channels.find((c:any)=>c.name==="management-chat"&&c.type===0);if(management)await discordApi("/channels/"+management.id+"/messages",{method:"POST",body:JSON.stringify({content:"**Private staff note — Application #"+(topicParts[2]||"") +"**\nApplicant: <@"+applicantId+">\nReviewer: "+session.username+"\n"+staffNote,allowed_mentions:{parse:[]}})});}
   const publicMessage=body.decision==="approve"?"🎉 Your BC Gold Logistics application has been approved. Welcome to the fleet!":body.decision==="deny"?"Thank you for applying. Management has decided not to move forward with your application at this time.":body.decision==="request-info"?"Management needs a little more information. Please reply in this ticket so we can continue reviewing your application.":"Your application has been placed on hold. Management will update this ticket when review resumes.";
+  let employeeRoleAssigned=false;
+  if(approved && String(message.embeds[0].title).includes("Employment")){
+   const roleResponse=await discordApi("/guilds/"+guildId+"/roles");
+   if(roleResponse.ok){const roleList=await roleResponse.json();const employeeRole=roleList.find((r:any)=>r.name==="Employee");if(employeeRole){const assigned=await discordApi("/guilds/"+guildId+"/members/"+applicantId+"/roles/"+employeeRole.id,{method:"PUT"});employeeRoleAssigned=assigned.ok;}}
+  }
   const post=await discordApi("/channels/"+id+"/messages",{method:"POST",body:JSON.stringify({content:"<@"+applicantId+"> "+publicMessage,allowed_mentions:{users:[applicantId]}})});
-  if(!post.ok)return NextResponse.json({ok:true,status,warning:"Decision saved, but ticket notification could not be posted."});
-  return NextResponse.json({ok:true,status,notification:"posted-in-ticket"});
+  if(!post.ok)return NextResponse.json({ok:true,status,warning:"Decision saved, but ticket notification could not be posted.",employeeRoleAssigned});
+  return NextResponse.json({ok:true,status,notification:"posted-in-ticket",employeeRoleAssigned});
  }catch(error){return NextResponse.json({error:error instanceof Error?error.message:"Decision failed."},{status:500});}
 }

@@ -69,25 +69,174 @@
     "Carrier Partner",
     "Applicant",
     "Employee",
-    "Guest"
+    "Guest",
+    "HR Manager",
+    "Recruiter",
+    "Payroll Specialist",
+    "Accountant",
+    "Procurement Specialist",
+    "Transportation Manager",
+    "Dispatch Supervisor",
+    "Load Planner",
+    "Warehouse Manager",
+    "Dock Supervisor",
+    "Inventory Control Specialist",
+    "Receiving Clerk",
+    "Shipping Clerk",
+    "Cold Storage Technician",
+    "Wholesale Account Manager",
+    "Wholesale Account Representative",
+    "Carrier Relations Coordinator",
+    "Diesel Mechanic",
+    "Parts Specialist",
+    "Safety Coordinator",
+    "Compliance Specialist",
+    "Security Supervisor",
+    "IT Manager",
+    "Systems Administrator",
+    "Facilities Manager",
+    "Training Coordinator",
+    "Driver Trainer"
   ],
   "categories": {
-    "🏢 CORPORATE HEADQUARTERS": ["welcome","company-announcements","company-information","company-handbook","company-rules","company-updates"],
-    "👥 HUMAN RESOURCES": ["employment-applications","employee-directory","employee-support","onboarding","training","loa-requests","promotions"],
-    "🚛 TRANSPORTATION & FLEET": ["driver-check-in","company-fleet","vehicle-assignments","fleet-inspections","maintenance-reports","fuel-reports"],
-    "📋 DISPATCH & LOAD PLANNING": ["wholesale-load-board","load-assignments","active-shipments","delivery-confirmations","dispatch-reports","appointment-schedule"],
-    "🏭 DISTRIBUTION CENTER": ["warehouse-operations","inbound-receiving","outbound-shipping","dock-schedule","inventory-control","cross-dock","cold-storage"],
-    "🏢 WHOLESALE CUSTOMER SERVICES": ["wholesale-accounts","customer-support","shipment-inquiries","freight-claims"],
-    "🤝 CARRIER SERVICES": ["carrier-registration","carrier-check-in","carrier-appointments","carrier-staging","carrier-notices"],
-    "🦺 SAFETY & COMPLIANCE": ["safety-reports","incident-reports","compliance-updates","training-records"],
-    "🔐 FACILITY SECURITY": ["security-operations","gate-reports","access-issues","emergency-coordination"],
-    "📊 FINANCE & ADMINISTRATION": ["payroll-support","procurement","invoices","company-budget","department-requests"],
-    "🔒 EXECUTIVE OFFICE": ["executive-office","management-discussions","department-reports","company-strategy","executive-decisions"],
-    "🔒 HR STAFF": ["hr-staff-chat","applications-review","employee-records","hr-reports"],
-    "🔒 DISPATCH & WAREHOUSE LEADERSHIP": ["dispatch-staff-chat","dispatch-logs","warehouse-leadership","shift-reports"],
-    "🔒 SAFETY & FINANCE STAFF": ["safety-leadership","incident-review","finance-staff","payroll-records"],
-    "💬 COMPANY COMMUNITY": ["general-chat","company-media","suggestions"],
-    "🔊 COMPANY VOICE": ["company-operations","dispatch-voice","warehouse-operations-voice","management-meetings","afk"]
+    "🏢 CORPORATE HEADQUARTERS": [
+      "welcome",
+      "company-announcements",
+      "company-information",
+      "company-handbook",
+      "company-rules",
+      "company-updates"
+    ],
+    "👥 HUMAN RESOURCES": [
+      "employment-applications",
+      "employee-directory",
+      "employee-support",
+      "onboarding",
+      "training",
+      "loa-requests",
+      "promotions"
+    ],
+    "🚛 TRANSPORTATION & FLEET": [
+      "driver-check-in",
+      "company-fleet",
+      "vehicle-assignments",
+      "fleet-inspections",
+      "maintenance-reports",
+      "fuel-reports"
+    ],
+    "📋 DISPATCH & LOAD PLANNING": [
+      "wholesale-load-board",
+      "load-assignments",
+      "active-shipments",
+      "delivery-confirmations",
+      "dispatch-reports",
+      "appointment-schedule"
+    ],
+    "🏭 DISTRIBUTION CENTER": [
+      "warehouse-operations",
+      "inbound-receiving",
+      "outbound-shipping",
+      "dock-schedule",
+      "inventory-control",
+      "cross-dock",
+      "cold-storage"
+    ],
+    "🏢 WHOLESALE CUSTOMER SERVICES": [
+      "wholesale-accounts",
+      "customer-support",
+      "shipment-inquiries",
+      "freight-claims"
+    ],
+    "🤝 CARRIER SERVICES": [
+      "carrier-registration",
+      "carrier-check-in",
+      "carrier-appointments",
+      "carrier-staging",
+      "carrier-notices"
+    ],
+    "🦺 SAFETY & COMPLIANCE": [
+      "safety-reports",
+      "incident-reports",
+      "compliance-updates",
+      "training-records"
+    ],
+    "🔐 FACILITY SECURITY": [
+      "security-operations",
+      "gate-reports",
+      "access-issues",
+      "emergency-coordination"
+    ],
+    "📊 FINANCE & ADMINISTRATION": [
+      "payroll-support",
+      "procurement",
+      "invoices",
+      "company-budget",
+      "department-requests"
+    ],
+    "🔒 EXECUTIVE OFFICE": [
+      "executive-office",
+      "management-discussions",
+      "department-reports",
+      "company-strategy",
+      "executive-decisions"
+    ],
+    "🔒 HR STAFF": [
+      "hr-staff-chat",
+      "applications-review",
+      "employee-records",
+      "hr-reports"
+    ],
+    "🔒 DISPATCH & WAREHOUSE LEADERSHIP": [
+      "dispatch-staff-chat",
+      "dispatch-logs",
+      "warehouse-leadership",
+      "shift-reports"
+    ],
+    "🔒 SAFETY & FINANCE STAFF": [
+      "safety-leadership",
+      "incident-review",
+      "finance-staff",
+      "payroll-records"
+    ],
+    "💬 COMPANY COMMUNITY": [
+      "general-chat",
+      "company-media",
+      "suggestions"
+    ],
+    "🔊 COMPANY VOICE": [
+      "company-operations",
+      "dispatch-voice",
+      "warehouse-operations-voice",
+      "management-meetings",
+      "afk"
+    ]
   },
-  "managementRoles": ["Owner","President","Chief Executive Officer","Chief Operating Officer","Chief Financial Officer","Executive Director","HR Director","Transportation Director","Fleet Director","Dispatch Director","Warehouse Director","Carrier Services Director","Safety & Compliance Director","Security Director","Finance Director","IT & Facilities Director","Department Manager","Shift Manager","Supervisor"]
+  "managementRoles": [
+    "Owner",
+    "President",
+    "Chief Executive Officer",
+    "Chief Operating Officer",
+    "Chief Financial Officer",
+    "Executive Director",
+    "HR Director",
+    "Transportation Director",
+    "Fleet Director",
+    "Dispatch Director",
+    "Warehouse Director",
+    "Carrier Services Director",
+    "Safety & Compliance Director",
+    "Security Director",
+    "Finance Director",
+    "IT & Facilities Director",
+    "Department Manager",
+    "Shift Manager",
+    "Supervisor",
+    "HR Manager",
+    "Transportation Manager",
+    "Dispatch Supervisor",
+    "Warehouse Manager",
+    "Security Supervisor",
+    "IT Manager",
+    "Facilities Manager"
+  ]
 }

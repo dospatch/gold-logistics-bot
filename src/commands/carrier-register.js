@@ -5,8 +5,8 @@ const data=new SlashCommandBuilder().setName("carrier-register").setDescription(
 .addStringOption(o=>o.setName("company").setDescription("Carrier legal or operating name").setRequired(true).setMaxLength(100))
 .addStringOption(o=>o.setName("equipment").setDescription("Equipment types operated").setRequired(true).setMaxLength(150))
 .addStringOption(o=>o.setName("service-area").setDescription("States or regions served").setRequired(true).setMaxLength(150))
-.addStringOption(o=>o.setName("dot-mc").setDescription("USDOT or MC identifier, if applicable").setRequired(false).setMaxLength(50))
-.addBooleanOption(o=>o.setName("insurance-ready").setDescription("Can provide current insurance documents when requested?").setRequired(true));
+.addBooleanOption(o=>o.setName("insurance-ready").setDescription("Can provide current insurance documents when requested?").setRequired(true))
+.addStringOption(o=>o.setName("dot-mc").setDescription("USDOT or MC identifier, if applicable").setRequired(false).setMaxLength(50));
 async function execute(i){
  await i.deferReply({ephemeral:true});
  const guild=i.guild,category=guild.channels.cache.find(c=>c.type===ChannelType.GuildCategory&&c.name==="🤝 CARRIER SERVICES");

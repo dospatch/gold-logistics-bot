@@ -4,7 +4,7 @@ export const runtime="nodejs";
 export async function POST(request:NextRequest,context:{params:Promise<{id:string}>}){
  const {session,response}=await requireManager(request);if(!session)return response!;
  try{
-  const {id}=await context.params;if(!/^\\d{17,20}$/.test(id))return NextResponse.json({error:"Invalid application ticket."},{status:400});
+  const {id}=await context.params;if(!/^\d{17,20}$/.test(id))return NextResponse.json({error:"Invalid application ticket."},{status:400});
   const body=await request.json();const decisions=["approve","deny","request-info","hold"];
   if(!decisions.includes(body.decision))return NextResponse.json({error:"Choose a valid staff decision."},{status:400});
   const guildId=process.env.GUILD_ID;
@@ -15,7 +15,7 @@ export async function POST(request:NextRequest,context:{params:Promise<{id:strin
   const messages=await messagesResponse.json();const message=messages.find((m:any)=>["🚛 BC Gold Logistics — Driver Application","🏢 BC Logistics LLC — Employment Application"].includes(m.embeds?.[0]?.title));if(!message?.embeds?.[0])return NextResponse.json({error:"Application details are missing."},{status:422});
   const fields=message.embeds[0].fields||[];const get=(name:string)=>fields.find((f:any)=>f.name===name)?.value||"";
   const applicantId=channel.topic.split("|")[1];const oldStatus=get("Status")||"Pending";
-  if(oldStatus!=="Pending"&&body.decision!=="request-info"&&body.decision!=="hold")return NextResponse.json({error:"This application has already received a final decision."},{status:409});
+  if(!["Pending","On Hold","More Information Requested"].includes(oldStatus)&&body.decision!=="request-info"&&body.decision!=="hold")return NextResponse.json({error:"This application has already received a final decision."},{status:409});
   const statusMap:any={approve:"Approved",deny:"Denied","request-info":"More Information Requested",hold:"On Hold"};
   const status=statusMap[body.decision];const approved=body.decision==="approve";
   const staffNote=String(body.note||"").trim().slice(0,1000);

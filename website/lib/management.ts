@@ -2,7 +2,7 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
-export const MANAGER_ROLES = ["Owner", "Chief Executive Officer", "Operations Manager", "Fleet Manager"];
+export const MANAGER_ROLES = ["Owner","President","Chief Executive Officer","Chief Operating Officer","Chief Financial Officer","Executive Director","HR Director","HR Manager","Transportation Director","Transportation Manager","Fleet Director","Dispatch Director","Dispatch Supervisor","Warehouse Director","Warehouse Manager","Carrier Services Director","Safety & Compliance Director","Security Director","Security Supervisor","Finance Director","IT & Facilities Director","IT Manager","Facilities Manager","Department Manager","Shift Manager","Supervisor"];
 export const COOKIE_NAME = "bcgl_session";
 export type ManagerSession = { userId: string; username: string; roles: string[]; exp: number };
 

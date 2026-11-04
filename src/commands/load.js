@@ -60,7 +60,7 @@ async function execute(i){
  if(notes){const noteField=fields.find(f=>f.name==="Latest status note");if(noteField)noteField.value=notes;else fields.push({name:"Latest status note",value:notes});}
  embed.setFields(fields).setTimestamp();await message.edit({embeds:[embed]});
  const active=channel("active-shipments");if(active)await active.send({embeds:[createEmbed({title:"Load Status Updated",description:"**"+reference+"** — "+status+(notes?"\n"+notes:""),timestamp:true})]});
- if(status==="Delivered"){const done=channel("delivery-confirmations");if(done)await done.send({embeds:[createEmbed({title:"Delivery Confirmation",description:"Load **"+reference+"** marked delivered by <@"+i.user.id+">.",timestamp:true})]};}
+ if(status==="Delivered"){const done=channel("delivery-confirmations");if(done)await done.send({embeds:[createEmbed({title:"Delivery Confirmation",description:"Load **"+reference+"** marked delivered by <@"+i.user.id+">.",timestamp:true})]});}
  return i.editReply("Load **"+reference+"** updated to **"+status+"**.");
 }
 module.exports={data,execute};

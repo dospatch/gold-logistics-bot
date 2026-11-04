@@ -61,7 +61,7 @@ async function saveSettings(guild, channel, settings) {
 const data = new SlashCommandBuilder()
   .setName("company-settings")
   .setDescription("Customize BC Logistics LLC welcome, role, and information destinations.")
-  .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
+  .setDefaultMemberPermissions(null)
   .addSubcommand(sub => sub.setName("set-channel").setDescription("Choose where a company panel or message belongs.")
     .addStringOption(option => option.setName("type").setDescription("Which destination are you setting?").setRequired(true)
       .addChoices(...CHANNEL_TYPES.map(([value,name]) => ({ name, value }))))

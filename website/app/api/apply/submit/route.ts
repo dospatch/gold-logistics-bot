@@ -16,9 +16,9 @@ export async function POST(request:NextRequest) {
   const [channelsResponse,rolesResponse]=await Promise.all([discord("/guilds/"+process.env.GUILD_ID+"/channels"),discord("/guilds/"+process.env.GUILD_ID+"/roles")]);
   if(!channelsResponse.ok||!rolesResponse.ok) throw new Error("The bot cannot read server channels or roles. Check its permissions.");
   const channels=await channelsResponse.json(), roles=await rolesResponse.json();
-  const category=channels.find((c:any)=>c.type===4&&c.name==="📝 RECRUITMENT");
-  if(!category) throw new Error("The 📝 RECRUITMENT category was not found. Run /setup-company.");
-  const staffNames=["Owner","Chief Executive Officer","Operations Manager","Fleet Manager"];
+  const category=channels.find((c:any)=>c.type===4&&c.name==="👥 HUMAN RESOURCES");
+  if(!category) throw new Error("The 👥 HUMAN RESOURCES category was not found. Run /setup-company.");
+  const staffNames=["Owner","President","Chief Executive Officer","Chief Operating Officer","HR Director","HR Manager","Recruiter"];
   const staffRoles=roles.filter((r:any)=>staffNames.includes(r.name));
   const overwrites=[
    {id:process.env.GUILD_ID,type:0,deny:"1024"},

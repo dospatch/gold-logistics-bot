@@ -12,6 +12,7 @@ const commandModules = [
   require("./commands/convoy"),
   require("./commands/delivery"),
   require("./commands/roster"),
+  require("./commands/convoy-cancel"),
 ];
 const commandPayload = commandModules.map(command => command.data.toJSON());
 

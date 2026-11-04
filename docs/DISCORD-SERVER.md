@@ -37,3 +37,38 @@ The setup command will add the following business categories while retaining exi
 - Company fleet remains the primary transportation model.
 - Approved outside carriers are registered freight partners, not automatically employees.
 - Do not publish private employee, customer, shipment, or security information in public channels.
+
+
+## Department permission model
+- Human Resources: HR Director, HR Manager, Recruiter, and authorized leadership; the general Employee role can view employee-facing information but not HR staff records.
+- Transportation & Fleet: transportation/fleet leadership, assigned company drivers, driver trainers, maintenance, and relevant safety roles.
+- Dispatch & Load Planning: dispatch leadership and dispatchers, load planners, transportation management, warehouse leadership, and company drivers who need load information.
+- Distribution Center: warehouse leadership, warehouse associates, forklift operators, receiving/shipping, cold storage, dispatch, and assigned company drivers.
+- Wholesale Customer Services: wholesale account staff and authorized carrier/dispatch management.
+- Carrier Services: carrier relations staff, approved Carrier Partner role, and dispatch management. Individual registration tickets are private to the applicant and carrier reviewers.
+- Safety & Compliance: safety/compliance staff, HR leadership, trainers, and affected operating roles.
+- Facility Security: security staff, security leadership, and facilities leadership.
+- Finance & Administration: finance, payroll, procurement, IT/facilities leadership, and executive management.
+- Executive, HR staff, dispatch/warehouse leadership, and safety/finance staff categories remain restricted.
+- Public company information and community channels remain separate from confidential operational records.
+- The legacy ATS/ETS2 simulator community is retained and is not reconfigured by the business department permission map.
+
+## Hiring workflow
+1. Applicant opens Careers and signs in with Discord.
+2. Applicant selects one of the 12 departments and a position of interest.
+3. A private HR application ticket is created; applicant and HR reviewers can access it.
+4. HR reviews the application in the management portal and may approve, deny, request information, or place it on hold.
+5. Approval grants the general Employee role. HR assigns the specific department/job role after onboarding and verification.
+6. HR records onboarding/training and any later promotions or leave requests in the appropriate restricted channels.
+
+## Wholesale freight workflow
+1. Dispatch creates a load using `/load create` with customer, origin, destination, cargo, equipment, and appointment details.
+2. Dispatch assigns an approved company driver and unit using `/load assign`.
+3. Dispatch updates progress using `/load status`; status notices are copied to active shipments.
+4. Delivered loads are posted to delivery confirmations. Existing ATS/ETS2 telemetry remains a separate simulator workflow.
+
+## Outside carrier workflow
+1. A prospective carrier submits `/carrier-register`; the bot creates a private registration ticket.
+2. Carrier Services verifies company identity, operating authority, equipment, service area, and insurance documents through an approved secure process.
+3. An authorized reviewer uses `/carrier-review` to approve or decline.
+4. Approval grants only the separate `Carrier Partner` role. It does not make the carrier an employee or grant access to internal fleet, payroll, or HR records.

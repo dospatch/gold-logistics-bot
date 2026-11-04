@@ -1,220 +1,45 @@
 {
-  "company": "BC Gold Logistics",
-  "tagline": "Driven by Excellence. Delivered with Pride.",
-  "operatingModel": "Multiplayer-only ATS/ETS2 virtual transportation company. TruckersMP is not required.",
-  "games": [
-    "American Truck Simulator",
-    "Euro Truck Simulator 2"
-  ],
-  "fleetModel": "Company-owned virtual fleet managed through company records and driver assignments.",
+  "company": "BC Logistics LLC",
+  "tagline": "Regional Transportation & Distribution",
+  "operatingModel": "Regional transportation, warehousing, and wholesale distribution company.",
+  "scale": {
+    "fleetCapacity": "300+ company trucks",
+    "employeeCapacity": "600+ employees",
+    "distributionCenter": "24/7",
+    "customerBase": "Wholesale / business-to-business only"
+  },
+  "transportationModel": "Company-owned and operated fleet with employed drivers as the primary transportation model.",
+  "outsideCarriers": "Approved outside carriers may register as separate freight partners; they are not automatically employees or company-fleet drivers.",
+  "customerPolicy": "Wholesale and business customers only. No direct-to-consumer retail service positioning.",
   "divisions": [
-    {
-      "name": "BC Gold Freight",
-      "status": "active"
-    },
-    {
-      "name": "BC Gold Heavy Haul",
-      "status": "active"
-    },
-    {
-      "name": "BC Gold Refrigerated",
-      "status": "active"
-    },
-    {
-      "name": "BC Gold Fleet Services",
-      "status": "active"
-    },
-    {
-      "name": "BC Gold Passenger Transport",
-      "status": "future-ready"
-    }
+    "Executive & Corporate Administration",
+    "Transportation & Company Fleet",
+    "Dispatch & Load Planning",
+    "Distribution Center & Warehouse Operations",
+    "Fleet Maintenance & Parts",
+    "Safety, Compliance & Training",
+    "Security & Facility Protection",
+    "Wholesale Customer & Carrier Services",
+    "Freight, Inventory & Claims Management",
+    "Human Resources & Employee Services",
+    "Finance, Payroll & Procurement",
+    "IT, Systems & Facilities"
+  ],
+  "campusFacilities": [
+    "Three-floor corporate headquarters with central atrium and two angled wings",
+    "Regional distribution center with 20 planned loading docks",
+    "300+ truck fleet capacity and trailer staging",
+    "Eight truck maintenance bays",
+    "Truck wash and on-site company diesel fueling",
+    "Parts warehouse and fleet inspection area",
+    "Separate company and carrier check-in and staging",
+    "Inbound and outbound truck scales",
+    "Driver lounge, restrooms, showers, lockers, and training",
+    "Employee and visitor parking",
+    "Automatic security gate, cameras, security booth, and access control",
+    "Generator, utilities, fire protection, refrigeration backup, waste and recycling"
   ],
   "roles": [
-    {
-      "name": "Owner",
-      "color": "#D4AF37"
-    },
-    {
-      "name": "President",
-      "color": "#F1C40F"
-    },
-    {
-      "name": "Chief Executive Officer",
-      "color": "#E5B83B"
-    },
-    {
-      "name": "Chief Operating Officer",
-      "color": "#E67E22"
-    },
-    {
-      "name": "Chief Financial Officer",
-      "color": "#16A085"
-    },
-    {
-      "name": "Executive Director",
-      "color": "#C49A35"
-    },
-    {
-      "name": "HR Director",
-      "color": "#9B59B6"
-    },
-    {
-      "name": "Transportation Director",
-      "color": "#2980B9"
-    },
-    {
-      "name": "Fleet Director",
-      "color": "#3498DB"
-    },
-    {
-      "name": "Dispatch Director",
-      "color": "#1F8A70"
-    },
-    {
-      "name": "Business Development Director",
-      "color": "#8E6E53"
-    },
-    {
-      "name": "Department Manager",
-      "color": "#B8860B"
-    },
-    {
-      "name": "Supervisor",
-      "color": "#A67C52"
-    },
-    {
-      "name": "Senior Driver",
-      "color": "#2ECC71"
-    },
-    {
-      "name": "Driver Trainer",
-      "color": "#27AE60"
-    },
-    {
-      "name": "Company Driver",
-      "color": "#1ABC9C"
-    },
-    {
-      "name": "Probationary Driver",
-      "color": "#95A5A6"
-    },
-    {
-      "name": "Applicant",
-      "color": "#7F8C8D"
-    },
-    {
-      "name": "LOA",
-      "color": "#5865F2"
-    },
-    {
-      "name": "Guest",
-      "color": "#777777"
-    }
-  ],
-  "categories": {
-    "🏢 CORPORATE HEADQUARTERS": [
-      "welcome",
-      "company-announcements",
-      "company-information",
-      "company-handbook",
-      "company-rules",
-      "company-updates"
-    ],
-    "👥 HUMAN RESOURCES": [
-      "employment-applications",
-      "application-status",
-      "employee-directory",
-      "employee-support",
-      "loa-requests",
-      "resignation-requests",
-      "promotions"
-    ],
-    "📋 DISPATCH OPERATIONS": [
-      "driver-check-in",
-      "company-load-board",
-      "load-assignments",
-      "active-deliveries",
-      "delivery-confirmations",
-      "dispatch-reports",
-      "delivery-logs",
-      "mileage-reports"
-    ],
-    "🚛 BC GOLD FREIGHT": [
-      "freight-announcements",
-      "freight-dispatch",
-      "freight-drivers",
-      "ats-drivers",
-      "ets2-drivers"
-    ],
-    "🏗️ BC GOLD HEAVY HAUL": [
-      "heavy-haul-announcements",
-      "heavy-haul-dispatch",
-      "heavy-haul-drivers"
-    ],
-    "❄️ BC GOLD REFRIGERATED": [
-      "reefer-announcements",
-      "reefer-dispatch",
-      "reefer-drivers"
-    ],
-    "🚌 BC GOLD PASSENGER TRANSPORT": [
-      "passenger-division",
-      "bus-fleet",
-      "route-development"
-    ],
-    "🛠️ FLEET MANAGEMENT": [
-      "company-fleet",
-      "vehicle-assignments",
-      "fleet-inspections",
-      "maintenance-reports",
-      "fleet-purchases"
-    ],
-    "📊 FINANCE & ADMINISTRATION": [
-      "virtual-financial-ledger",
-      "company-budget",
-      "department-requests"
-    ],
-    "🔒 EXECUTIVE OFFICE": [
-      "executive-office",
-      "management-discussions",
-      "department-reports",
-      "company-strategy",
-      "executive-decisions"
-    ],
-    "🔒 HUMAN RESOURCES STAFF": [
-      "hr-staff-chat",
-      "applications-review",
-      "employee-records",
-      "hr-reports"
-    ],
-    "🔒 DISPATCH STAFF": [
-      "dispatch-staff-chat",
-      "dispatch-logs",
-      "dispatch-planning"
-    ],
-    "💬 COMPANY COMMUNITY": [
-      "general-chat",
-      "truck-showcase",
-      "company-media",
-      "suggestions"
-    ],
-    "🔊 COMPANY VOICE": [
-      "company-operations",
-      "ats-company-session",
-      "ets2-company-session",
-      "freight-dispatch-voice",
-      "heavy-haul-operations",
-      "refrigerated-operations",
-      "passenger-operations",
-      "management-meetings",
-      "afk"
-    ],
-    "🎮 COMPANY MULTIPLAYER SESSIONS": [
-      "company-session-announcements",
-      "company-session-schedule",
-      "company-session-media"
-    ]
-  },
-  "managementRoles": [
     "Owner",
     "President",
     "Chief Executive Officer",
@@ -225,8 +50,44 @@
     "Transportation Director",
     "Fleet Director",
     "Dispatch Director",
-    "Business Development Director",
+    "Warehouse Director",
+    "Carrier Services Director",
+    "Safety & Compliance Director",
+    "Security Director",
+    "Finance Director",
+    "IT & Facilities Director",
     "Department Manager",
-    "Supervisor"
-  ]
+    "Shift Manager",
+    "Supervisor",
+    "Dispatcher",
+    "Company Driver",
+    "Warehouse Associate",
+    "Forklift Operator",
+    "Diesel Technician",
+    "Safety Officer",
+    "Security Officer",
+    "Carrier Partner",
+    "Applicant",
+    "Employee",
+    "Guest"
+  ],
+  "categories": {
+    "🏢 CORPORATE HEADQUARTERS": ["welcome","company-announcements","company-information","company-handbook","company-rules","company-updates"],
+    "👥 HUMAN RESOURCES": ["employment-applications","employee-directory","employee-support","onboarding","training","loa-requests","promotions"],
+    "🚛 TRANSPORTATION & FLEET": ["driver-check-in","company-fleet","vehicle-assignments","fleet-inspections","maintenance-reports","fuel-reports"],
+    "📋 DISPATCH & LOAD PLANNING": ["wholesale-load-board","load-assignments","active-shipments","delivery-confirmations","dispatch-reports","appointment-schedule"],
+    "🏭 DISTRIBUTION CENTER": ["warehouse-operations","inbound-receiving","outbound-shipping","dock-schedule","inventory-control","cross-dock","cold-storage"],
+    "🏢 WHOLESALE CUSTOMER SERVICES": ["wholesale-accounts","customer-support","shipment-inquiries","freight-claims"],
+    "🤝 CARRIER SERVICES": ["carrier-registration","carrier-check-in","carrier-appointments","carrier-staging","carrier-notices"],
+    "🦺 SAFETY & COMPLIANCE": ["safety-reports","incident-reports","compliance-updates","training-records"],
+    "🔐 FACILITY SECURITY": ["security-operations","gate-reports","access-issues","emergency-coordination"],
+    "📊 FINANCE & ADMINISTRATION": ["payroll-support","procurement","invoices","company-budget","department-requests"],
+    "🔒 EXECUTIVE OFFICE": ["executive-office","management-discussions","department-reports","company-strategy","executive-decisions"],
+    "🔒 HR STAFF": ["hr-staff-chat","applications-review","employee-records","hr-reports"],
+    "🔒 DISPATCH & WAREHOUSE LEADERSHIP": ["dispatch-staff-chat","dispatch-logs","warehouse-leadership","shift-reports"],
+    "🔒 SAFETY & FINANCE STAFF": ["safety-leadership","incident-review","finance-staff","payroll-records"],
+    "💬 COMPANY COMMUNITY": ["general-chat","company-media","suggestions"],
+    "🔊 COMPANY VOICE": ["company-operations","dispatch-voice","warehouse-operations-voice","management-meetings","afk"]
+  },
+  "managementRoles": ["Owner","President","Chief Executive Officer","Chief Operating Officer","Chief Financial Officer","Executive Director","HR Director","Transportation Director","Fleet Director","Dispatch Director","Warehouse Director","Carrier Services Director","Safety & Compliance Director","Security Director","Finance Director","IT & Facilities Director","Department Manager","Shift Manager","Supervisor"]
 }

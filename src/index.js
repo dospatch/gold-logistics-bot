@@ -6,6 +6,7 @@ const crypto = require("node:crypto");
 const { Client, GatewayIntentBits, Collection, Events, REST, Routes, EmbedBuilder } = require("discord.js");
 
 const applyCommand = require("./commands/apply");
+const companySettingsCommand = require("./commands/company-settings");
 const commandModules = [
   require("./commands/setup-company"),
   applyCommand,
@@ -16,6 +17,7 @@ const commandModules = [
   require("./commands/load"),
   require("./commands/carrier-register"),
   require("./commands/carrier-review"),
+  companySettingsCommand,
 ];
 const commandPayload = commandModules.map(command => command.data.toJSON());
 
@@ -29,6 +31,8 @@ const sessions = new Map();
 const oauthStates = new Map();
 const MANAGER_ROLES = ["Owner","President","Chief Executive Officer","Chief Operating Officer","Chief Financial Officer","Executive Director","HR Director","HR Manager","Transportation Director","Transportation Manager","Fleet Director","Dispatch Director","Dispatch Supervisor","Warehouse Director","Warehouse Manager","Carrier Services Director","Safety & Compliance Director","Security Director","Security Supervisor","Finance Director","IT & Facilities Director","IT Manager","Facilities Manager","Department Manager","Shift Manager","Supervisor"];
 const BASE_URL = (process.env.WEB_BASE_URL || "https://bc-gold-logistics-bot.onrender.com").replace(/\/$/, "");
+
+client.on(Events.GuildMemberAdd, member => companySettingsCommand.handleMemberJoin(member));
 
 client.once(Events.ClientReady, readyClient => {
   console.log("BC Gold Logistics Bot online as " + readyClient.user.tag);

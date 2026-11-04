@@ -28,7 +28,7 @@ async function execute(interaction) {
     }
 
     const messageId = interaction.options.getString("message_id", true).trim();
-    if (!/^\\d{17,20}$/.test(messageId)) {
+    if (!/^\d{17,20}$/.test(messageId)) {
       return interaction.editReply({ content: "That message ID does not look valid. Copy the ID of the convoy announcement and try again." });
     }
 

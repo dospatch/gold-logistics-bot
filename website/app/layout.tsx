@@ -3,11 +3,10 @@ import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: { default: "BC Gold Logistics | Driven by Excellence", template: "%s | BC Gold Logistics" },
-  description: "A professional American Truck Simulator and Euro Truck Simulator 2 virtual trucking company. Driven by Excellence. United by the Road.",
-  applicationName: "BC Gold Logistics",
-  icons: { icon: "/bc-gold-logistics-logo.svg", shortcut: "/bc-gold-logistics-logo.svg", apple: "/bc-gold-logistics-logo.svg" },
-  openGraph: { title: "BC Gold Logistics", description: "Driven by Excellence. United by the Road.", type: "website", images: ["/bc-gold-logistics-logo.svg"] },
+  title: { default: "BC Logistics LLC | Regional Transportation & Distribution", template: "%s | BC Logistics LLC" },
+  description: "BC Logistics LLC is a regional transportation and wholesale distribution company planned around a 300+ truck company fleet, 600+ employee capacity, and 24/7 distribution center operations.",
+  applicationName: "BC Logistics LLC",
+  openGraph: { title: "BC Logistics LLC", description: "Regional Transportation & Distribution. Wholesale freight operations, 24/7.", type: "website" },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

@@ -18,6 +18,7 @@ const commandModules = [
   require("./commands/carrier-register"),
   require("./commands/carrier-review"),
   companySettingsCommand,
+  require("./commands/company-embed"),
 ];
 const commandPayload = commandModules.map(command => command.data.toJSON());
 

@@ -19,7 +19,7 @@ for (const key of ["DISCORD_TOKEN", "CLIENT_ID", "GUILD_ID"]) {
   if (!process.env[key]) throw new Error("Missing " + key + " environment variable.");
 }
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers] });
 client.commands = new Collection(commandModules.map(command => [command.data.name, command]));
 const sessions = new Map();
 const oauthStates = new Map();

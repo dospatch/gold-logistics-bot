@@ -8,7 +8,7 @@ export async function GET(request:NextRequest){
   const list=await discordApi("/guilds/"+guildId+"/channels");
   if(!list.ok)return NextResponse.json({error:"Discord could not load recruitment tickets."},{status:502});
   const channels=await list.json();
-  const category=channels.find((c:any)=>c.type===4&&c.name==="📝 RECRUITMENT");
+  const category=channels.find((c:any)=>c.type===4&&c.name==="👥 HUMAN RESOURCES");
   if(!category)return NextResponse.json({applications:[]});
   const tickets=channels.filter((c:any)=>c.parent_id===category.id&&String(c.topic||"").startsWith("BCGL_APP|"));
   const applications=[];

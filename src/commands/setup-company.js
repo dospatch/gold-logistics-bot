@@ -16,11 +16,11 @@ const layout = {
  "🤝 CARRIER SERVICES":["carrier-registration","carrier-check-in","carrier-appointments","carrier-staging","carrier-notices"],
  "🦺 SAFETY & COMPLIANCE":["safety-reports","incident-reports","compliance-updates","training-records"],
  "🔐 FACILITY SECURITY":["security-operations","gate-reports","access-issues","emergency-coordination"],
- "📊 FINANCE & ADMINISTRATION":["payroll-support","procurement","invoices","company-budget","department-requests"],
+ "📊 FINANCE & ADMINISTRATION":["procurement","department-requests"],
  "🔒 EXECUTIVE OFFICE":["executive-office","management-discussions","department-reports","company-strategy","executive-decisions"],
  "🔒 HR STAFF":["hr-staff-chat","applications-review","employee-records","hr-reports"],
  "🔒 DISPATCH & WAREHOUSE LEADERSHIP":["dispatch-staff-chat","dispatch-logs","warehouse-leadership","shift-reports"],
- "🔒 SAFETY & FINANCE STAFF":["safety-leadership","incident-review","finance-staff","payroll-records"],
+ "🔒 SAFETY & FINANCE STAFF":["safety-leadership","incident-review","finance-staff","payroll-records","payroll-support","invoices","company-budget"],
  "💬 COMPANY COMMUNITY":["general-chat","company-media","suggestions"],
  "🔊 COMPANY VOICE":["company-operations","dispatch-voice","warehouse-operations-voice","management-meetings","afk"],
  // Retain the former virtual trucking channels; do not delete or rename their history.

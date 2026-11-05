@@ -17,8 +17,22 @@ const CHANNEL_TYPES = [
   ["careers", "Careers and applications"],
   ["freight", "Wholesale freight information"],
   ["carriers", "Outside carrier registration"],
-  ["support", "Customer support"]
+  ["support", "Customer support"],
+  ["load-board", "Wholesale load board"],
+  ["dispatch-log", "Dispatch reports"],
+  ["active-shipments", "Active shipments"],
+  ["employee-support", "Employee support"],
+  ["applications-review", "Private application reviews"],
+  ["carrier-appointments", "Carrier appointments"]
 ];
+const DEFAULT_CHANNELS = {
+  welcome: "welcome", rules: "company-rules", handbook: "company-handbook",
+  announcements: "company-announcements", careers: "employment-applications",
+  freight: "freight-announcements", carriers: "carrier-registration", support: "customer-support",
+  "load-board": "wholesale-load-board", "dispatch-log": "dispatch-reports",
+  "active-shipments": "active-shipments", "employee-support": "employee-support",
+  "applications-review": "applications-review", "carrier-appointments": "carrier-appointments"
+};
 
 function isManager(member) {
   return member?.roles?.cache?.some(role => MANAGERS.has(role.name));
@@ -72,6 +86,7 @@ const data = new SlashCommandBuilder()
   .addSubcommand(sub => sub.setName("set-auto-role").setDescription("Choose the role new members receive automatically.")
     .addRoleOption(option => option.setName("role").setDescription("Starter role for new members").setRequired(true)))
   .addSubcommand(sub => sub.setName("clear-auto-role").setDescription("Stop automatically assigning a role to new members."))
+  .addSubcommand(sub => sub.setName("configure-defaults").setDescription("Map company features to the existing server channels without changing channels or permissions."))
   .addSubcommand(sub => sub.setName("show").setDescription("View the current company automation destinations."))
   .addSubcommand(sub => sub.setName("audit").setDescription("Create a read-only report of current roles, categories, channels, and access overrides."));
 
@@ -87,7 +102,11 @@ async function execute(interaction) {
     const categories = guild.channels.cache.filter(channel => channel.type === ChannelType.GuildCategory).sort((a,b) => a.position-b.position);
     const channelLines = [];
     for (const category of categories.values()) {
-      channelLines.push(`\n[${category.name}] | ID ${category.id}`);
+      const categoryOverwrites = category.permissionOverwrites.cache.map(overwrite => {
+        const target = overwrite.type === 0 ? guild.roles.cache.get(overwrite.id)?.name || `Role ${overwrite.id}` : guild.members.cache.get(overwrite.id)?.user?.tag || `Member ${overwrite.id}`;
+        return `${target}: allow=${overwrite.allow.toArray().join(",") || "none"}; deny=${overwrite.deny.toArray().join(",") || "none"}`;
+      });
+      channelLines.push(`\n[${category.name}] | ID ${category.id} | overrides: ${categoryOverwrites.join(" || ") || "none"}`);
       const children = guild.channels.cache.filter(channel => channel.parentId === category.id).sort((a,b) => a.position-b.position);
       for (const channel of children.values()) {
         const overwrites = channel.permissionOverwrites.cache.map(overwrite => {
@@ -117,6 +136,19 @@ async function execute(interaction) {
     return interaction.reply({ content: "I couldn't access the private #management-discussions channel. Please make sure it exists and that the bot can view and send messages there.", ephemeral: true });
   }
   const action = interaction.options.getSubcommand();
+  if (action === "configure-defaults") {
+    const mapped = [];
+    const missing = [];
+    settings.channels = { ...(settings.channels || {}) };
+    for (const [key, channelName] of Object.entries(DEFAULT_CHANNELS)) {
+      const channel = interaction.guild.channels.cache.find(item => item.name === channelName && item.type === ChannelType.GuildText);
+      if (!channel) { missing.push("#" + channelName); continue; }
+      if (!settings.channels[key]) settings.channels[key] = channel.id;
+      mapped.push("**" + key + ":** <#" + settings.channels[key] + ">");
+    }
+    await saveSettings(interaction.guild, storage, settings);
+    return interaction.reply({ content: "Existing channel destinations have been mapped. Existing custom choices were preserved.\n" + mapped.join("\n") + (missing.length ? "\n\nNot found: " + missing.join(", ") : ""), ephemeral: true });
+  }
   if (action === "show") {
     const lines = CHANNEL_TYPES.map(([key,label]) => {
       const id = settings.channels?.[key];

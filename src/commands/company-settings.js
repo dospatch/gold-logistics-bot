@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, ChannelType, PermissionFlagsBits, EmbedBuilder } = require("discord.js");
+const { SlashCommandBuilder, ChannelType, PermissionFlagsBits, EmbedBuilder, AttachmentBuilder } = require("discord.js");
 
 const MARKER = "BCGL_COMPANY_SETTINGS_V1";
 const MANAGERS = new Set([
@@ -72,11 +72,45 @@ const data = new SlashCommandBuilder()
   .addSubcommand(sub => sub.setName("set-auto-role").setDescription("Choose the role new members receive automatically.")
     .addRoleOption(option => option.setName("role").setDescription("Starter role for new members").setRequired(true)))
   .addSubcommand(sub => sub.setName("clear-auto-role").setDescription("Stop automatically assigning a role to new members."))
-  .addSubcommand(sub => sub.setName("show").setDescription("View the current company automation destinations."));
+  .addSubcommand(sub => sub.setName("show").setDescription("View the current company automation destinations."))
+  .addSubcommand(sub => sub.setName("audit").setDescription("Create a read-only report of current roles, categories, channels, and access overrides."));
 
 async function execute(interaction) {
   if (!interaction.guild || !isManager(interaction.member)) {
     return interaction.reply({ content: "Only authorized BC Logistics LLC management can change company settings.", ephemeral: true });
+  }
+  if (interaction.options.getSubcommand() === "audit") {
+    await interaction.deferReply({ ephemeral: true });
+    const guild = interaction.guild;
+    await Promise.all([guild.roles.fetch(), guild.channels.fetch()]);
+    const roleLines = guild.roles.cache.sort((a,b) => b.position-a.position).map(role => `${role.name} | ID ${role.id} | position ${role.position} | managed ${role.managed}`);
+    const categories = guild.channels.cache.filter(channel => channel.type === ChannelType.GuildCategory).sort((a,b) => a.position-b.position);
+    const channelLines = [];
+    for (const category of categories.values()) {
+      channelLines.push(`\n[${category.name}] | ID ${category.id}`);
+      const children = guild.channels.cache.filter(channel => channel.parentId === category.id).sort((a,b) => a.position-b.position);
+      for (const channel of children.values()) {
+        const overwrites = channel.permissionOverwrites.cache.map(overwrite => {
+          const target = overwrite.type === 0 ? guild.roles.cache.get(overwrite.id)?.name || `Role ${overwrite.id}` : guild.members.cache.get(overwrite.id)?.user?.tag || `Member ${overwrite.id}`;
+          return `${target}: allow=${overwrite.allow.toArray().join(",") || "none"}; deny=${overwrite.deny.toArray().join(",") || "none"}`;
+        });
+        channelLines.push(`  #${channel.name} | ${channel.type} | ID ${channel.id} | synced ${channel.permissionsLocked === true} | overrides: ${overwrites.join(" || ") || "none"}`);
+      }
+    }
+    const uncategorized = guild.channels.cache.filter(channel => !channel.parentId && channel.type !== ChannelType.GuildCategory);
+    if (uncategorized.size) {
+      channelLines.push("\n[UNCATEGORIZED]");
+      for (const channel of uncategorized.values()) channelLines.push(`  ${channel.name} | ${channel.type} | ID ${channel.id}`);
+    }
+    const report = [
+      "BC LOGISTICS LLC — READ-ONLY SERVER AUDIT",
+      `Guild: ${guild.name} (${guild.id})`,
+      `Generated: ${new Date().toISOString()}`,
+      `Roles: ${guild.roles.cache.size} | Categories: ${categories.size} | Channels: ${guild.channels.cache.filter(channel => channel.type !== ChannelType.GuildCategory).size}`,
+      "\nROLES", ...roleLines, "\nCHANNELS AND PERMISSION OVERRIDES", ...channelLines
+    ].join("\n");
+    const file = new AttachmentBuilder(Buffer.from(report, "utf8"), { name: "bc-logistics-server-audit.txt" });
+    return interaction.editReply({ content: "Read-only audit generated. No roles, channels, permissions, or messages were changed.", files: [file] });
   }
   const { channel: storage, settings } = await readSettings(interaction.guild);
   if (!storage) {

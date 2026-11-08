@@ -5,7 +5,8 @@ const data=new SlashCommandBuilder().setName("delivery").setDescription("Log a c
 .addStringOption(o=>o.setName("game").setDescription("Game").setRequired(true).addChoices({name:"ATS",value:"ATS"},{name:"ETS2",value:"ETS2"}))
 .addStringOption(o=>o.setName("cargo").setDescription("Cargo").setRequired(true))
 .addStringOption(o=>o.setName("route").setDescription("Origin to destination").setRequired(true))
-.addIntegerOption(o=>o.setName("distance").setDescription("Distance number").setRequired(true).setMinValue(1))\n.addStringOption(o=>o.setName("unit").setDescription("Distance unit").setRequired(true).addChoices({name:"Miles",value:"mi"},{name:"Kilometers",value:"km"}));
+.addIntegerOption(o=>o.setName("distance").setDescription("Distance number").setRequired(true).setMinValue(1))
+.addStringOption(o=>o.setName("unit").setDescription("Distance unit").setRequired(true).addChoices({name:"Miles",value:"mi"},{name:"Kilometers",value:"km"}));
 async function execute(i){
  const authorized=i.memberPermissions.has("Administrator")||i.member.roles.cache.some(role=>AUTHORIZED_ROLES.has(role.name));
  if(!authorized)return i.reply({content:"Only approved company drivers and management can log deliveries.",ephemeral:true});

@@ -132,3 +132,36 @@
 .driver-load-equipment span{font-size:9px;letter-spacing:1px;color:#d8b64f}
 .driver-load-equipment b{display:block;color:#eee;font-size:12px;margin-top:5px;letter-spacing:0}
 @media(max-width:700px){.driver-load-list{grid-template-columns:1fr}}
+
+
+/* BC Gold Logistics global navigation */
+.company-sidebar{position:fixed;z-index:80;inset:0 auto 0 0;width:252px;display:flex;flex-direction:column;padding:25px 17px 18px;background:linear-gradient(180deg,#111317 0%,#090a0c 100%);border-right:1px solid #302919;color:#f5f3ec}
+.sidebar-brand{display:flex;align-items:center;gap:12px;padding:2px 9px 22px;border-bottom:1px solid #292a2d;letter-spacing:1px}
+.sidebar-crest{height:43px;width:43px;display:grid;place-items:center;border:1px solid var(--gold);color:var(--gold2);font:800 17px Manrope;clip-path:polygon(0 0,100% 0,100% 78%,50% 100%,0 78%)}
+.sidebar-brand b{display:block;font:800 13px Manrope;letter-spacing:2px}
+.sidebar-brand small{display:block;color:var(--gold);font-size:9px;letter-spacing:4px;margin-top:3px}
+.sidebar-status{display:flex;align-items:center;gap:7px;padding:17px 8px 12px;color:#d6c58f;font-size:9px;font-weight:800;letter-spacing:1.3px}
+.sidebar-status i{width:6px;height:6px;background:#80a66b;border-radius:50%}
+.sidebar-status span{margin-left:auto;color:#777a7d;font-size:8px}
+.company-sidebar nav{overflow-y:auto;flex:1;padding:4px 0}
+.sidebar-group{margin:14px 0 20px}
+.sidebar-group h2{padding:0 10px;margin:0 0 8px;color:#777a7d;font-size:9px;letter-spacing:1.7px;font-weight:800}
+.sidebar-link{position:relative;display:flex;align-items:center;gap:12px;min-height:42px;padding:0 11px;margin:3px 0;border:1px solid transparent;border-radius:3px;color:#b9bab8;font-size:12px;font-weight:600;transition:background .15s,border-color .15s,color .15s}
+.sidebar-link:hover{background:#1a1b1d;color:#f5f3ec}
+.sidebar-link.active{background:linear-gradient(90deg,#3a3018,#1a1914);border-color:#5c4b24;color:#f2d77d}
+.sidebar-icon{width:18px;text-align:center;color:var(--gold);font-size:16px}
+.sidebar-active-mark{position:absolute;left:-1px;top:8px;bottom:8px;width:2px;background:var(--gold2)}
+.sidebar-bottom{border-top:1px solid #292a2d;padding:17px 9px 0;display:flex;flex-direction:column;gap:7px}
+.sidebar-bottom span{color:var(--gold);font-size:9px;letter-spacing:1.6px;font-weight:800}
+.sidebar-bottom small{color:#777a7d;font-size:8px;letter-spacing:1px}
+.site-with-sidebar{min-height:100vh;margin-left:252px}
+.sidebar-mobile-toggle,.sidebar-scrim{display:none}
+@media(max-width:900px){
+ .company-sidebar{width:270px;transform:translateX(-102%);transition:transform .22s ease;box-shadow:15px 0 40px #0008}
+ .company-sidebar.is-open{transform:translateX(0)}
+ .site-with-sidebar{margin-left:0;padding-top:54px}
+ .sidebar-mobile-toggle{display:flex;position:fixed;z-index:95;top:10px;left:12px;align-items:center;gap:9px;background:#17181b;border:1px solid #5b4a20;color:var(--gold2);padding:9px 13px;border-radius:3px;font-size:17px}
+ .sidebar-mobile-toggle span{font-size:9px;font-weight:800;letter-spacing:1.5px}
+ .sidebar-scrim{display:block;position:fixed;z-index:79;inset:0;background:#0009;border:0}
+}
+@media(min-width:901px){.sidebar-mobile-toggle{display:none}}

@@ -42,6 +42,16 @@ export async function POST(request:NextRequest) {
   ],footer:{text:"Driven by Excellence. United by the Road."},timestamp:new Date().toISOString()};
   const posted=await discord("/channels/"+channel.id+"/messages",{method:"POST",body:JSON.stringify({embeds:[embed]})});
   if(!posted.ok) { await discord("/channels/"+channel.id,{method:"DELETE"}); throw new Error("Ticket was created but the application record could not be posted."); }
-  return NextResponse.json({ok:true,number,channelId:channel.id,channelName:channel.name});
+  let dmSent=false,dmWarning="";
+  try {
+   const dmChannel=await discord("/users/@me/channels",{method:"POST",body:JSON.stringify({recipient_id:applicant.id})});
+   if(dmChannel.ok){
+    const dm=await dmChannel.json();
+    const sent=await discord("/channels/"+dm.id+"/messages",{method:"POST",body:JSON.stringify({embeds:[{title:"🚛 BC Gold Logistics — Application Received",color:0xD4AF37,description:"Your ATS driver application has been received. This DM is your private application progress inbox. We will message you here when recruitment updates your status.",fields:[{name:"Application number",value:"#"+number,inline:true},{name:"Current status",value:"Pending review",inline:true},{name:"What happens next",value:"The recruitment team will review your answers. You may receive a request for more information before a final decision."}],footer:{text:"BC Gold Logistics · Driven by Excellence. United by the Road."},timestamp:new Date().toISOString()}]})});
+    dmSent=sent.ok;
+    if(!sent.ok)dmWarning="Your application was saved, but Discord could not send a DM. Enable direct messages from server members and contact recruitment if you need updates.";
+   } else dmWarning="Your application was saved, but Discord could not open a DM. Enable direct messages from server members and contact recruitment if you need updates.";
+  } catch { dmWarning="Your application was saved, but the private DM could not be delivered. Enable direct messages from server members and contact recruitment if you need updates."; }
+  return NextResponse.json({ok:true,number,channelId:channel.id,channelName:channel.name,dmSent,dmWarning});
  } catch(error) { return NextResponse.json({error:error instanceof Error?error.message:"Application could not be submitted."},{status:500}); }
 }

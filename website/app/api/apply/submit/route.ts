@@ -12,7 +12,7 @@ export async function POST(request:NextRequest) {
  try {
   const body=await request.json();
   const games=String(body.games||"").trim(), experience=String(body.experience||"").trim(), availability=String(body.availability||"").trim(), truck=String(body.truck||"").trim(), about=String(body.about||"").trim();
-  if(!["ATS","ETS2","Both"].includes(games)||!experience||!availability||!truck||!about||[experience,about].some(v=>v.length>1000)) return NextResponse.json({error:"Complete every field. Long answers must be 1,000 characters or fewer."},{status:400});
+  if(games!=="ATS"||!experience||!availability||!truck||!about||truck.length>100||availability.length>150||[experience,about].some(v=>v.length>1000)) return NextResponse.json({error:"Complete every field using the ATS driver application. Text limits are shown on the form."},{status:400});
   const [channelsResponse,rolesResponse]=await Promise.all([discord("/guilds/"+process.env.GUILD_ID+"/channels"),discord("/guilds/"+process.env.GUILD_ID+"/roles")]);
   if(!channelsResponse.ok||!rolesResponse.ok) throw new Error("The bot cannot read server channels or roles. Check its permissions.");
   const channels=await channelsResponse.json(), roles=await rolesResponse.json();
@@ -20,6 +20,7 @@ export async function POST(request:NextRequest) {
   if(!category) throw new Error("The 👥 HUMAN RESOURCES category was not found. Run /setup-company.");
   const staffNames=["Owner","President","Chief Executive Officer","Chief Operating Officer","HR Director","HR Manager","Recruiter"];
   const staffRoles=roles.filter((r:any)=>staffNames.includes(r.name));
+  if(!staffRoles.length) throw new Error("No authorized recruitment roles were found. Create or restore an HR Director, HR Manager, or Recruiter role before accepting applications.");
   const overwrites=[
    {id:process.env.GUILD_ID,type:0,deny:"1024"},
    ...staffRoles.map((r:any)=>({id:r.id,type:0,allow:"68608"})),
@@ -33,9 +34,9 @@ export async function POST(request:NextRequest) {
   const created=await discord("/guilds/"+process.env.GUILD_ID+"/channels",{method:"POST",body:JSON.stringify({name:"application-"+number+"-"+safeName,type:0,parent_id:category.id,topic:"BCGL_APP|"+applicant.id+"|"+number+"|Pending",permission_overwrites:overwrites})});
   if(!created.ok) throw new Error("Could not create the private application ticket ("+created.status+").");
   const channel=await created.json();
-  const embed={title:"🚛 BC Gold Logistics — Driver Application",color:0xD4AF37,description:"Application #"+number+" has been submitted. Staff decisions are made through the company website.",fields:[
+  const embed={title:"🚛 BC Gold Logistics — Driver Application",color:0xD4AF37,description:"ATS Driver Application #"+number+". Management review is required before company driver access is granted.",fields:[
    {name:"Applicant",value:applicant.globalName+" ( @"+applicant.username+" )\nDiscord ID: "+applicant.id},
-   {name:"Game",value:games,inline:true},{name:"Preferred truck",value:truck,inline:true},
+   {name:"Game",value:"American Truck Simulator (ATS)",inline:true},{name:"Preferred truck",value:truck,inline:true},
    {name:"Experience",value:experience},{name:"Availability",value:availability},{name:"Why they want to join",value:about},
    {name:"Status",value:"Pending",inline:true}
   ],footer:{text:"Driven by Excellence. United by the Road."},timestamp:new Date().toISOString()};

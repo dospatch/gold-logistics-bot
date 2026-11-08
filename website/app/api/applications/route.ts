@@ -21,7 +21,7 @@ export async function GET(request:NextRequest){
    const embed=message?.embeds?.[0];if(!embed)continue;
    const fields=embed.fields||[];const get=(name:string)=>fields.find((f:any)=>f.name===name)?.value||"";
    const applicantField=get("Applicant");
-   applications.push({id:channel.id,channelName:channel.name,number:parts[2]||"",applicantId:parts[1]||"",applicant:applicantField.split("\n")[0].replace(/\s*\(\s*@.*$/,""),discordUsername:applicantField.match(/@([^ )]+)/)?.[1]||"",applicationType:message.embeds[0].title.includes("Employment")?"Employment":"Driver",department:get("Department"),position:get("Position"),games:get("Game"),truck:get("Preferred truck"),experience:get("Experience"),availability:get("Availability"),about:get("Why they want to join")||get("Why you want to join BC Logistics LLC"),status:get("Status")||parts[3]||"Pending",createdAt:message.timestamp});
+   applications.push({id:channel.id,channelName:channel.name,number:parts[2]||"",applicantId:parts[1]||"",applicant:applicantField.split("\n")[0].replace(/\s*\(\s*@.*$/,""),discordUsername:applicantField.match(/@([^ )]+)/)?.[1]||"",applicationType:message.embeds[0].title.includes("Employment")?"Employment":"Driver",department:get("Department"),position:get("Position"),games:get("Game"),truck:get("Preferred truck"),experience:get("Experience"),availability:get("Availability"),about:get("Why they want to join")||get("Why you want to join BC Logistics LLC"),status:get("Status")||parts[3]||"Pending",createdAt:message.timestamp,ticketUrl:"https://discord.com/channels/"+guildId+"/"+channel.id});
   }
   applications.sort((a:any,b:any)=>b.createdAt.localeCompare(a.createdAt));
   return NextResponse.json({applications},{headers:{"Cache-Control":"no-store"}});

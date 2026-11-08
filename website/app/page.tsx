@@ -1,33 +1,72 @@
 import Link from "next/link";
 
-const facts = [
-  ["ATS", "American Truck Simulator home base"],
-  ["VTC", "A community trucking company"],
-  ["OPEN", "Driver applications reviewed by management"],
-  ["CONVOYS", "Optional organized multiplayer drives"],
+const operations = [
+  { number: "01", title: "Company Driving", text: "Run American Truck Simulator at your own pace. Build your driving record, represent the company, and take part in shared goals when you are available." },
+  { number: "02", title: "Dispatch & Freight", text: "Company freight activity is organized around routes, cargo, driver assignments, and delivery records. Approved drivers can view their assignments in the driver portal." },
+  { number: "03", title: "Fleet Operations", text: "Company equipment is tracked as a managed fleet, with truck and trailer assignments maintained for operational planning as the fleet grows." },
 ];
-const divisions = [
-  ["Company Drivers", "Join the roster, represent BC Gold Logistics, and take part in company driving activities."],
-  ["Dispatch & Operations", "Coordinate routes, freight runs, driver assignments, and company events."],
-  ["Fleet Management", "Maintain company truck and trailer records, preferred equipment, and fleet standards."],
-  ["Driver Community", "Meet other ATS players, share routes, and take part in organized Convoy sessions."],
+
+const principles = [
+  ["Professionalism", "Represent the company respectfully in-game, on Discord, and during company activities."],
+  ["Flexibility", "Single-player driving is part of the company model. Join multiplayer Convoys when they fit your schedule."],
+  ["Progress", "Build experience through consistent driving, reliable communication, and recorded deliveries."],
 ];
 
 export default function Home() {
-  return <main className="subpage">
-    <div className="section-kicker">AMERICAN TRUCK SIMULATOR · VIRTUAL TRUCKING COMPANY</div>
-    <h1>BC Gold <em>Logistics</em></h1>
-    <p>More than a tag on a truck. BC Gold Logistics is a player-run ATS trucking company built for drivers who want to run their own routes, join a team, and take part in organized company convoys.</p>
-    <div className="value-grid">{facts.map(([value,label])=><article key={label}><span>{value}</span><h3>{label}</h3></article>)}</div>
-    <h2>Drive your way. Run as a team.</h2>
-    <p>Enjoy American Truck Simulator on your own, then connect with the company for shared deliveries, scheduled Convoy sessions, and community events. Multiplayer participation uses the game's Convoy mode; TruckersMP is not required.</p>
-    <div className="value-grid">{divisions.map(([title,body])=><article key={title}><span>BC GOLD LOGISTICS</span><h3>{title}</h3><p>{body}</p></article>)}</div>
-    <div className="career-box">
-      <h2>Ready to join the fleet?</h2>
-      <p>Applications are open to ATS players. Sign in with Discord, tell us a little about your driving experience and availability, and company management will review your application. Approval is required before joining the official driver roster.</p>
-      <Link className="btn gold" href="/apply">Apply to become a driver ↗</Link>
-    </div>
-    <h2>Company resources</h2>
-    <p><Link className="back" href="/convoys">Convoys & events →</Link>　<Link className="back" href="/standards">Driver standards →</Link>　<Link className="back" href="/driver">Driver portal →</Link></p>
+  return <main>
+    <div className="announcement"><span className="live-dot" /> AMERICAN TRUCK SIMULATOR <i /> COMPANY DRIVING <i /> OPTIONAL CONVOY MULTIPLAYER</div>
+    <header className="wrap nav">
+      <Link href="/" className="brand"><span className="crest">BC</span><span><b>BC GOLD LOGISTICS</b><small>DRIVE WITH PURPOSE</small></span></Link>
+      <nav aria-label="Main navigation">
+        <a href="#company">COMPANY</a><a href="#operations">OPERATIONS</a><a href="#standards">OUR STANDARD</a>
+        <Link href="/convoys">CONVOYS</Link><Link href="/driver">DRIVER PORTAL</Link>
+      </nav>
+      <Link className="nav-cta" href="/apply">JOIN THE FLEET <span>↗</span></Link>
+    </header>
+
+    <section className="hero">
+      <div className="hero-grid" />
+      <div className="wrap hero-content">
+        <div className="eyebrow"><span /> BUILT FOR THE LONG HAUL</div>
+        <h1>Every mile has<br />a <em>purpose.</em></h1>
+        <p>BC Gold Logistics is an American Truck Simulator company built around independent drivers, organized freight operations, and a community that moves forward together.</p>
+        <div className="hero-actions"><Link className="btn gold" href="/apply">APPLY TO THE COMPANY <span>↗</span></Link><Link className="btn outline" href="/convoys">EXPLORE CONVOYS</Link></div>
+        <div className="hero-meta"><span>AMERICAN TRUCK SIMULATOR</span><b /> <span>SINGLE-PLAYER + VTC</span><b /> <span>DRIVER APPLICATIONS OPEN</span></div>
+      </div>
+      <div className="hero-stamp"><span>BC</span><small>GOLD<br/>LOGISTICS</small></div>
+    </section>
+
+    <div className="ticker">INDEPENDENT DRIVERS <b>✦</b> SHARED MILES <b>✦</b> PROFESSIONAL OPERATIONS <b>✦</b> ONE COMPANY</div>
+
+    <section className="section wrap" id="company">
+      <div className="intro-grid">
+        <div><div className="section-kicker">WHO WE ARE</div><h2>One company.<br/><em>Many roads.</em></h2></div>
+        <div><p className="lead">A real company experience for the virtual road.</p><p className="muted">BC Gold Logistics is designed to work as both your personal ATS company identity and a virtual trucking company for drivers who want to participate together. You can haul solo, build your experience, and connect with the team when you want more than a solo run.</p><Link className="text-link" href="/standards">READ OUR DRIVER STANDARDS <span>↗</span></Link></div>
+      </div>
+    </section>
+
+    <section className="section services" id="operations">
+      <div className="wrap">
+        <div className="section-head"><div><div className="section-kicker">HOW WE OPERATE</div><h2>Built around the<br/><em>work that moves us.</em></h2></div><p>From a solo delivery to a coordinated company run, every driver has a place in the operation.</p></div>
+        <div className="service-grid">{operations.map(item=><article className="service-card" key={item.number}><span>OPERATION {item.number}</span><div className="service-icon">✦</div><h3>{item.title}</h3><p>{item.text}</p><div className="card-line" /></article>)}</div>
+      </div>
+    </section>
+
+    <section className="fleet">
+      <div className="fleet-image" role="img" aria-label="A highway freight truck on the open road" />
+      <div className="fleet-copy"><div className="section-kicker">THE BC GOLD FLEET</div><h2>Equipment with<br/><em>a purpose.</em></h2><p>We treat fleet operations as a company responsibility. Trucks, trailers, and driver assignments are organized to support dependable freight activity and future growth. Our fleet records will expand as company equipment is added.</p><Link className="text-link" href="/driver">OPEN THE DRIVER PORTAL <span>↗</span></Link></div>
+    </section>
+
+    <section className="section wrap values" id="standards">
+      <div className="section-kicker">WHAT DRIVERS CAN EXPECT</div><h2>Good miles start<br/>with <em>good standards.</em></h2>
+      <div className="value-grid">{principles.map(([title,body])=><article key={title}><span>BC GOLD PRINCIPLE</span><h3>{title}</h3><p>{body}</p></article>)}</div>
+      <Link className="text-link" href="/standards">VIEW COMPANY STANDARDS <span>↗</span></Link>
+    </section>
+
+    <section className="careers">
+      <div className="wrap career-inner"><div><div className="section-kicker">RECRUITMENT · DRIVER APPLICATIONS</div><h2>Your next route<br/>could start <em>here.</em></h2><p>Interested in joining BC Gold Logistics? Submit your application through the website. Management reviews applications, and approved drivers receive access to company driver resources.</p></div><div className="career-action"><Link className="btn gold" href="/apply">START YOUR APPLICATION <span>↗</span></Link><small>Discord sign-in required · Management approval required</small></div></div>
+    </section>
+
+    <footer className="footer"><div className="wrap footer-top"><Link href="/" className="brand"><span className="crest">BC</span><span><b>BC GOLD LOGISTICS</b><small>DRIVE WITH PURPOSE</small></span></Link><p>American Truck Simulator · Virtual Trucking Company</p><div className="footer-links"><Link href="/apply">Apply</Link><Link href="/convoys">Convoys</Link><Link href="/standards">Standards</Link><Link href="/driver">Driver Portal</Link></div></div><div className="wrap footer-bottom"><span>© {new Date().getFullYear()} BC GOLD LOGISTICS</span><span>REAL DRIVERS. REAL DELIVERIES. ONE TEAM.</span></div></footer>
   </main>;
 }

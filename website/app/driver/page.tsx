@@ -1,6 +1,7 @@
 "use client";
 import {useEffect,useState} from "react";
-type Delivery={game:string;cargo:string;route:string;distance:string;recordedAt:string};\ntype Load={reference:string;customer:string;origin:string;destination:string;cargo:string;equipment:string;truck:string;trailer:string;status:string};
+type Delivery={game:string;cargo:string;route:string;distance:string;recordedAt:string};
+type Load={reference:string;customer:string;origin:string;destination:string;cargo:string;equipment:string;truck:string;trailer:string;status:string};
 type DriverData={driver:{id:string;name:string;username:string;roles:string[];joinedAt:string|null};stats:{completedDeliveries:number;recordedMiles:number;recordedKilometers:number;unlabeledDistance:number;recentDeliveries:Delivery[]};roster:{id:string;name:string;username:string;roles:string[];deliveries:number}[];leaderboard:{id:string;name:string;username:string;roles:string[];deliveries:number}[];assignedLoads:Load[];recordsAvailable:boolean};
 export default function DriverPortal(){
  const [data,setData]=useState<DriverData|null>(null),[loading,setLoading]=useState(true),[error,setError]=useState(""),[needsLogin,setNeedsLogin]=useState(false);

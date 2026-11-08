@@ -5,7 +5,7 @@ export async function GET(request:NextRequest) {
   const origin=request.nextUrl.origin;
   const state=randomBytes(24).toString("hex");
   const redirectUri=origin+"/api/apply/discord/callback";
-  const returnTo=["/careers/apply","/careers/track"].includes(request.nextUrl.searchParams.get("returnTo")||"")?(request.nextUrl.searchParams.get("returnTo") as string):"/apply";
+  const returnTo=["/careers/apply","/careers/track","/apply/driver"].includes(request.nextUrl.searchParams.get("returnTo")||"")?(request.nextUrl.searchParams.get("returnTo") as string):"/careers/apply";
   const params=new URLSearchParams({client_id:process.env.CLIENT_ID||"",redirect_uri:redirectUri,response_type:"code",scope:"identify guilds.members.read",state});
   const response=NextResponse.redirect("https://discord.com/oauth2/authorize?"+params.toString());
   response.cookies.set("bcgl_apply_state",state,{httpOnly:true,secure:true,sameSite:"lax",path:"/",maxAge:600});

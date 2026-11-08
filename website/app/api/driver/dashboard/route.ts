@@ -1,7 +1,6 @@
 import { NextRequest,NextResponse } from "next/server";
 import { getApplicant } from "@/lib/applicant";
 export const runtime="nodejs";
-const headers={};
 export async function GET(request:NextRequest){
  const user=getApplicant(request);
  if(!user)return NextResponse.json({error:"Sign in with Discord first."},{status:401});
@@ -39,11 +38,10 @@ export async function GET(request:NextRequest){
  }).filter(Boolean);
  const own=completed.filter((x:any)=>x.driverId===user.id);
  const leaderboard=completed.reduce((acc:any,x:any)=>{acc[x.driverId]=(acc[x.driverId]||0)+1;return acc;},{});
- const memberIds=Object.keys(leaderboard).slice(0,100);
  const roster=await fetch("https://discord.com/api/v10/guilds/"+guildId+"/members?limit=1000",{headers:auth,cache:"no-store"});
  const memberList=roster.ok?await roster.json():[];
  const drivers=memberList.filter((m:any)=>(m.roles||[]).some((id:string)=>driverRoles.includes(String(roleById.get(id)||"")))).map((m:any)=>{
   const id=m.user.id;return {id,name:m.nick||m.user.global_name||m.user.username,username:m.user.username,roles:(m.roles||[]).map((r:string)=>roleById.get(r)).filter((r:string)=>driverRoles.includes(r)),deliveries:leaderboard[id]||0};
  }).sort((a:any,b:any)=>b.deliveries-a.deliveries||a.name.localeCompare(b.name));
- return NextResponse.json({driver:{id:user.id,name:member.nick||user.globalName||user.username,username:user.username,roles:roleNames,joinedAt:member.joined_at||null},stats:{completedDeliveries:own.length,recordedDistance:own.reduce((sum:number,x:any)=>sum+x.distanceValue,0),recentDeliveries:own.slice(0,10)},roster:drivers,leaderboard:drivers.slice(0,10),recordsAvailable:!!logChannel},{headers:{"Cache-Control":"no-store"}});
+ return NextResponse.json({driver:{id:user.id,name:member.nick||user.globalName||user.username,username:user.username,roles:roleNames,joinedAt:member.joined_at||null},stats:{completedDeliveries:own.length,recordedMiles:own.filter((x:any)=>x.unit==="mi").reduce((sum:number,x:any)=>sum+x.distanceValue,0),recordedKilometers:own.filter((x:any)=>x.unit==="km").reduce((sum:number,x:any)=>sum+x.distanceValue,0),unlabeledDistance:own.filter((x:any)=>x.unit==="unknown").reduce((sum:number,x:any)=>sum+x.distanceValue,0),recentDeliveries:own.slice(0,10)},roster:drivers,leaderboard:drivers.slice(0,10),recordsAvailable:!!logChannel},{headers:{"Cache-Control":"no-store"}});
 }

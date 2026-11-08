@@ -3,10 +3,10 @@ import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: { default: "BC Logistics LLC | Regional Transportation & Distribution", template: "%s | BC Logistics LLC" },
-  description: "BC Logistics LLC is a regional transportation and wholesale distribution company planned around a 300+ truck company fleet, 600+ employee capacity, and 24/7 distribution center operations.",
-  applicationName: "BC Logistics LLC",
-  openGraph: { title: "BC Logistics LLC", description: "Regional Transportation & Distribution. Wholesale freight operations, 24/7.", type: "website" },
+  title: { default: "BC Gold Logistics | American Truck Simulator VTC", template: "%s | BC Gold Logistics" },
+  description: "Join BC Gold Logistics, a player-run American Truck Simulator trucking company for solo drivers and organized multiplayer Convoy sessions.",
+  applicationName: "BC Gold Logistics",
+  openGraph: { title: "BC Gold Logistics", description: "American Truck Simulator trucking company. Real Drivers. Real Deliveries. One Team.", type: "website" },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

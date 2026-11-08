@@ -18,13 +18,15 @@ const departments = [
 ];
 
 const resources = [
-  { href: "/careers/departments", number: "01", title: "Explore departments", text: "Understand the teams in the long-term company plan." },
-  { href: "/careers/process", number: "02", title: "Recruitment process", text: "See the proposed stages from submission through onboarding." },
-  { href: "/careers/working-here", number: "03", title: "Working at BC Logistics", text: "Review the professional standards and culture we aim to build." },
-  { href: "/careers/onboarding", number: "04", title: "Training & onboarding", text: "Learn how approved roles will be introduced and supported." },
-  { href: "/careers/faq", number: "05", title: "Recruitment FAQ", text: "Get answers about applications, qualifications, and updates." },
-  { href: "/careers/track", number: "06", title: "Applicant center", text: "Sign in securely to view your own application statuses." },
-  { href: "/careers/carriers", number: "07", title: "Carrier registration", text: "Find the separate pathway for independent outside carriers." },
+  { href: "/careers/open-positions", number: "01", title: "Open positions", text: "Check formally approved vacancies and current recruitment availability." },
+  { href: "/careers/departments", number: "02", title: "Explore departments", text: "Understand the teams in the long-term company plan." },
+  { href: "/careers/process", number: "03", title: "Recruitment process", text: "See the proposed stages from submission through onboarding." },
+  { href: "/careers/working-here", number: "04", title: "Working at BC Logistics", text: "Review the professional standards and culture we aim to build." },
+  { href: "/careers/onboarding", number: "05", title: "Training & onboarding", text: "Learn how approved roles will be introduced and supported." },
+  { href: "/careers/handbook", number: "06", title: "Employee handbook & policies", text: "Review the publication status of formal employee policies." },
+  { href: "/careers/faq", number: "07", title: "Recruitment FAQ", text: "Get answers about applications, qualifications, and updates." },
+  { href: "/careers/track", number: "08", title: "Applicant center", text: "Sign in securely to view your own application statuses." },
+  { href: "/careers/carriers", number: "09", title: "Carrier registration", text: "Find the separate pathway for independent outside carriers." },
 ];
 
 export default function Careers() {
@@ -37,7 +39,7 @@ export default function Careers() {
       <p className="cv2-disclaimer">BC Logistics LLC is planning future workforce capacity for 600+ employees. This is a long-term planning target—not current headcount, a promise of employment, or a statement that 600+ vacancies are available.</p>
       <div className="cv2-actions">
         <a className="cv2-button" href="/careers/apply">Submit an employment application <span>↗</span></a>
-        <a className="cv2-text-link" href="/careers/process">How recruitment works <span>→</span></a>
+        <a className="cv2-text-link" href="/careers/open-positions">View approved openings <span>→</span></a>
       </div>
       <div className="cv2-stat"><strong>600+</strong><span>PLANNED FUTURE WORKFORCE CAPACITY</span></div>
     </section>

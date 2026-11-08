@@ -15,7 +15,7 @@ const data=new SlashCommandBuilder().setName("load").setDescription("Manage whol
 .addSubcommand(s=>s.setName("assign").setDescription("Assign a company driver to a load.")
  .addStringOption(o=>o.setName("reference").setDescription("Load reference").setRequired(true))
  .addUserOption(o=>o.setName("driver").setDescription("Company driver").setRequired(true))
- .addStringOption(o=>o.setName("truck").setDescription("Company truck/unit number").setRequired(false)))
+ .addStringOption(o=>o.setName("truck").setDescription("Company truck/unit number").setRequired(false))\n .addStringOption(o=>o.setName("trailer").setDescription("Company trailer/unit number").setRequired(false)))
 .addSubcommand(s=>s.setName("status").setDescription("Update a load's operating status.")
  .addStringOption(o=>o.setName("reference").setDescription("Load reference").setRequired(true))
  .addStringOption(o=>o.setName("status").setDescription("New status").setRequired(true).addChoices({name:"Open",value:"Open"},{name:"Assigned",value:"Assigned"},{name:"Dispatched",value:"Dispatched"},{name:"In Transit",value:"In Transit"},{name:"At Pickup",value:"At Pickup"},{name:"At Delivery",value:"At Delivery"},{name:"Delivered",value:"Delivered"},{name:"On Hold",value:"On Hold"},{name:"Cancelled",value:"Cancelled"}))
@@ -44,14 +44,14 @@ async function execute(i){
  if(action==="assign"){
   const driver=i.options.getUser("driver",true),member=await guild.members.fetch(driver.id);
   if(!member.roles.cache.some(r=>DRIVERS.has(r.name)))return i.editReply("That member does not have an approved company-driver role. Assign the correct driver role first.");
-  const truck=i.options.getString("truck")||"Not assigned";
+  const truck=i.options.getString("truck")||"Not assigned",trailer=i.options.getString("trailer")||"Not assigned";
   const fields=embed.data.fields||[];
-  for(const [name,value] of [["Assigned driver","<@"+driver.id+">"],["Company unit",truck],["Status","Assigned"]]){
+  for(const [name,value] of [["Assigned driver","<@"+driver.id+">"],["Company unit",truck],["Company trailer",trailer],["Status","Assigned"]]){
    const field=fields.find(f=>f.name===name);if(field)field.value=value;else fields.push({name,value});
   }
   embed.setFields(fields).setTimestamp();
   await message.edit({embeds:[embed]});
-  const target=channel("load-assignments");if(target)await target.send({content:"<@"+driver.id+">",embeds:[createEmbed({title:"Company Load Assignment",description:"Load **"+reference+"** has been assigned to <@"+driver.id+">.",fields:[{name:"Company unit",value:truck}],timestamp:true})]});
+  const target=channel("load-assignments");if(target)await target.send({content:"<@"+driver.id+">",embeds:[createEmbed({title:"Company Load Assignment",description:"Load **"+reference+"** has been assigned to <@"+driver.id+">.",fields:[{name:"Company unit",value:truck},{name:"Company trailer",value:trailer}],timestamp:true})]});
   return i.editReply("Load **"+reference+"** assigned to "+driver.user.tag+".");
  }
  const status=i.options.getString("status",true),notes=i.options.getString("notes");

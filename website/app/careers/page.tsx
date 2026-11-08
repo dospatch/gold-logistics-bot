@@ -23,7 +23,8 @@ const resources = [
   { href: "/careers/working-here", number: "03", title: "Working at BC Logistics", text: "Review the professional standards and culture we aim to build." },
   { href: "/careers/onboarding", number: "04", title: "Training & onboarding", text: "Learn how approved roles will be introduced and supported." },
   { href: "/careers/faq", number: "05", title: "Recruitment FAQ", text: "Get answers about applications, qualifications, and updates." },
-  { href: "/careers/carriers", number: "06", title: "Carrier registration", text: "Find the separate pathway for independent outside carriers." },
+  { href: "/careers/track", number: "06", title: "Applicant center", text: "Sign in securely to view your own application statuses." },
+  { href: "/careers/carriers", number: "07", title: "Carrier registration", text: "Find the separate pathway for independent outside carriers." },
 ];
 
 export default function Careers() {

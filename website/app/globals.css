@@ -120,3 +120,15 @@
 .driver-delivery-list article small,.driver-delivery-list time{font-size:10px;color:#999}
 .driver-delivery-list article>span{font-size:10px;color:#d8b64f}
 @media(max-width:700px){.driver-delivery-list article{grid-template-columns:1fr 50px;gap:7px}.driver-delivery-list article time{grid-column:1}.driver-ranking>div{gap:8px}.driver-ranking>div>strong{font-size:10px}}
+
+.driver-load-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:18px}
+.driver-load-list article{padding:16px;border:1px solid #3c3525;background:#111215}
+.driver-load-head{display:flex;justify-content:space-between;gap:12px;align-items:center}
+.driver-load-head>b{color:#e4c15b;font-size:13px}
+.driver-load-head>span{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:#9bd4ae}
+.driver-load-list p{margin:14px 0 5px;color:#eee}
+.driver-load-list small{font-size:10px;color:#999;line-height:1.7}
+.driver-load-equipment{display:flex;gap:18px;margin:14px 0}
+.driver-load-equipment span{font-size:9px;letter-spacing:1px;color:#d8b64f}
+.driver-load-equipment b{display:block;color:#eee;font-size:12px;margin-top:5px;letter-spacing:0}
+@media(max-width:700px){.driver-load-list{grid-template-columns:1fr}}

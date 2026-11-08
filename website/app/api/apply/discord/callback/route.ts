@@ -3,7 +3,7 @@ import { applicantCookie,APPLICANT_COOKIE } from "@/lib/applicant";
 export const runtime="nodejs";
 export async function GET(request:NextRequest) {
   const state=request.nextUrl.searchParams.get("state"), code=request.nextUrl.searchParams.get("code");
-  const saved=request.cookies.get("bcgl_apply_state")?.value, origin=request.cookies.get("bcgl_apply_origin")?.value||request.nextUrl.origin, returnTo=["/careers/apply","/careers/track"].includes(request.cookies.get("bcgl_apply_return")?.value||"")?(request.cookies.get("bcgl_apply_return")?.value as string):"/apply";
+  const saved=request.cookies.get("bcgl_apply_state")?.value, origin=request.cookies.get("bcgl_apply_origin")?.value||request.nextUrl.origin, returnTo=["/careers/apply","/careers/track","/apply/driver"].includes(request.cookies.get("bcgl_apply_return")?.value||"")?(request.cookies.get("bcgl_apply_return")?.value as string):"/careers/apply";
   if(!state||state!==saved||!code) return NextResponse.redirect(new URL(returnTo+"?error=discord_auth",origin));
   const redirectUri=origin+"/api/apply/discord/callback";
   const tokenResponse=await fetch("https://discord.com/api/v10/oauth2/token",{method:"POST",headers:{"content-type":"application/x-www-form-urlencoded"},body:new URLSearchParams({client_id:process.env.CLIENT_ID||"",client_secret:process.env.DISCORD_CLIENT_SECRET||"",grant_type:"authorization_code",code,redirect_uri:redirectUri})});

@@ -28,12 +28,12 @@ export async function POST(request:NextRequest,context:{params:Promise<{id:strin
   const status=statusMap[body.decision];
   const staffNote=String(body.note||"").trim().slice(0,1000);
   const embed={...message.embeds[0],color:approved?0x2ecc71:body.decision==="deny"?0xe74c3c:0xd4af37,fields:[...fields.filter((f:any)=>!["Status","Decision","Staff note"].includes(f.name)),{name:"Status",value:status,inline:true},{name:"Decision",value:"Reviewed by "+session.username+" on the website",inline:true}]};
-  if(staffNote)embed.fields.push({name:"Staff note",value:staffNote});
   const edit=await discordApi("/channels/"+id+"/messages/"+message.id,{method:"PATCH",body:JSON.stringify({embeds:[embed]})});
   if(!edit.ok)return NextResponse.json({error:"Could not update the application ticket."},{status:502});
   const topicParts=String(channel.topic).split("|");topicParts[3]=status;
   const topicUpdate=await discordApi("/channels/"+id,{method:"PATCH",body:JSON.stringify({topic:topicParts.join("|")})});
   const publicMessage=body.decision==="approve"?(isDriver?"Your ATS driver application has been approved. Welcome to the BC Gold Logistics fleet! Your Company Driver role is being activated.":"Your employment application has been approved. Welcome to BC Logistics LLC."):body.decision==="deny"?"Thank you for applying. Management has decided not to move forward at this time. We appreciate your interest.":body.decision==="request-info"?"Recruitment needs more information before completing your review. Please reply to your private application ticket or contact the recruitment team.":"Your application has been placed on hold. Management will contact you when the review resumes.";
+  if(staffNote){const privateReview=channels.find((c:any)=>(c.name==="applications-review"||c.name==="hr-staff-chat")&&c.type===0);if(privateReview)await discordApi("/channels/"+privateReview.id+"/messages",{method:"POST",body:JSON.stringify({content:"**Private recruitment note — Application #"+(topicParts[2]||"")+"**\nApplicant ID: "+applicantId+"\nReviewer: "+session.username+"\n"+staffNote,allowed_mentions:{parse:[]}})});}
   const post=await discordApi("/channels/"+id+"/messages",{method:"POST",body:JSON.stringify({content:"<@"+applicantId+"> "+publicMessage,allowed_mentions:{users:[applicantId]}})});
   let membershipRoleAssigned=false,warning="";
   if(approved&&roleToAssign){

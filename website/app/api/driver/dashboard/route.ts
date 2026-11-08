@@ -30,11 +30,12 @@ export async function GET(request:NextRequest){
   const title=String(embed.title||"");
   if(!/Delivery Report|Delivery Completed Automatically/i.test(title))return null;
   const fields=embed.fields||[];
-  const field=(name:string)=>fields.find((f:any)=>f.name.toLowerCase()===name.toLowerCase())?.value||"";
-  const driver=field("Driver").match(/\d{17,20}/)?.[0];if(!driver)return null;
-  const distance=field("Distance");
+  const field=(name:string)=>fields.find((f:any)=>String(f.name).toLowerCase()===name.toLowerCase())?.value||"";
+  const driver=String(field("Driver")).match(/\d{17,20}/)?.[0];if(!driver)return null;
+  const distance=String(field("Distance"));
   const numeric=Number((distance.match(/[\d,.]+/)||[])[0]?.replace(/,/g,"")||0);
-  return {driverId:driver,game:field("Game")||"ATS",cargo:field("Cargo")||"Freight",route:field("Route")||"Route not recorded",distance,distanceValue:numeric,recordedAt:m.timestamp,title};
+  const unit=/\bkm\b|kilometer/i.test(distance)?"km":/\bmi\b|mile/i.test(distance)?"mi":"unknown";
+  return {driverId:driver,game:field("Game")||"ATS",cargo:field("Cargo")||"Freight",route:field("Route")||"Route not recorded",distance,distanceValue:numeric,unit,recordedAt:m.timestamp,title};
  }).filter(Boolean);
  const own=completed.filter((x:any)=>x.driverId===user.id);
  const leaderboard=completed.reduce((acc:any,x:any)=>{acc[x.driverId]=(acc[x.driverId]||0)+1;return acc;},{});

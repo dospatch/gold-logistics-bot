@@ -212,7 +212,7 @@ async function handleRequest(req, res) {
       { name: "Route", value: pick("route", "citySrc", "sourceCity", "source", "origin") + " → " + pick("cityDst", "destinationCity", "destination", "destinationName"), inline: false }
     ];
     if (!started) {
-      fields.push({ name: "Distance", value: pick("jobDeliveredDistanceKm", "plannedDistanceKm", "distance", "plannedDistance", "jobDistance"), inline: true });
+      fields.push({ name: "Distance", value: pick("jobDeliveredDistanceKm", "plannedDistanceKm", "distance", "plannedDistance", "jobDistance") + " km", inline: true });
       fields.push({ name: "Revenue", value: pick("jobDeliveredRevenue", "revenue", "income", "jobIncome"), inline: true });
     }
     const embed = createEmbed({

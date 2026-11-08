@@ -37,7 +37,8 @@ export async function GET(request:NextRequest){
   const unit=/\bkm\b|kilometer/i.test(distance)?"km":/\bmi\b|mile/i.test(distance)?"mi":"unknown";
   return {driverId:driver,game:field("Game")||"ATS",cargo:field("Cargo")||"Freight",route:field("Route")||"Route not recorded",distance,distanceValue:numeric,unit,recordedAt:m.timestamp,title};
  }).filter(Boolean);
- const own=completed.filter((x:any)=>x.driverId===user.id);\n const loadBoard=channels.find((c:any)=>c.name==="wholesale-load-board"&&c.type===0);
+ const own=completed.filter((x:any)=>x.driverId===user.id);
+ const loadBoard=channels.find((c:any)=>c.name==="wholesale-load-board"&&c.type===0);
  let assignedLoads:any[]=[];
  if(loadBoard){
   const loadResponse=await fetch("https://discord.com/api/v10/channels/"+loadBoard.id+"/messages?limit=100",{headers:auth,cache:"no-store"});

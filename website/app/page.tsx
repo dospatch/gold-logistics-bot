@@ -1,29 +1,33 @@
 import Link from "next/link";
 
 const facts = [
-  ["300+", "Company fleet capacity"],
-  ["600+", "Employee planning capacity"],
-  ["24/7", "Distribution center operations"],
-  ["B2B", "Wholesale customers only"],
+  ["ATS", "American Truck Simulator home base"],
+  ["VTC", "A community trucking company"],
+  ["OPEN", "Driver applications reviewed by management"],
+  ["CONVOYS", "Optional organized multiplayer drives"],
 ];
 const divisions = [
-  ["Transportation & Fleet", "Company-operated regional trucking, dispatch, fleet planning, inspections, and maintenance."],
-  ["Wholesale Distribution", "Round-the-clock receiving, storage, order staging, cross-docking, and outbound shipping."],
-  ["Carrier & Customer Services", "Wholesale account coordination, carrier registration, appointments, shipment visibility, and claims."],
-  ["People & Compliance", "Recruitment, onboarding, training, safety, compliance, payroll, and employee services."],
+  ["Company Drivers", "Join the roster, represent BC Gold Logistics, and take part in company driving activities."],
+  ["Dispatch & Operations", "Coordinate routes, freight runs, driver assignments, and company events."],
+  ["Fleet Management", "Maintain company truck and trailer records, preferred equipment, and fleet standards."],
+  ["Driver Community", "Meet other ATS players, share routes, and take part in organized Convoy sessions."],
 ];
+
 export default function Home() {
   return <main className="subpage">
-    <div className="section-kicker">REGIONAL TRANSPORTATION & DISTRIBUTION</div>
-    <h1>BC Logistics <em>LLC</em></h1>
-    <p>Built to move wholesale freight. BC Logistics LLC is planned as an integrated regional transportation and distribution company, combining a company-operated fleet, 24/7 warehouse operations, and coordinated wholesale freight services.</p>
+    <div className="section-kicker">AMERICAN TRUCK SIMULATOR · VIRTUAL TRUCKING COMPANY</div>
+    <h1>BC Gold <em>Logistics</em></h1>
+    <p>More than a tag on a truck. BC Gold Logistics is a player-run ATS trucking company built for drivers who want to run their own routes, join a team, and take part in organized company convoys.</p>
     <div className="value-grid">{facts.map(([value,label])=><article key={label}><span>{value}</span><h3>{label}</h3></article>)}</div>
-    <h2>One company. Connected operations.</h2>
-    <p>Our operating model brings transportation, dispatch, warehouse operations, fleet maintenance, carrier services, safety, and corporate support together on one coordinated campus.</p>
-    <div className="value-grid">{divisions.map(([title,body])=><article key={title}><span>BC LOGISTICS</span><h3>{title}</h3><p>{body}</p></article>)}</div>
-    <div className="career-box"><h2>Wholesale business focus</h2><p>BC Logistics LLC is planned to serve wholesale and business customers. The company is not positioned as a direct-to-consumer retail delivery service. Approved outside carriers may register as freight partners under separate carrier procedures.</p><Link className="btn gold" href="/operations">Explore our operations ↗</Link></div>
-    <h2>Build the company with us</h2>
-    <p>Explore the company, operating divisions, and career opportunities as the organization develops.</p>
-    <p><Link className="back" href="/about">About BC Logistics LLC →</Link>　<Link className="back" href="/careers">Careers →</Link></p>
+    <h2>Drive your way. Run as a team.</h2>
+    <p>Enjoy American Truck Simulator on your own, then connect with the company for shared deliveries, scheduled Convoy sessions, and community events. Multiplayer participation uses the game's Convoy mode; TruckersMP is not required.</p>
+    <div className="value-grid">{divisions.map(([title,body])=><article key={title}><span>BC GOLD LOGISTICS</span><h3>{title}</h3><p>{body}</p></article>)}</div>
+    <div className="career-box">
+      <h2>Ready to join the fleet?</h2>
+      <p>Applications are open to ATS players. Sign in with Discord, tell us a little about your driving experience and availability, and company management will review your application. Approval is required before joining the official driver roster.</p>
+      <Link className="btn gold" href="/apply">Apply to become a driver ↗</Link>
+    </div>
+    <h2>Company resources</h2>
+    <p><Link className="back" href="/convoys">Convoys & events →</Link>　<Link className="back" href="/standards">Driver standards →</Link>　<Link className="back" href="/driver">Driver portal →</Link></p>
   </main>;
 }

@@ -17,7 +17,7 @@ const layout = {
  "🏢 CORPORATE HEADQUARTERS":["welcome","company-announcements","company-information","company-handbook","company-rules","company-updates"],
  "👥 HUMAN RESOURCES":["employment-applications","employee-directory","employee-support","onboarding","training","loa-requests","promotions"],
  "🚛 TRANSPORTATION & FLEET":["driver-check-in","company-fleet","vehicle-assignments","fleet-inspections","maintenance-reports","fuel-reports"],
- "📋 DISPATCH & LOAD PLANNING":["wholesale-load-board","load-assignments","active-shipments","delivery-confirmations","dispatch-reports","appointment-schedule"],
+ "📋 DISPATCH & LOAD PLANNING":["wholesale-load-board","load-assignments","active-shipments","delivery-confirmations","delivery-logs","dispatch-reports","appointment-schedule"],
  "🏭 DISTRIBUTION CENTER":["warehouse-operations","inbound-receiving","outbound-shipping","dock-schedule","inventory-control","cross-dock","cold-storage"],
  "🏢 WHOLESALE CUSTOMER SERVICES":["wholesale-accounts","customer-support","shipment-inquiries","freight-claims"],
  "🤝 CARRIER SERVICES":["carrier-registration","carrier-check-in","carrier-appointments","carrier-staging","carrier-notices"],

@@ -105,3 +105,18 @@
 .driver-panel small{display:block;color:#888;font-size:10px;margin-top:16px}
 .driver-note{padding:16px;border-left:2px solid #b9973c;background:#111215;color:#aaa;font-size:11px;line-height:1.8}
 @media(max-width:700px){.convoy-empty,.driver-panel{padding:22px}.convoy-info,.driver-shortcuts{grid-template-columns:1fr}.driver-facts{grid-template-columns:1fr;gap:18px}.driver-connected{margin:8px 0 0}.driver-profile-top{align-items:flex-start}.convoy-page .btn{width:100%}}
+
+/* Stage 3 driver records */
+.driver-ranking{display:flex;flex-direction:column;margin-top:18px}
+.driver-ranking>div{display:flex;align-items:center;gap:14px;padding:14px 4px;border-top:1px solid #303136}
+.driver-ranking>div>b{color:#d8b64f;min-width:32px}
+.driver-ranking>div>span{display:flex;flex-direction:column;gap:4px;flex:1;color:#eee;font-size:13px}
+.driver-ranking>div>span small{margin:0;color:#858585;font-size:10px}
+.driver-ranking>div>strong{color:#d8b64f;font-size:11px;white-space:nowrap}
+.driver-delivery-list{display:flex;flex-direction:column;margin-top:16px}
+.driver-delivery-list article{display:grid;grid-template-columns:1.5fr 55px 100px 90px;gap:12px;align-items:center;padding:13px 0;border-top:1px solid #303136}
+.driver-delivery-list article>div{display:flex;flex-direction:column;gap:5px}
+.driver-delivery-list article b{font-size:12px;color:#eee}
+.driver-delivery-list article small,.driver-delivery-list time{font-size:10px;color:#999}
+.driver-delivery-list article>span{font-size:10px;color:#d8b64f}
+@media(max-width:700px){.driver-delivery-list article{grid-template-columns:1fr 50px;gap:7px}.driver-delivery-list article time{grid-column:1}.driver-ranking>div{gap:8px}.driver-ranking>div>strong{font-size:10px}}

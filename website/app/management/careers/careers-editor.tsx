@@ -3,7 +3,7 @@ import {useCallback,useEffect,useState} from "react";
 type Vacancy={id:string;title:string;department:string;location:string;employmentType:string;schedule:string;summary:string;qualifications:string;responsibilities:string;status:"Draft"|"Published"|"Closed";updatedAt:string};
 const blank=()=>({id:"",title:"",department:"",location:"",employmentType:"Full-time",schedule:"",summary:"",qualifications:"",responsibilities:"",status:"Draft" as const});
 export default function CareersEditor(){
- const [items,setItems]=useState<Vacancy[]>([]),[form,setForm]=useState(blank),[loading,setLoading]=useState(true),[saving,setSaving]=useState(false),[signedOut,setSignedOut]=useState(false),[error,setError]=useState(""),[notice,setNotice]=useState("");
+ const [items,setItems]=useState<Vacancy[]>([]),[form,setForm]=useState<Vacancy>(blank() as Vacancy),[loading,setLoading]=useState(true),[saving,setSaving]=useState(false),[signedOut,setSignedOut]=useState(false),[error,setError]=useState(""),[notice,setNotice]=useState("");
  const load=useCallback(async()=>{setLoading(true);setError("");try{const r=await fetch("/api/careers/vacancies?manage=1",{cache:"no-store"});const d=await r.json();if(r.status===401){setSignedOut(true);return;}if(!r.ok)throw new Error(d.error||"Could not load vacancy records.");setItems(d.vacancies||[]);setSignedOut(false);}catch(e){setError(e instanceof Error?e.message:"Could not load vacancy records.");}finally{setLoading(false);}},[]);
  useEffect(()=>{void load();},[load]);
  function edit(v:Vacancy){setForm({...v});setNotice("");setError("");window.scrollTo({top:0,behavior:"smooth"});}

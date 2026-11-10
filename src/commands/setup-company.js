@@ -33,8 +33,8 @@ const layout = {
     "welcome", "company-announcements", "company-information",
     "company-handbook", "company-rules", "company-updates"
   ],
-  "🧑‍💼 RECRUITMENT & HR": [
-    "employment-applications", "employee-support", "onboarding",
+  "👥 HUMAN RESOURCES": [
+    "applications-review", "employment-applications", "employee-support", "onboarding",
     "training", "loa-requests", "promotions"
   ],
   "🚛 DRIVER OPERATIONS": [

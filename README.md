@@ -2,16 +2,16 @@
 
 **Driven by Excellence. Delivered with Pride.**
 
-BC Gold Logistics is a player-run American Truck Simulator (ATS) trucking company and virtual trucking company (VTC). The goal is to give solo players a place in a shared company community and let members join organized multiplayer drives when they want to.
+BC Gold Logistics is a player-run American Truck Simulator (ATS) trucking company and virtual trucking company (VTC). The company is organized around coordinated multiplayer company operations using the built-in ATS Convoy mode.
 
 ## Company operating model
 - American Truck Simulator is the primary game.
-- The company supports both solo driving and organized multiplayer VTC operations.
+- Company operations are multiplayer-only and are organized through ATS Convoy sessions.
 - Official multiplayer meetups use the built-in ATS Convoy mode; TruckersMP is not required.
 - Drivers apply through the public website and are added to the official roster only after management approval.
 - Company-owned virtual fleet records, driver assignments, deliveries, and mileage are managed as company records.
-- Company convoys and events are optional; members can participate according to their availability.
-- Additional game support or divisions are future expansion decisions, not current requirements.
+- Company convoys and events are the core operating format; schedules and participation expectations are communicated through official company channels.
+- Additional game support and new divisions are future expansion decisions, not current operating commitments.
 
 ## Discord bot commands
 - `/setup-company` — creates missing company roles, categories, and channels; updates managed role colors; never deletes existing content.
@@ -47,4 +47,4 @@ Requires Node.js 20+.
 Never commit bot tokens or other secrets.
 
 ## ATS telemetry
-The optional `telemetry-companion` can be run locally by a driver to forward supported ATS telemetry to the company service. It is not required to apply, join the Discord community, or participate in Convoy sessions. Driver mileage and delivery statistics should only be shown as verified after telemetry and server storage are configured.
+The optional `telemetry-companion` can be run locally by a driver to forward supported ATS telemetry to the company service. It is a future enhancement to the multiplayer VTC workflow. Driver mileage and delivery statistics should only be shown as verified after telemetry, identity checks, and persistent server storage are configured.

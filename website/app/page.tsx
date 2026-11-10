@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 const operations = [
-  { number: "01", title: "Company Driving", text: "Run American Truck Simulator at your own pace. Build your driving record, represent the company, and take part in shared goals when you are available." },
+  { number: "01", title: "Company Driving", text: "Drive with approved BC Gold Logistics members through organized ATS Convoy sessions. Company operations are built around coordinated multiplayer driving." },
   { number: "02", title: "Dispatch & Freight", text: "Company freight activity is organized around routes, cargo, driver assignments, and delivery records. Approved drivers can view their assignments in the driver portal." },
   { number: "03", title: "Fleet Operations", text: "Company equipment is tracked as a managed fleet, with truck and trailer assignments maintained for operational planning as the fleet grows." },
 ];

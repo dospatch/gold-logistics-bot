@@ -29,7 +29,16 @@ export default function SiteSidebar() {
     <button className="sidebar-mobile-toggle" type="button" aria-label={open ? "Close navigation" : "Open navigation"} aria-expanded={open} onClick={() => setOpen(v => !v)}>{open ? "×" : "☰"}<span>MENU</span></button>
     {open && <button className="sidebar-scrim" aria-label="Close navigation" onClick={() => setOpen(false)} />}
     <aside className={"company-sidebar " + (open ? "is-open" : "")}>
-      <Link href="/" className="sidebar-brand" onClick={() => setOpen(false)}><img src="/bc-gold-logistics-logo.svg" alt="BC Gold Logistics" style={{ width: 52, height: 52, objectFit: "contain", flexShrink: 0 }} /><span><b>BC GOLD</b><small>LOGISTICS</small></span></Link>
+      <Link href="/" className="sidebar-brand" onClick={() => setOpen(false)}>
+        <img
+          src="/bc-gold-logistics-logo.svg"
+          alt="BC Gold Logistics company logo"
+          width={64}
+          height={64}
+          style={{ width: 64, height: 64, objectFit: "contain", flexShrink: 0, padding: 3, border: "1px solid #d7b34a", borderRadius: 8, background: "#050505", boxShadow: "0 0 16px #d7b34a22" }}
+        />
+        <span><b>BC GOLD</b><small>LOGISTICS</small></span>
+      </Link>
       <div className="sidebar-status"><i /> COMPANY NETWORK <span>ATS · VTC</span></div>
       <nav aria-label="Company navigation">
         {groups.map(group => <section className="sidebar-group" key={group.label}><h2>{group.label}</h2>{group.links.map(link => {

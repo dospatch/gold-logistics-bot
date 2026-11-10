@@ -8,7 +8,7 @@ const operations = [
 
 const principles = [
   ["Professionalism", "Represent the company respectfully in-game, on Discord, and during company activities."],
-  ["Flexibility", "Single-player driving is part of the company model. Join multiplayer Convoys when they fit your schedule."],
+  ["Teamwork", "Company driving is organized around multiplayer Convoy operations, clear communication, and coordinated routes."],
   ["Progress", "Build experience through consistent driving, reliable communication, and recorded deliveries."],
 ];
 
@@ -16,7 +16,7 @@ const discordInvite = "https://discord.gg/uPvQNgHCr";
 
 export default function Home() {
   return <main>
-    <div className="announcement"><span className="live-dot" /> AMERICAN TRUCK SIMULATOR <i /> COMPANY DRIVING <i /> OPTIONAL CONVOY MULTIPLAYER</div>
+    <div className="announcement"><span className="live-dot" /> AMERICAN TRUCK SIMULATOR <i /> MULTIPLAYER VTC <i /> ORGANIZED COMPANY CONVOYS</div>
     <header className="wrap nav">
       <Link href="/" className="brand"><img src="/bc-gold-logistics-logo.svg" alt="BC Gold Logistics" style={{ width: 54, height: 54, objectFit: "contain" }} /><span><b>BC GOLD LOGISTICS</b><small>DRIVE WITH PURPOSE</small></span></Link>
       <nav aria-label="Main navigation">
@@ -32,10 +32,10 @@ export default function Home() {
       <div className="wrap hero-content">
         <div className="eyebrow"><span /> BUILT FOR THE LONG HAUL</div>
         <h1>Every mile has<br />a <em>purpose.</em></h1>
-        <p>BC Gold Logistics is an American Truck Simulator company built around independent drivers, organized freight operations, and a community that moves forward together.</p>
+        <p>BC Gold Logistics is a multiplayer American Truck Simulator virtual trucking company built around coordinated company convoys, professional drivers, and organized freight operations.</p>
         <div className="hero-actions"><Link className="btn gold" href="/apply">APPLY TO THE COMPANY <span>↗</span></Link><Link className="btn outline" href="/convoys">EXPLORE CONVOYS</Link></div>
         <img src="/bc-gold-logistics-logo.svg" alt="BC Gold Logistics gold truck emblem" style={{ display: "block", width: "min(180px, 34vw)", height: "auto", marginTop: 28, border: "1px solid #d7b34a88", borderRadius: 10, padding: 8, background: "#08090bcc" }} />
-        <div className="hero-meta"><span>AMERICAN TRUCK SIMULATOR</span><b /> <span>SINGLE-PLAYER + VTC</span><b /> <span>DRIVER APPLICATIONS OPEN</span></div>
+        <div className="hero-meta"><span>AMERICAN TRUCK SIMULATOR</span><b /> <span>MULTIPLAYER VTC</span><b /> <span>DRIVER APPLICATIONS OPEN</span></div>
       </div>
     </section>
 
@@ -44,13 +44,13 @@ export default function Home() {
     <section className="section wrap" id="company">
       <div className="intro-grid">
         <div><div className="section-kicker">WHO WE ARE</div><h2>One company.<br/><em>Many roads.</em></h2></div>
-        <div><p className="lead">A real company experience for the virtual road.</p><p className="muted">BC Gold Logistics is designed to work as both your personal ATS company identity and a virtual trucking company for drivers who want to participate together. You can haul solo, build your experience, and connect with the team when you want more than a solo run.</p><Link className="text-link" href="/standards">READ OUR DRIVER STANDARDS <span>↗</span></Link></div>
+        <div><p className="lead">A coordinated company experience on the virtual road.</p><p className="muted">BC Gold Logistics is organized for drivers who want to operate together in ATS multiplayer Convoy sessions. Members represent one company, follow shared operating standards, and participate in coordinated freight runs and company events.</p><Link className="text-link" href="/standards">READ OUR DRIVER STANDARDS <span>↗</span></Link></div>
       </div>
     </section>
 
     <section className="section services" id="operations">
       <div className="wrap">
-        <div className="section-head"><div><div className="section-kicker">HOW WE OPERATE</div><h2>Built around the<br/><em>work that moves us.</em></h2></div><p>From a solo delivery to a coordinated company run, every driver has a place in the operation.</p></div>
+        <div className="section-head"><div><div className="section-kicker">HOW WE OPERATE</div><h2>Built around the<br/><em>work that moves us.</em></h2></div><p>From dispatch coordination to completed company runs, every driver contributes to one connected operation.</p></div>
         <div className="service-grid">{operations.map(item=><article className="service-card" key={item.number}><span>OPERATION {item.number}</span><div className="service-icon">✦</div><h3>{item.title}</h3><p>{item.text}</p><div className="card-line" /></article>)}</div>
       </div>
     </section>

@@ -19,12 +19,12 @@ export async function GET(request:NextRequest){
    const messagesResponse=await fetch("https://discord.com/api/v10/channels/"+channel.id+"/messages?limit=50",{headers,cache:"no-store"});
    if(!messagesResponse.ok)continue;
    const messages=await messagesResponse.json();
-   const message=messages.find((m:any)=>["🚛 BC Gold Logistics — Driver Application","🏢 BC Logistics LLC — Employment Application"].includes(m.embeds?.[0]?.title));
+   const message=messages.find((m:any)=>["🚛 BC Gold Logistics — Driver Application","🏢 BC Gold Logistics — VTC Employment Application"].includes(m.embeds?.[0]?.title));
    const embed=message?.embeds?.[0];if(!embed)continue;
    const fields=embed.fields||[];
    const get=(name:string)=>fields.find((f:any)=>f.name===name)?.value||"";
    const isEmployment=String(embed.title).includes("Employment");
-   applications.push({number:parts[2]||"",status:get("Status")||parts[3]||"Pending",type:isEmployment?"Employment":"ATS Driver",department:get("Department")||"Transportation & Company Fleet",position:get("Position")||"Company Driver",submittedAt:message.timestamp||null});
+   applications.push({number:parts[2]||"",status:get("Status")||parts[3]||"Pending",type:isEmployment?"Employment":"ATS Driver",department:get("Department")||"Transportation & Driver Operations",position:get("Position")||"Company Driver",submittedAt:message.timestamp||null});
   }
   applications.sort((a:any,b:any)=>String(b.submittedAt||"").localeCompare(String(a.submittedAt||"")));
   return NextResponse.json({authenticated:true,applications},{headers:{"Cache-Control":"no-store"}});

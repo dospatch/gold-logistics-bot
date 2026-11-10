@@ -69,6 +69,10 @@ const layout = {
 };
 
 const access = {
+  "👥 HUMAN RESOURCES": [
+    "Owner", "President", "Chief Executive Officer", "Chief Operating Officer",
+    "HR Director", "Recruiter"
+  ],
   "🚛 DRIVER OPERATIONS": [
     "Owner", "President", "Chief Executive Officer", "Chief Operating Officer",
     "Transportation Director", "Fleet Director", "Company Driver", "Senior Driver",

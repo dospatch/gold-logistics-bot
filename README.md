@@ -16,7 +16,7 @@ BC Gold Logistics is a player-run American Truck Simulator (ATS) trucking compan
 ## Discord bot commands
 - `/setup-company` — creates missing company roles, categories, and channels; updates managed role colors; never deletes existing content.
 - `/apply` — posts the company driver recruitment panel.
-- `/convoy` — posts optional company multiplayer-session announcements.
+- `/convoy` — publishes official company multiplayer-session announcements.
 - `/delivery` — records completed deliveries.
 - `/roster` — shows members assigned to company roles.
 - `/load create` — opens a freight load on the dispatch board.

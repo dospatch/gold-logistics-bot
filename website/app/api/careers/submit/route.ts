@@ -3,7 +3,7 @@ import {getApplicant} from "@/lib/applicant";
 export const runtime="nodejs";
 const headers=()=>({Authorization:"Bot "+(process.env.DISCORD_TOKEN||""),"Content-Type":"application/json"});
 async function discord(path:string,init:RequestInit={}){return fetch("https://discord.com/api/v10"+path,{...init,headers:{...headers(),...(init.headers||{})},cache:"no-store"});}
-const departments=["Executive & Corporate Administration","Transportation & Company Fleet","Dispatch & Load Planning","Distribution Center & Warehouse Operations","Fleet Maintenance & Parts","Safety, Compliance & Training","Security & Facility Protection","Wholesale Customer & Carrier Services","Freight, Inventory & Claims Management","Human Resources & Employee Services","Finance, Payroll & Procurement","IT, Systems & Facilities"];
+const departments=["Executive & Company Administration","Transportation & Driver Operations","Dispatch & Freight Coordination","Fleet & Equipment Management","Safety & Training","Human Resources & Recruitment","Technology & Systems","Convoy & Community Operations"];
 export async function POST(request:NextRequest){
  const applicant=getApplicant(request);if(!applicant)return NextResponse.json({error:"Connect your Discord account before submitting."},{status:401});
  if(!process.env.DISCORD_TOKEN||!process.env.GUILD_ID)return NextResponse.json({error:"Employment application service is not configured."},{status:503});
@@ -23,11 +23,11 @@ export async function POST(request:NextRequest){
   const created=await discord("/guilds/"+process.env.GUILD_ID+"/channels",{method:"POST",body:JSON.stringify({name:"employment-"+number+"-"+safe,type:0,parent_id:category.id,topic:"BCGL_APP|"+applicant.id+"|"+number+"|Pending|Employment",permission_overwrites:overwrites})});
   if(!created.ok)throw new Error("Could not create a private HR application ticket ("+created.status+").");
   const channel=await created.json();
-  const embed={title:"🏢 BC Logistics LLC — Employment Application",color:0xD4AF37,description:"Private Human Resources application #"+number,fields:[
+  const embed={title:"🏢 BC Gold Logistics — VTC Employment Application",color:0xD4AF37,description:"Private Human Resources application #"+number,fields:[
    {name:"Applicant",value:(applicant.globalName||applicant.username)+" (@"+applicant.username+")\nDiscord ID: "+applicant.id},
    {name:"Department",value:department},{name:"Position",value:position},{name:"Experience & qualifications",value:experience},
-   {name:"Availability",value:availability},{name:"Why you want to join BC Logistics LLC",value:about},{name:"Status",value:"Pending",inline:true}
-  ],footer:{text:"BC Logistics LLC | Human Resources"},timestamp:new Date().toISOString()};
+   {name:"Availability",value:availability},{name:"Why you want to join BC Gold Logistics",value:about},{name:"Status",value:"Pending",inline:true}
+  ],footer:{text:"BC Gold Logistics | Human Resources"},timestamp:new Date().toISOString()};
   const posted=await discord("/channels/"+channel.id+"/messages",{method:"POST",body:JSON.stringify({embeds:[embed]})});
   if(!posted.ok){await discord("/channels/"+channel.id,{method:"DELETE"});throw new Error("The ticket was created but its application record could not be posted.");}
   return NextResponse.json({ok:true,number,channelId:channel.id,channelName:channel.name});

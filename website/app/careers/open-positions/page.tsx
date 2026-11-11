@@ -4,7 +4,7 @@ import VacancyBoard from "./vacancy-board";
 
 export const metadata: Metadata = {
   title: "Open Positions",
-  description: "Review formally approved employment vacancies at BC Logistics LLC.",
+  description: "Review formally approved company openings at BC Gold Logistics.",
 };
 
 export default function OpenPositions() {
@@ -12,7 +12,7 @@ export default function OpenPositions() {
     <a className="cv2-back" href="/careers">← CAREERS & RECRUITMENT</a>
     <div className="cv2-kicker">CAREER OPPORTUNITIES</div>
     <h1 className="cv2-page-title">Open positions.<br/><em>Official opportunities.</em></h1>
-    <p className="cv2-lead">Explore employment vacancies formally approved for recruitment by BC Logistics LLC management.</p>
+    <p className="cv2-lead">Explore company roles formally approved for recruitment by BC Gold Logistics management.</p>
     <section className="cv2-section">
       <VacancyBoard />
       <h2>How openings are published</h2>

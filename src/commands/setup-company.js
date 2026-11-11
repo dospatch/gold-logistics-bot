@@ -202,13 +202,22 @@ async function execute(interaction) {
       }
 
       try {
-        await guild.channels.create({
+        const channel = await guild.channels.create({
           name,
           type,
           parent: category.id,
           reason: "BC Gold Logistics VTC structure"
         });
         channelsCreated++;
+        if (categoryName === "🔒 HR PRIVATE") {
+          const recruiter = guild.roles.cache.find(role => role.name === "Recruiter");
+          if (recruiter && ["employee-records", "loa-reviews"].includes(name)) {
+            await channel.permissionOverwrites.edit(recruiter, {
+              ViewChannel: false,
+              SendMessages: false
+            }, { reason: "Restrict sensitive HR records to HR leadership" });
+          }
+        }
       } catch (error) {
         errors.push("Channel " + name + ": " + error.message);
       }

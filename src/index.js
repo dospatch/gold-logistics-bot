@@ -9,6 +9,7 @@ const applyCommand = require("./commands/apply");
 const companySettingsCommand = require("./commands/company-settings");
 const commandModules = [
   require("./commands/setup-company"),
+  require("./commands/reset-company"),
   applyCommand,
   require("./commands/convoy"),
   require("./commands/delivery"),

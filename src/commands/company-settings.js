@@ -2,12 +2,9 @@ const { SlashCommandBuilder, ChannelType, PermissionFlagsBits, EmbedBuilder, Att
 
 const MARKER = "BCGL_COMPANY_SETTINGS_V1";
 const MANAGERS = new Set([
-  "Owner","President","Chief Executive Officer","Chief Operating Officer","Chief Financial Officer",
-  "Executive Director","HR Director","HR Manager","Transportation Director","Transportation Manager",
-  "Fleet Director","Dispatch Director","Dispatch Supervisor","Warehouse Director","Warehouse Manager",
-  "Carrier Services Director","Safety & Compliance Director","Security Director","Security Supervisor",
-  "Finance Director","IT & Facilities Director","IT Manager","Facilities Manager","Department Manager",
-  "Shift Manager","Supervisor"
+  "Owner","President","Chief Executive Officer","Chief Operating Officer",
+  "Executive Director","HR Director","Transportation Director","Fleet Director",
+  "Dispatch Director","Safety & Training Director","Department Manager","Shift Manager","Supervisor"
 ]);
 const CHANNEL_TYPES = [
   ["welcome", "Welcome messages"],
@@ -74,7 +71,7 @@ async function saveSettings(guild, channel, settings) {
 }
 const data = new SlashCommandBuilder()
   .setName("company-settings")
-  .setDescription("Customize BC Logistics LLC welcome, role, and information destinations.")
+  .setDescription("Customize BC Gold Logistics VTC welcome, role, and information destinations.")
   .setDefaultMemberPermissions(null)
   .addSubcommand(sub => sub.setName("set-channel").setDescription("Choose where a company panel or message belongs.")
     .addStringOption(option => option.setName("type").setDescription("Which destination are you setting?").setRequired(true)
@@ -92,7 +89,7 @@ const data = new SlashCommandBuilder()
 
 async function execute(interaction) {
   if (!interaction.guild || !isManager(interaction.member)) {
-    return interaction.reply({ content: "Only authorized BC Logistics LLC management can change company settings.", ephemeral: true });
+    return interaction.reply({ content: "Only authorized BC Gold Logistics management can change company settings.", ephemeral: true });
   }
   if (interaction.options.getSubcommand() === "audit") {
     await interaction.deferReply({ ephemeral: true });
@@ -122,7 +119,7 @@ async function execute(interaction) {
       for (const channel of uncategorized.values()) channelLines.push(`  ${channel.name} | ${channel.type} | ID ${channel.id}`);
     }
     const report = [
-      "BC LOGISTICS LLC — READ-ONLY SERVER AUDIT",
+      "BC GOLD LOGISTICS — READ-ONLY SERVER AUDIT",
       `Guild: ${guild.name} (${guild.id})`,
       `Generated: ${new Date().toISOString()}`,
       `Roles: ${guild.roles.cache.size} | Categories: ${categories.size} | Channels: ${guild.channels.cache.filter(channel => channel.type !== ChannelType.GuildCategory).size}`,
@@ -192,7 +189,7 @@ async function handleMemberJoin(member) {
     if (settings.autoRoleId) {
       const role = await member.guild.roles.fetch(settings.autoRoleId);
       if (role && !role.managed && role.position < member.guild.members.me.roles.highest.position) {
-        await member.roles.add(role, "BC Logistics LLC automatic new-member role");
+        await member.roles.add(role, "BC Gold Logistics automatic new-member role");
       }
     }
     const channelId = settings.channels?.welcome;

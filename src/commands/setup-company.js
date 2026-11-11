@@ -1,6 +1,5 @@
 const { SlashCommandBuilder, ChannelType, PermissionFlagsBits, EmbedBuilder } = require("discord.js");
 
-// VTC roles only. Existing roles are never deleted or renamed.
 const roles = [
   ["Owner", 0xD4AF37],
   ["President", 0xF1C40F],
@@ -11,10 +10,12 @@ const roles = [
   ["Transportation Director", 0x2980B9],
   ["Fleet Director", 0x3498DB],
   ["Dispatch Director", 0x1F8A70],
+  ["Safety & Training Director", 0xC0392B],
   ["Department Manager", 0xB8860B],
   ["Shift Manager", 0xA67C52],
   ["Supervisor", 0xA67C52],
   ["Dispatcher", 0x1F8A70],
+  ["Fleet Coordinator", 0x3498DB],
   ["Company Driver", 0x1ABC9C],
   ["Senior Driver", 0x2ECC71],
   ["Probationary Driver", 0x95A5A6],
@@ -29,81 +30,76 @@ const roles = [
 ];
 
 const layout = {
-  "🏢 COMPANY HEADQUARTERS": [
-    "welcome", "company-announcements", "company-information",
-    "company-handbook", "company-rules", "company-updates"
+  "🏁 START HERE": [
+    "welcome", "announcements", "company-information", "company-rules",
+    "driver-handbook", "frequently-asked-questions"
   ],
-  "👥 HUMAN RESOURCES": [
-    "applications-review", "employment-applications", "employee-support", "onboarding",
-    "training", "loa-requests", "promotions"
+  "📝 RECRUITMENT & HUMAN RESOURCES": [
+    "open-positions", "how-to-apply", "application-support", "onboarding",
+    "hr-announcements"
+  ],
+  "🔒 HR PRIVATE": [
+    "applications-review", "employee-records", "hr-team", "loa-reviews"
   ],
   "🚛 DRIVER OPERATIONS": [
-    "driver-check-in", "driver-chat", "company-fleet",
-    "vehicle-assignments", "fleet-inspections", "maintenance-reports",
-    "delivery-logs"
+    "driver-check-in", "driver-chat", "driver-resources",
+    "delivery-logs", "driver-support", "leave-requests"
   ],
-  "📋 DISPATCH & FREIGHT": [
-    "wholesale-load-board", "load-assignments", "active-shipments",
+  "🚚 FLEET MANAGEMENT": [
+    "fleet-overview", "vehicle-assignments", "maintenance-reports",
+    "fleet-coordination"
+  ],
+  "📦 DISPATCH & FREIGHT": [
+    "dispatch-board", "load-assignments", "active-deliveries",
     "delivery-confirmations", "dispatch-reports"
   ],
   "🗓️ CONVOY OPERATIONS": [
-    "company-session-announcements", "company-session-schedule",
-    "route-briefings", "convoy-media"
+    "convoy-announcements", "convoy-schedule", "route-briefings",
+    "convoy-chat", "convoy-media"
+  ],
+  "🦺 SAFETY & TRAINING": [
+    "safety-announcements", "training-resources", "driver-training",
+    "incident-reports"
   ],
   "💬 COMPANY COMMUNITY": [
-    "general-chat", "company-media", "suggestions", "truck-showcase"
+    "general-chat", "truck-showcase", "screenshots-and-media",
+    "suggestions", "off-topic"
   ],
-  "🔒 MANAGEMENT": [
-    "executive-office", "management-discussions", "department-reports",
-    "company-strategy"
-  ],
-  "🔒 HR PRIVATE": [
-    "applications-review", "employee-records", "hr-staff-chat"
-  ],
-  "🔒 DISPATCH STAFF": [
-    "dispatch-staff-chat", "dispatch-logs"
+  "🔒 LEADERSHIP": [
+    "executive-office", "management-chat", "department-reports",
+    "company-planning"
   ],
   "🔊 COMPANY VOICE": [
-    "company-operations", "dispatch-voice", "management-meetings", "afk"
+    "company-lounge", "driver-room", "convoy-staging",
+    "convoy-channel-1", "convoy-channel-2", "dispatch-room",
+    "training-room", "management-meeting", "afk"
   ]
 };
 
-const access = {
-  "👥 HUMAN RESOURCES": [
-    "Owner", "President", "Chief Executive Officer", "Chief Operating Officer",
-    "HR Director", "Recruiter"
-  ],
-  "🚛 DRIVER OPERATIONS": [
-    "Owner", "President", "Chief Executive Officer", "Chief Operating Officer",
-    "Transportation Director", "Fleet Director", "Company Driver", "Senior Driver",
-    "Probationary Driver", "Driver Trainer", "Safety Officer", "Department Manager",
-    "Shift Manager", "Supervisor"
-  ],
-  "📋 DISPATCH & FREIGHT": [
-    "Owner", "President", "Chief Executive Officer", "Chief Operating Officer",
-    "Transportation Director", "Dispatch Director", "Dispatcher", "Company Driver",
-    "Senior Driver", "Probationary Driver", "Driver Trainer", "Department Manager",
-    "Shift Manager", "Supervisor"
-  ],
-  "🔒 MANAGEMENT": [
-    "Owner", "President", "Chief Executive Officer", "Chief Operating Officer",
-    "Executive Director", "HR Director", "Transportation Director", "Fleet Director",
-    "Dispatch Director", "Department Manager"
-  ],
+const privateAccess = {
   "🔒 HR PRIVATE": [
     "Owner", "President", "Chief Executive Officer", "Chief Operating Officer",
-    "HR Director", "Recruiter"
+    "Executive Director", "HR Director", "Recruiter"
   ],
-  "🔒 DISPATCH STAFF": [
+  "🔒 LEADERSHIP": [
     "Owner", "President", "Chief Executive Officer", "Chief Operating Officer",
-    "Transportation Director", "Dispatch Director", "Dispatcher", "Department Manager",
-    "Shift Manager", "Supervisor"
+    "Executive Director", "HR Director", "Transportation Director",
+    "Fleet Director", "Dispatch Director", "Safety & Training Director",
+    "Department Manager"
   ]
 };
+
+const staffRoles = [
+  "Owner", "President", "Chief Executive Officer", "Chief Operating Officer",
+  "Executive Director", "HR Director", "Transportation Director", "Fleet Director",
+  "Dispatch Director", "Safety & Training Director", "Department Manager",
+  "Shift Manager", "Supervisor", "Dispatcher", "Fleet Coordinator",
+  "Driver Trainer", "Convoy Coordinator", "Safety Officer", "Recruiter"
+];
 
 const data = new SlashCommandBuilder()
   .setName("setup-company")
-  .setDescription("Create BC Gold Logistics VTC roles and channels without deleting existing server content.")
+  .setDescription("Build the BC Gold Logistics ATS Convoy VTC Discord structure.")
   .setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
 
 async function execute(interaction) {
@@ -119,13 +115,17 @@ async function execute(interaction) {
   let rolesCreated = 0;
   let categoriesCreated = 0;
   let channelsCreated = 0;
-  let existingChannelsLeftInPlace = 0;
+  let existingChannelsReused = 0;
+  const errors = [];
 
   for (const [name, color] of roles) {
-    const existing = guild.roles.cache.find(role => role.name === name);
-    if (!existing) {
-      await guild.roles.create({ name, color, reason: "BC Gold Logistics VTC setup" });
-      rolesCreated++;
+    if (!guild.roles.cache.some(role => role.name === name)) {
+      try {
+        await guild.roles.create({ name, color, reason: "BC Gold Logistics VTC structure" });
+        rolesCreated++;
+      } catch (error) {
+        errors.push("Role " + name + ": " + error.message);
+      }
     }
   }
 
@@ -137,13 +137,14 @@ async function execute(interaction) {
     PermissionFlagsBits.SendMessages,
     PermissionFlagsBits.ReadMessageHistory,
     PermissionFlagsBits.EmbedLinks,
-    PermissionFlagsBits.AttachFiles
+    PermissionFlagsBits.AttachFiles,
+    PermissionFlagsBits.ManageChannels
   ];
 
   for (const [categoryName, channelNames] of Object.entries(layout)) {
-    const allowedNames = access[categoryName];
-    const restricted = Array.isArray(allowedNames);
-    const overwrites = restricted
+    const allowedNames = privateAccess[categoryName];
+    const isPrivate = Array.isArray(allowedNames);
+    const overwrites = isPrivate
       ? [
           { id: guild.roles.everyone.id, deny: [PermissionFlagsBits.ViewChannel] },
           ...guild.roles.cache
@@ -166,40 +167,55 @@ async function execute(interaction) {
       channel => channel.type === ChannelType.GuildCategory && channel.name === categoryName
     );
     if (!category) {
-      category = await guild.channels.create({
-        name: categoryName,
-        type: ChannelType.GuildCategory,
-        permissionOverwrites: overwrites,
-        reason: "BC Gold Logistics VTC setup"
-      });
-      categoriesCreated++;
+      try {
+        category = await guild.channels.create({
+          name: categoryName,
+          type: ChannelType.GuildCategory,
+          permissionOverwrites: overwrites,
+          reason: "BC Gold Logistics VTC structure"
+        });
+        categoriesCreated++;
+      } catch (error) {
+        errors.push("Category " + categoryName + ": " + error.message);
+        continue;
+      }
     }
 
     for (const name of channelNames) {
       const type = categoryName === "🔊 COMPANY VOICE"
         ? ChannelType.GuildVoice
         : ChannelType.GuildText;
-      const existing = guild.channels.cache.find(
+      let existing = guild.channels.cache.find(
         channel => channel.name === name && channel.type === type
       );
 
-      // Never move or rewrite permissions on an existing channel. This preserves
-      // its current history and access configuration for a separate review.
       if (existing) {
-        existingChannelsLeftInPlace++;
+        try {
+          if (existing.parentId !== category.id) {
+            await existing.setParent(category.id, { lockPermissions: true, reason: "Organize BC Gold Logistics VTC channels" });
+          }
+          existingChannelsReused++;
+        } catch (error) {
+          errors.push("Channel " + name + ": " + error.message);
+        }
         continue;
       }
 
-      await guild.channels.create({
-        name,
-        type,
-        parent: category.id,
-        reason: "BC Gold Logistics VTC setup"
-      });
-      channelsCreated++;
+      try {
+        await guild.channels.create({
+          name,
+          type,
+          parent: category.id,
+          reason: "BC Gold Logistics VTC structure"
+        });
+        channelsCreated++;
+      } catch (error) {
+        errors.push("Channel " + name + ": " + error.message);
+      }
     }
   }
 
+  await guild.roles.fetch();
   const ownerRole = guild.roles.cache.find(role => role.name === "Owner");
   const ownerMember = await guild.members.fetch(interaction.user.id);
   if (ownerRole && guild.ownerId === interaction.user.id &&
@@ -215,40 +231,44 @@ async function execute(interaction) {
     const overview = new EmbedBuilder()
       .setColor(0xD4AF37)
       .setTitle("BC Gold Logistics | Company Overview")
-      .setDescription(
-        "A multiplayer American Truck Simulator virtual trucking company built around coordinated company Convoy operations, professional driver standards, and a managed virtual fleet."
-      )
+      .setDescription("A multiplayer American Truck Simulator virtual trucking company built around coordinated company Convoy operations, professional driver standards, and a managed virtual fleet.")
       .addFields(
         { name: "Primary operation", value: "American Truck Simulator · Multiplayer Convoy" },
         { name: "Company model", value: "Multiplayer-only VTC operations. TruckersMP is not required." },
-        { name: "Core departments", value: "Executive Administration · Transportation · Dispatch · Fleet Management · Human Resources · Safety & Training · Convoy Operations · Technology" },
+        { name: "Departments", value: "Leadership · Human Resources · Driver Operations · Fleet Management · Dispatch · Convoy Operations · Safety & Training" },
         { name: "Driver expectations", value: "Follow company standards, attend announced company runs when scheduled, communicate respectfully, and submit accurate delivery records." },
-        { name: "Platform", value: "Company website, Discord workspace, driver resources, management tools, and future verified ATS telemetry." }
+        { name: "Company platforms", value: "Discord, company website, driver resources, management tools, and future verified ATS telemetry." }
       )
       .setFooter({ text: "Company capabilities and fleet records are published only when established." })
       .setTimestamp();
 
-    const recent = await infoChannel.messages.fetch({ limit: 25 });
-    const prior = recent.find(message =>
-      message.author.id === botMember.id &&
-      message.embeds.some(embed => embed.title === "BC Gold Logistics | Company Overview")
-    );
-    if (prior) await prior.edit({ embeds: [overview] });
-    else await infoChannel.send({ embeds: [overview] });
-    overviewPosted = true;
+    try {
+      const recent = await infoChannel.messages.fetch({ limit: 25 });
+      const prior = recent.find(message =>
+        message.author.id === botMember.id &&
+        message.embeds.some(embed => embed.title === "BC Gold Logistics | Company Overview")
+      );
+      if (prior) await prior.edit({ embeds: [overview] });
+      else await infoChannel.send({ embeds: [overview] });
+      overviewPosted = true;
+    } catch (error) {
+      errors.push("Company overview: " + error.message);
+    }
   }
 
-  await interaction.editReply(
-    "BC Gold Logistics VTC setup finished. " +
-    rolesCreated + " roles created, " +
-    categoriesCreated + " categories created, " +
-    channelsCreated + " new channels created. " +
-    existingChannelsLeftInPlace + " existing channels were left untouched. " +
-    (overviewPosted
-      ? "The company overview was posted/updated in #company-information. "
-      : "The #company-information channel was not found, so no overview was posted. ") +
-    "No existing roles, channels, permissions, or messages were deleted or rewritten."
-  );
+  const summary = [
+    "BC Gold Logistics VTC setup finished.",
+    rolesCreated + " roles created.",
+    categoriesCreated + " categories created.",
+    channelsCreated + " channels created.",
+    existingChannelsReused + " existing channels organized into the new layout.",
+    overviewPosted ? "Company overview published in #company-information." : "Company overview could not be published."
+  ];
+  if (errors.length) {
+    summary.push(errors.length + " setup items need attention. Check Render logs for details.");
+    console.error("BC Gold Logistics setup issues:", errors);
+  }
+  await interaction.editReply(summary.join(" "));
 }
 
 module.exports = { data, execute };

@@ -179,6 +179,13 @@ async function execute(interaction) {
         errors.push("Category " + categoryName + ": " + error.message);
         continue;
       }
+    } else if (isPrivate) {
+      try {
+        // Re-apply the intended access list even when the category already exists.
+        await category.permissionOverwrites.set(overwrites, "Enforce BC Gold Logistics private category access");
+      } catch (error) {
+        errors.push("Category permissions " + categoryName + ": " + error.message);
+      }
     }
 
     for (const name of channelNames) {
@@ -194,13 +201,16 @@ async function execute(interaction) {
           if (existing.parentId !== category.id) {
             await existing.setParent(category.id, { lockPermissions: true, reason: "Organize BC Gold Logistics VTC channels" });
           }
-          if (categoryName === "🔒 HR PRIVATE") {
-            const recruiter = guild.roles.cache.find(role => role.name === "Recruiter");
-            if (recruiter && ["employee-records", "loa-reviews"].includes(name)) {
-              await existing.permissionOverwrites.edit(recruiter, {
-                ViewChannel: false,
-                SendMessages: false
-              }, { reason: "Restrict sensitive HR records to HR leadership" });
+          if (isPrivate) {
+            await existing.permissionOverwrites.set(overwrites, "Sync private channel access with BC Gold Logistics category");
+            if (categoryName === "🔒 HR PRIVATE") {
+              const recruiter = guild.roles.cache.find(role => role.name === "Recruiter");
+              if (recruiter && ["employee-records", "loa-reviews"].includes(name)) {
+                await existing.permissionOverwrites.edit(recruiter, {
+                  ViewChannel: false,
+                  SendMessages: false
+                }, { reason: "Restrict sensitive HR records to HR leadership" });
+              }
             }
           }
           existingChannelsReused++;

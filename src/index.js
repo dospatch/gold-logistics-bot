@@ -31,7 +31,7 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBit
 client.commands = new Collection(commandModules.map(command => [command.data.name, command]));
 const sessions = new Map();
 const oauthStates = new Map();
-const MANAGER_ROLES = ["Owner","President","Chief Executive Officer","Chief Operating Officer","Chief Financial Officer","Executive Director","HR Director","HR Manager","Transportation Director","Transportation Manager","Fleet Director","Dispatch Director","Dispatch Supervisor","Warehouse Director","Warehouse Manager","Carrier Services Director","Safety & Compliance Director","Security Director","Security Supervisor","Finance Director","IT & Facilities Director","IT Manager","Facilities Manager","Department Manager","Shift Manager","Supervisor"];
+const MANAGER_ROLES = ["Owner","President","Chief Executive Officer","Chief Operating Officer","Executive Director","HR Director","Transportation Director","Fleet Director","Dispatch Director","Safety & Training Director","Department Manager","Shift Manager","Supervisor"];
 const BASE_URL = (process.env.WEB_BASE_URL || "https://bc-gold-logistics-bot.onrender.com").replace(/\/$/, "");
 
 client.on(Events.GuildMemberAdd, member => companySettingsCommand.handleMemberJoin(member));

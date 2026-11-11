@@ -194,6 +194,15 @@ async function execute(interaction) {
           if (existing.parentId !== category.id) {
             await existing.setParent(category.id, { lockPermissions: true, reason: "Organize BC Gold Logistics VTC channels" });
           }
+          if (categoryName === "🔒 HR PRIVATE") {
+            const recruiter = guild.roles.cache.find(role => role.name === "Recruiter");
+            if (recruiter && ["employee-records", "loa-reviews"].includes(name)) {
+              await existing.permissionOverwrites.edit(recruiter, {
+                ViewChannel: false,
+                SendMessages: false
+              }, { reason: "Restrict sensitive HR records to HR leadership" });
+            }
+          }
           existingChannelsReused++;
         } catch (error) {
           errors.push("Channel " + name + ": " + error.message);

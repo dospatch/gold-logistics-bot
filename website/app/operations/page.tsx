@@ -19,7 +19,7 @@ const divisions = [
 export default function Operations() {
   return (
     <main className="subpage">
-      <a className="back" href="/">← BC GOLD LOGISTICS</a>
+      <a className="back brand-back" href="/"><img src="/bc-gold-logistics-logo.svg" alt="BC Gold Logistics" className="subpage-logo"/> <span>BC GOLD LOGISTICS</span></a>
       <div className="section-kicker">OUR OPERATING MODEL</div>
       <h1>One team.<br /><em>One coordinated operation.</em></h1>
       <p>

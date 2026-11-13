@@ -18,7 +18,7 @@ export default function Home() {
   return <main>
     <div className="announcement"><span className="live-dot" /> AMERICAN TRUCK SIMULATOR <i /> MULTIPLAYER VTC <i /> ORGANIZED COMPANY CONVOYS</div>
     <header className="wrap nav">
-      <Link href="/" className="brand"><img src="/bc-gold-logistics-logo.svg" alt="BC Gold Logistics" style={{ width: 54, height: 54, objectFit: "contain" }} /><span><b>BC GOLD LOGISTICS</b><small>DRIVE WITH PURPOSE</small></span></Link>
+      <Link href="/" className="brand"><img src="/bc-gold-logistics-logo.svg" alt="BC Gold Logistics" style={{ width: 62, height: 62, objectFit: "contain", border: "1px solid #d7b34a", borderRadius: 8, padding: 3, background: "#050505" }} /><span><b>BC GOLD LOGISTICS</b><small>DRIVE WITH PURPOSE</small></span></Link>
       <nav aria-label="Main navigation">
         <a href="#company">COMPANY</a><a href="#operations">OPERATIONS</a><a href="#standards">OUR STANDARD</a>
         <Link href="/convoys">CONVOYS</Link><Link href="/driver">DRIVER PORTAL</Link>
@@ -41,7 +41,7 @@ export default function Home() {
 
     <div className="ticker">INDEPENDENT DRIVERS <b>✦</b> SHARED MILES <b>✦</b> PROFESSIONAL OPERATIONS <b>✦</b> ONE COMPANY</div>
 
-    <section className="section wrap" id="company">
+    <section className="road-gallery wrap" aria-label="BC Gold Logistics on the road">\n      <article className="road-gallery-card road-gallery-highway"><span>01 / THE OPEN ROAD</span><b>Every route.<br/>Every mile.</b></article>\n      <article className="road-gallery-card road-gallery-fleet"><span>02 / FLEET OPERATIONS</span><b>Ready for<br/>the long haul.</b></article>\n      <article className="road-gallery-card road-gallery-convoy"><span>03 / COMPANY CONVOYS</span><b>Stronger<br/>together.</b></article>\n    </section>\n\n    <section className="section wrap" id="company">
       <div className="intro-grid">
         <div><div className="section-kicker">WHO WE ARE</div><h2>One company.<br/><em>Many roads.</em></h2></div>
         <div><p className="lead">A coordinated company experience on the virtual road.</p><p className="muted">BC Gold Logistics is organized for drivers who want to operate together in ATS multiplayer Convoy sessions. Members represent one company, follow shared operating standards, and participate in coordinated freight runs and company events.</p><Link className="text-link" href="/standards">READ OUR DRIVER STANDARDS <span>↗</span></Link></div>

@@ -2,6 +2,11 @@ name: Import BC Truck Works repositories
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/import-truck-works.yml
 
 permissions:
   contents: write

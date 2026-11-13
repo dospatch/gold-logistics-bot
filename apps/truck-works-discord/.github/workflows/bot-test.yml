@@ -1,0 +1,33 @@
+name: BC TRUCK WORKS Bot Test
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  bot-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Check bot syntax
+        run: node --check index.js
+
+      - name: Verify discord.js
+        run: node -e "const { Client } = require('discord.js'); if (!Client) process.exit(1); console.log('discord.js loaded successfully')"
+
+      - name: Verify package configuration
+        run: node -e "const pkg = require('./package.json'); if (pkg.main !== 'index.js' || pkg.scripts.start !== 'node index.js') process.exit(1); console.log('package configuration verified')"

@@ -1,0 +1,40 @@
+'use strict';
+
+const PLATFORM_NAME = 'BC TRUCK WORKS';
+
+const GAMES = Object.freeze({
+  ATS: 'ATS',
+  ETS2: 'ETS2',
+  OTHER: 'OTHER'
+});
+
+const SERVER_STATUS = Object.freeze({
+  ONLINE: 'ONLINE',
+  OFFLINE: 'OFFLINE',
+  STARTING: 'STARTING',
+  STOPPING: 'STOPPING',
+  UNKNOWN: 'UNKNOWN'
+});
+
+const LICENSE_STATUS = Object.freeze({
+  ACTIVE: 'ACTIVE',
+  SUSPENDED: 'SUSPENDED',
+  EXPIRED: 'EXPIRED',
+  REVOKED: 'REVOKED',
+  PENDING: 'PENDING'
+});
+
+const USER_ROLES = Object.freeze({
+  PLATFORM_ADMIN: 'PLATFORM_ADMIN',
+  SERVER_OWNER: 'SERVER_OWNER',
+  SERVER_ADMIN: 'SERVER_ADMIN',
+  SERVER_MEMBER: 'SERVER_MEMBER'
+});
+
+module.exports = {
+  PLATFORM_NAME,
+  GAMES,
+  SERVER_STATUS,
+  LICENSE_STATUS,
+  USER_ROLES
+};

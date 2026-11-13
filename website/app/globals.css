@@ -173,3 +173,18 @@
 .subpage-logo{width:42px;height:42px;object-fit:contain;border:1px solid #d7b34a;border-radius:5px;background:#050505;padding:2px;box-shadow:0 0 12px #d7b34a22}
 .management-brand{display:flex;align-items:center;gap:12px}
 .management-brand .management-logo{width:48px;height:48px;object-fit:contain;border:1px solid #d7b34a;border-radius:6px;background:#050505;padding:2px}
+
+
+/* BC Gold Logistics company image gallery */
+.gallery-section{background:linear-gradient(180deg,#0b0c0f,#111317);border-block:1px solid #2b271d}
+.company-gallery{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.gallery-card{position:relative;min-height:350px;overflow:hidden;border:1px solid #514321;background:#090a0c}
+.gallery-card img{width:100%;height:100%;min-height:350px;position:absolute;inset:0;object-fit:cover;transition:transform .45s ease;filter:brightness(.72) saturate(.9)}
+.gallery-card:hover img{transform:scale(1.045);filter:brightness(.88) saturate(1)}
+.gallery-card:after{content:"";position:absolute;inset:25% 0 0;background:linear-gradient(180deg,transparent,rgba(5,6,8,.96))}
+.gallery-card>div{position:absolute;z-index:1;left:22px;right:22px;bottom:22px}
+.gallery-card span{color:var(--gold2);font-size:9px;font-weight:800;letter-spacing:1.8px}
+.gallery-card h3{font:800 22px Manrope;margin:10px 0 5px}
+.gallery-card p{color:#c5c3bd;font-size:12px;line-height:1.7;margin:0}
+.gallery-note{color:#777a7d;font-size:10px;line-height:1.6;margin-top:14px}
+@media(max-width:800px){.company-gallery{grid-template-columns:1fr}.gallery-card,.gallery-card img{min-height:290px}.gallery-card>div{left:18px;right:18px;bottom:18px}}

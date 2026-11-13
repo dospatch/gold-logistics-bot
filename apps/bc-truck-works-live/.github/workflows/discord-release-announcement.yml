@@ -1,0 +1,95 @@
+name: Manually announce Live Companion releases in Discord
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Release tag to announce (for example v1.0.0)"
+        required: true
+        default: "v1.0.0"
+
+permissions:
+  contents: read
+
+jobs:
+  announce:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Post release and optionally mention the configured Discord role
+        env:
+          DISCORD_RELEASE_WEBHOOK_URL: ${{ secrets.DISCORD_RELEASE_WEBHOOK_URL }}
+          DISCORD_RELEASE_ROLE_ID: ${{ vars.DISCORD_RELEASE_ROLE_ID }}
+          RELEASE_TAG: ${{ github.event.release.tag_name || inputs.release_tag }}
+          RELEASE_NAME: ${{ github.event.release.name || inputs.release_tag }}
+          RELEASE_URL: ${{ github.event.release.html_url || format('https://github.com/{0}/releases/tag/{1}', github.repository, inputs.release_tag) }}
+          RELEASE_BODY: ${{ github.event.release.body || 'A new version is now available. Open the release page for details.' }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          node <<'NODE'
+          const webhook = process.env.DISCORD_RELEASE_WEBHOOK_URL;
+          const roleId = (process.env.DISCORD_RELEASE_ROLE_ID || "").trim();
+          if (!webhook) {
+            console.error("Missing repository secret DISCORD_RELEASE_WEBHOOK_URL.");
+            process.exit(1);
+          }
+          if (roleId && !/^\d{17,20}$/.test(roleId)) {
+            console.error("DISCORD_RELEASE_ROLE_ID is set but invalid. Use the numeric Discord role ID, or leave the variable empty to post without a role mention.");
+            process.exit(1);
+          }
+
+          let target;
+          try {
+            target = new URL(webhook);
+            if (target.protocol !== "https:" || !["discord.com", "discordapp.com"].includes(target.hostname) || !target.pathname.includes("/api/webhooks/")) {
+              throw new Error("Unexpected webhook URL");
+            }
+            target.searchParams.set("wait", "true");
+          } catch {
+            console.error("DISCORD_RELEASE_WEBHOOK_URL is not a valid Discord webhook URL.");
+            process.exit(1);
+          }
+
+          const tag = process.env.RELEASE_TAG || "New release";
+          const title = (process.env.RELEASE_NAME || tag).slice(0, 250);
+          const body = (process.env.RELEASE_BODY || "A new version is now available. Open the release page for details.").trim().slice(0, 3900);
+          const releaseUrl = process.env.RELEASE_URL;
+          const hasRole = /^\d{17,20}$/.test(roleId);
+          const announcement = hasRole
+            ? `🚛 <@&${roleId}> — a new BC Truck Works Live Companion version is out!`
+            : "🚛 A new BC Truck Works Live Companion version is out!";
+          const payload = {
+            username: "BC Truck Works Releases",
+            allowed_mentions: hasRole ? { parse: [], roles: [roleId] } : { parse: [] },
+            content: announcement,
+            embeds: [{
+              title: `🚀 ${title}`,
+              url: releaseUrl,
+              description: body || "A new version is now available.",
+              color: 4436735,
+              fields: [
+                { name: "Version", value: tag, inline: true },
+                { name: "Repository", value: process.env.REPOSITORY, inline: true },
+                { name: "Release link", value: `[Open ${tag}](${releaseUrl})`, inline: false }
+              ],
+              footer: { text: "BC Truck Works Live Companion · Release announcements" },
+              timestamp: new Date().toISOString()
+            }]
+          };
+
+          fetch(target, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          }).then(async response => {
+            if (!response.ok) {
+              const detail = (await response.text()).slice(0, 500);
+              throw new Error(`Discord webhook returned HTTP ${response.status}: ${detail}`);
+            }
+            console.log(hasRole
+              ? `Discord announcement sent for ${tag}; role ${roleId} was mentioned.`
+              : `Discord announcement sent for ${tag}; no role mention was configured.`);
+          }).catch(error => {
+            console.error(error.message || error);
+            process.exitCode = 1;
+          });
+          NODE

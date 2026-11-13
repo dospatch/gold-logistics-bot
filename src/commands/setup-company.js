@@ -26,13 +26,14 @@ const roles = [
   ["Applicant", 0x7F8C8D],
   ["Employee", 0x2ECC71],
   ["LOA", 0x5865F2],
-  ["Guest", 0x777777]
+  ["Guest", 0x777777],
+  ["BC Logistics Changelog", 0xD4AF37]
 ];
 
 const layout = {
   "🏁 START HERE": [
     "welcome", "announcements", "company-information", "company-rules",
-    "driver-handbook", "frequently-asked-questions"
+    "driver-handbook", "frequently-asked-questions", "bc-logistics-changelog"
   ],
   "📝 RECRUITMENT & HUMAN RESOURCES": [
     "open-positions", "how-to-apply", "application-support", "onboarding",
@@ -121,7 +122,7 @@ async function execute(interaction) {
   for (const [name, color] of roles) {
     if (!guild.roles.cache.some(role => role.name === name)) {
       try {
-        await guild.roles.create({ name, color, reason: "BC Gold Logistics VTC structure" });
+        await guild.roles.create({ name, color, mentionable: name === "BC Logistics Changelog", reason: "BC Gold Logistics VTC structure" });
         rolesCreated++;
       } catch (error) {
         errors.push("Role " + name + ": " + error.message);

@@ -34,7 +34,7 @@ export default function Home() {
         <h1>Every mile has<br />a <em>purpose.</em></h1>
         <p>BC Gold Logistics is a multiplayer American Truck Simulator virtual trucking company built around coordinated company convoys, professional drivers, and organized freight operations.</p>
         <div className="hero-actions"><Link className="btn gold" href="/apply">APPLY TO THE COMPANY <span>↗</span></Link><Link className="btn outline" href="/convoys">EXPLORE CONVOYS</Link></div>
-        <img src="/bc-gold-logistics-logo.svg" alt="BC Gold Logistics gold truck emblem" style={{ display: "block", width: "min(180px, 34vw)", height: "auto", marginTop: 28, border: "1px solid #d7b34a88", borderRadius: 10, padding: 8, background: "#08090bcc" }} />
+        <img src="/bc-gold-logistics-logo.svg" alt="BC Gold Logistics gold truck emblem" style={{ display: "block", width: "min(220px, 42vw)", height: "auto", marginTop: 28, border: "1px solid #d7b34a88", borderRadius: 10, padding: 8, background: "#08090bcc" }} />
         <div className="hero-meta"><span>AMERICAN TRUCK SIMULATOR</span><b /> <span>MULTIPLAYER VTC</span><b /> <span>DRIVER APPLICATIONS OPEN</span></div>
       </div>
     </section>
@@ -58,6 +58,28 @@ export default function Home() {
     <section className="fleet">
       <div className="fleet-image" role="img" aria-label="A highway freight truck on the open road" />
       <div className="fleet-copy"><div className="section-kicker">THE BC GOLD FLEET</div><h2>Equipment with<br/><em>a purpose.</em></h2><p>We treat fleet operations as a company responsibility. Trucks, trailers, and driver assignments are organized to support dependable freight activity and future growth. Our fleet records will expand as company equipment is added.</p><Link className="text-link" href="/driver">OPEN THE DRIVER PORTAL <span>↗</span></Link></div>
+    </section>
+
+
+    <section className="section gallery-section">
+      <div className="wrap">
+        <div className="section-head"><div><div className="section-kicker">LIFE ON THE ROAD</div><h2>Company miles.<br/><em>Shared experiences.</em></h2></div><p>A look at the trucks, routes, and freight environments that inspire the BC Gold Logistics experience.</p></div>
+        <div className="company-gallery">
+          <article className="gallery-card gallery-convoy">
+            <img src="https://cdn.mos.cms.futurecdn.net/7WpX8HGSLKDud6SygGgVX6.jpg" alt="American Truck Simulator multiplayer convoy lineup" loading="lazy" />
+            <div><span>01 / CONVOY OPERATIONS</span><h3>Drive together</h3><p>Organized multiplayer routes and shared company runs.</p></div>
+          </article>
+          <article className="gallery-card gallery-warehouse">
+            <img src="https://www.prologis.it/sites/italy/files/images/2022/05/featured-property-3_bologna-dc-15_ok-sd.jpg" alt="Modern logistics distribution center with trucks at loading docks" loading="lazy" />
+            <div><span>02 / FREIGHT & LOGISTICS</span><h3>Move with purpose</h3><p>Freight coordination, distribution, and dependable operations.</p></div>
+          </article>
+          <article className="gallery-card gallery-highway">
+            <img src="https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=1400&q=85" alt="Semi truck traveling along an open highway" loading="lazy" />
+            <div><span>03 / LONG-HAUL DRIVING</span><h3>Every mile matters</h3><p>Professional drivers, open roads, and the next destination.</p></div>
+          </article>
+        </div>
+        <p className="gallery-note">Visual reference imagery; not a representation of company-owned physical equipment or facilities.</p>
+      </div>
     </section>
 
     <section className="section wrap values" id="standards">

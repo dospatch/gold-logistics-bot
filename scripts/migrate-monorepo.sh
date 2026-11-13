@@ -2,7 +2,7 @@
 set -euo pipefail
 
 EXPECTED_REPO="dospatch/gold-logistics-bot"
-BRANCH="${GITHUB_REF_NAME:-$(git branch --show-current)}"
+BRANCH="$(git branch --show-current)"
 
 ROOT="$(git rev-parse --show-toplevel)"
 cd "$ROOT"

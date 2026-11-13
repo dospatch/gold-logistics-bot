@@ -1,0 +1,108 @@
+name: Build Windows Installer
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: windows-installer-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build-windows:
+    # windows-latest moved to a runner with VS 18, which node-gyp currently
+    # fails to identify. Pin VS 2022 until native telemetry dependency supports it.
+    runs-on: windows-2022
+    timeout-minutes: 30
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Build Next.js standalone dashboard
+        run: npm run build
+      - name: Verify standalone runtime dependencies
+        shell: pwsh
+        run: |
+          $required = @(
+            ".next/standalone/server.js",
+            ".next/standalone/node_modules/next/package.json",
+            ".next/standalone/node_modules/react/package.json",
+            ".next/standalone/node_modules/react-dom/package.json",
+            "node_modules/trucksim-telemetry/package.json",
+            "electron/telemetry-bridge.cjs"
+          )
+          foreach ($path in $required) {
+            if (-not (Test-Path $path)) {
+              Write-Error "Standalone runtime dependency missing: $path"
+              exit 1
+            }
+          }
+          $telemetryPackage = Get-Content "node_modules/trucksim-telemetry/package.json" -Raw | ConvertFrom-Json
+          Write-Host "Telemetry package version:" $telemetryPackage.version
+          Write-Host "Standalone server, telemetry bridge, and runtime dependencies are present."
+      - name: Package Windows installer
+        run: npx electron-builder --win nsis --publish always
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Verify packaged dashboard runtime
+        shell: pwsh
+        run: |
+          $required = @(
+            "release/win-unpacked/resources/app/server.js",
+            "release/win-unpacked/resources/app/node_modules/next/package.json",
+            "release/win-unpacked/resources/app/node_modules/react/package.json",
+            "release/win-unpacked/resources/app/node_modules/react-dom/package.json",
+            "release/win-unpacked/resources/telemetry/telemetry-bridge.cjs",
+            "release/win-unpacked/resources/telemetry/node_modules/trucksim-telemetry/package.json"
+          )
+          foreach ($path in $required) {
+            if (-not (Test-Path $path)) {
+              Write-Error "Packaged runtime dependency missing: $path"
+              exit 1
+            }
+          }
+          Write-Host "Packaged dashboard and telemetry runtime dependencies are present."
+      - name: Generate SHA-256 checksum
+        shell: pwsh
+        run: |
+          $installer = Get-ChildItem release/*.exe | Select-Object -First 1
+          if (-not $installer) { throw "No Windows installer was produced." }
+          $hash = (Get-FileHash $installer.FullName -Algorithm SHA256).Hash.ToLower()
+          "$hash  $($installer.Name)" | Set-Content -Path "$($installer.FullName).sha256" -Encoding ascii
+      - name: Verify updater metadata for version releases
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: pwsh
+        run: |
+          $metadata = Get-ChildItem release/latest*.yml -ErrorAction SilentlyContinue | Select-Object -First 1
+          if (-not $metadata) { throw "electron-builder did not create latest.yml updater metadata." }
+          Write-Host "Updater metadata found:" $metadata.Name
+      - name: Upload installer artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: BC-Truck-Works-Companion-Windows-Installer
+          path: |
+            release/*.exe
+            release/*.sha256
+          if-no-files-found: error
+          retention-days: 14
+      - name: Publish GitHub Release assets
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          name: BC Truck Works Live Companion ${{ github.ref_name }}
+          generate_release_notes: true
+          files: |
+            release/*.exe
+            release/*.sha256

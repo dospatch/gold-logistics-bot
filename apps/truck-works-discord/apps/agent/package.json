@@ -1,0 +1,15 @@
+{
+  "name": "@truckworks/agent",
+  "version": "1.0.0",
+  "private": true,
+  "description": "BC TRUCK WORKS dedicated server agent",
+  "main": "src/index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2"
+  }
+}

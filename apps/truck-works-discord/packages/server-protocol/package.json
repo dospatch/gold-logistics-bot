@@ -1,0 +1,8 @@
+{
+  "name": "@truckworks/server-protocol",
+  "version": "1.0.0",
+  "private": true,
+  "description": "BC TRUCK WORKS server agent/API communication protocol",
+  "main": "protocol.js",
+  "type": "commonjs"
+}

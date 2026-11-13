@@ -1,0 +1,13 @@
+{
+  "game": "ATS",
+  "discordId": "YOUR_DISCORD_USER_ID",
+  "apiUrl": "https://bcttruckworks.vercel.app/api/telemetry",
+  "telemetryApiKey": "YOUR_TELEMETRY_API_KEY",
+  "intervalMs": 2000,
+  "telemetryTimeoutMs": 1500,
+  "requestTimeoutMs": 5000,
+  "commandsUrl": "https://bcttruckworks.vercel.app/api/game-commands",
+  "connectorCommandKey": "YOUR_CONNECTOR_COMMAND_KEY",
+  "allowGameInput": false,
+  "gameWindowTitle": "American Truck Simulator"
+}

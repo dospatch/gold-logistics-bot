@@ -165,3 +165,11 @@
  .sidebar-scrim{display:block;position:fixed;z-index:79;inset:0;background:#0009;border:0}
 }
 @media(min-width:901px){.sidebar-mobile-toggle{display:none}}
+
+/* Consistent BC Gold Logistics emblem across mobile navigation and every subpage. */
+.sidebar-mobile-toggle img{width:34px;height:34px;object-fit:contain;display:block;border:1px solid #d7b34a;border-radius:5px;background:#050505;padding:2px;box-shadow:0 0 12px #d7b34a22}
+.sidebar-mobile-toggle{min-height:52px;gap:10px}
+.brand-back{display:inline-flex!important;align-items:center;gap:10px;min-height:54px;padding:5px 12px;border:1px solid #5b4a20;border-radius:6px;background:#090a0dcc}
+.subpage-logo{width:42px;height:42px;object-fit:contain;border:1px solid #d7b34a;border-radius:5px;background:#050505;padding:2px;box-shadow:0 0 12px #d7b34a22}
+.management-brand{display:flex;align-items:center;gap:12px}
+.management-brand .management-logo{width:48px;height:48px;object-fit:contain;border:1px solid #d7b34a;border-radius:6px;background:#050505;padding:2px}

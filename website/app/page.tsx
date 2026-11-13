@@ -41,7 +41,13 @@ export default function Home() {
 
     <div className="ticker">INDEPENDENT DRIVERS <b>✦</b> SHARED MILES <b>✦</b> PROFESSIONAL OPERATIONS <b>✦</b> ONE COMPANY</div>
 
-    <section className="road-gallery wrap" aria-label="BC Gold Logistics on the road">\n      <article className="road-gallery-card road-gallery-highway"><span>01 / THE OPEN ROAD</span><b>Every route.<br/>Every mile.</b></article>\n      <article className="road-gallery-card road-gallery-fleet"><span>02 / FLEET OPERATIONS</span><b>Ready for<br/>the long haul.</b></article>\n      <article className="road-gallery-card road-gallery-convoy"><span>03 / COMPANY CONVOYS</span><b>Stronger<br/>together.</b></article>\n    </section>\n\n    <section className="section wrap" id="company">
+    <section className="road-gallery wrap" aria-label="BC Gold Logistics on the road">
+      <article className="road-gallery-card road-gallery-highway"><span>01 / THE OPEN ROAD</span><b>Every route.<br/>Every mile.</b></article>
+      <article className="road-gallery-card road-gallery-fleet"><span>02 / FLEET OPERATIONS</span><b>Ready for<br/>the long haul.</b></article>
+      <article className="road-gallery-card road-gallery-convoy"><span>03 / COMPANY CONVOYS</span><b>Stronger<br/>together.</b></article>
+    </section>
+
+    <section className="section wrap" id="company">
       <div className="intro-grid">
         <div><div className="section-kicker">WHO WE ARE</div><h2>One company.<br/><em>Many roads.</em></h2></div>
         <div><p className="lead">A coordinated company experience on the virtual road.</p><p className="muted">BC Gold Logistics is organized for drivers who want to operate together in ATS multiplayer Convoy sessions. Members represent one company, follow shared operating standards, and participate in coordinated freight runs and company events.</p><Link className="text-link" href="/standards">READ OUR DRIVER STANDARDS <span>↗</span></Link></div>

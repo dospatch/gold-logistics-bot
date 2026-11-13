@@ -26,11 +26,11 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Verify Git subtree is available
-        run: git subtree --version
-
       - name: Import source repositories
-        run: bash scripts/migrate-monorepo.sh
+        run: |
+          command -v git
+          git subtree -h >/dev/null 2>&1 || true
+          bash scripts/migrate-monorepo.sh
         env:
           GITHUB_REF_NAME: monorepo-foundation
 

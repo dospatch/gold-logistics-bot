@@ -9,7 +9,7 @@ on:
       - 'apps/**'
       - '.github/workflows/monorepo-validation.yml'
   push:
-    branches: [main, monorepo-foundation]
+    branches: [main, monorepo-foundation, truck-works-unified]
     paths:
       - 'src/**'
       - 'package.json'
@@ -32,16 +32,16 @@ jobs:
             directory: .
             node: '22'
             command: 'node --check src/index.js'
-          - app: bc-truck-works
-            directory: apps/bc-truck-works
+          - app: bc-truck-works-platform
+            directory: apps/bc-truck-works/platform
             node: '22'
             command: 'node --check index.js'
           - app: bc-truck-works-live
-            directory: apps/bc-truck-works-live
+            directory: apps/bc-truck-works/live-companion
             node: '22'
             command: 'npm run build'
-          - app: truck-works-discord
-            directory: apps/truck-works-discord
+          - app: bc-truck-works-discord
+            directory: apps/bc-truck-works/discord-bot
             node: '22'
             command: 'node --check index.js'
     steps:

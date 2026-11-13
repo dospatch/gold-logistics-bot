@@ -24,6 +24,7 @@ jobs:
           GITHUB_EVENT_BEFORE: ${{ github.event.before }}
           GITHUB_EVENT_AFTER: ${{ github.event.after }}
           GITHUB_EVENT_NAME: ${{ github.event_name }}
+          GITHUB_COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
           GITHUB_SERVER_URL: ${{ github.server_url }}
         run: |
           python3 - <<'PY'
@@ -74,15 +75,17 @@ jobs:
           commit_url = f"{os.environ['GITHUB_SERVER_URL']}/{repo}/commit/{sha}"
           event_name = os.environ.get("GITHUB_EVENT_NAME", "push")
           title = "Website / company systems update" if event_name == "push" else "Company update"
-          content = (
-              f"<@&{role['id']}>\\n"
-              f"## 🏆 BC GOLD LOGISTICS — {title}\\n"
-              f"**Branch:** `{ref}`\\n"
-              f"**Commit:** [`{sha[:7]}`]({commit_url})\\n"
-              f"**Repository:** `{repo}`\\n"
-              f"An update has been merged into the main company project. Review the commit for the exact files and changes.\\n"
-              f"🔗 {commit_url}"
-          )
+          commit_message = os.environ.get("GITHUB_COMMIT_MESSAGE", "Company update")
+          content = "\\n".join([
+              f"<@&{role['id']}>",
+              f"## 🏆 BC GOLD LOGISTICS — {title}",
+              f"**Update:** {commit_message[:250]}",
+              f"**Branch:** `{ref}`",
+              f"**Commit:** [`{sha[:7]}`]({commit_url})",
+              f"**Repository:** `{repo}`",
+              "An update has been merged into the main company project.",
+              f"🔗 {commit_url}",
+          ])
           api("POST", f"/channels/{channel['id']}/messages", {
               "content": content[:1900],
               "allowed_mentions": {"parse": [], "roles": [role["id"]]},

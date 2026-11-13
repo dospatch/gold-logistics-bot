@@ -1,55 +1,54 @@
-# Monorepo application guide
+# BC Gold Logistics application guide
 
-This repository is the central source for BC Gold Logistics and the BC Truck Works applications. The imported applications remain separate deployable products; they are not one combined Node process.
+This repository is the central source for BC Gold Logistics and its BC Truck Works division.
 
-## Applications
+## Company structure
 
-| Directory | Product | Runtime |
-|---|---|---|
-| Repository root | BC Gold Logistics Discord bot | Node.js; `npm start` |
-| `apps/bc-truck-works` | BC Truck Works primary Discord bot and driver platform source | Node.js 20+; `npm start` |
-| `apps/bc-truck-works-live` | BC Truck Works Live Companion web dashboard and optional Windows desktop app | Node.js 22; `npm run dev` / `npm run build` |
-| `apps/truck-works-discord` | Separate BC Truck Works Discord bot package | Node.js 20+; `npm start` |
+- Repository root and `website/`: BC Gold Logistics company platform and services.
+- `apps/bc-truck-works/`: the complete BC Truck Works division, organized into three independently runnable components:
+  - `platform/`: original BC Truck Works driver hub, telemetry/connector, fleet and dispatch platform.
+  - `live-companion/`: ATS/ETS2 Live Companion web dashboard, telemetry bridge and optional Windows desktop companion.
+  - `discord-bot/`: Truck Works Discord bot and its supporting app/database packages.
+
+The three components share one division folder and central repository, but remain separate deployable processes. This avoids accidentally starting two Discord bots or mixing incompatible dependencies into one Node process.
 
 ## Local development
 
-Run commands from the relevant application directory.
+Run commands from each component's own directory.
 
 ```bash
-# BC Gold Logistics bot (repository root)
+# BC Gold Logistics root service
 npm install
 npm start
 
-# BC Truck Works bot
-cd apps/bc-truck-works
+# BC Truck Works platform
+cd apps/bc-truck-works/platform
 npm install
 npm start
 
-# Live Companion
-cd apps/bc-truck-works-live
+# BC Truck Works Live Companion
+cd apps/bc-truck-works/live-companion
 npm install
 npm run dev
-# Production validation:
 npm run build
 
-# Separate Truck Works Discord bot
-cd apps/truck-works-discord
+# BC Truck Works Discord bot
+cd apps/bc-truck-works/discord-bot
 npm install
 npm start
 ```
 
-Each app has its own `.env.example`. Copy it to the appropriate local environment file and supply secrets through the host's environment-variable settings. Never commit real Discord tokens, database credentials, webhook URLs, or populated environment files.
+Each component keeps its own package manifest and `.env.example`. Configure secrets in the relevant hosting service; never commit populated environment files, Discord tokens, database credentials, or webhook URLs.
 
 ## Deployment boundaries
 
-- Keep the existing BC Gold Logistics Render service at the repository root.
-- Keep the Live Companion as a separate Next.js deployment rooted at `apps/bc-truck-works-live` only after its hosting project is deliberately reconfigured and verified.
-- Keep both Truck Works Discord bot deployments separate until their command sets, server targets, and production responsibilities are reconciled.
-- Do not deploy both Discord bots into the same process or server instance by default.
-- Existing standalone source repositories remain intact as rollback references. Do not archive or delete them until production cutover is verified and explicitly approved.
+- Keep the BC Gold Logistics website and root service on their existing deployment roots.
+- Keep Live Companion as a separate Next.js deployment rooted at `apps/bc-truck-works/live-companion` after the Vercel project is reconfigured and verified.
+- Keep Discord bot services separate until their command sets, server targets, and production responsibilities are reconciled. Never run duplicate bots against the same Discord server unintentionally.
+- Keep the original source repositories intact as rollback references until all central deployments are verified and explicitly approved for retirement.
 
 ## Migration notes
 
-The three source repositories were imported as Git subtrees, preserving their commit histories. The empty `goldtrack-ats-companion.` repository was intentionally left untouched. Unrelated BCGAMING projects are not part of this monorepo.
+All three source repositories were imported as Git subtrees before being grouped under this division folder. The empty `goldtrack-ats-companion.` repository remains untouched. Unrelated BCGAMING projects are excluded.
 
-See [MONOREPO-PLAN.md](./MONOREPO-PLAN.md) for the migration plan and safety rules.
+See [MONOREPO-PLAN.md](./MONOREPO-PLAN.md) for migration history and safety rules.

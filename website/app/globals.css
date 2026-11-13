@@ -173,3 +173,17 @@
 .subpage-logo{width:42px;height:42px;object-fit:contain;border:1px solid #d7b34a;border-radius:5px;background:#050505;padding:2px;box-shadow:0 0 12px #d7b34a22}
 .management-brand{display:flex;align-items:center;gap:12px}
 .management-brand .management-logo{width:48px;height:48px;object-fit:contain;border:1px solid #d7b34a;border-radius:6px;background:#050505;padding:2px}
+
+
+/* Website visual refresh: stronger shared emblem and distinct trucking photography. */
+.nav .brand img,.footer .brand img{flex:0 0 auto;box-shadow:0 0 18px #d7b34a24}
+.road-gallery{display:grid;grid-template-columns:1.15fr 1fr 1fr;gap:14px;padding-top:38px;padding-bottom:38px}
+.road-gallery-card{min-height:210px;position:relative;display:flex;flex-direction:column;justify-content:space-between;padding:18px;border:1px solid #4b4027;background-color:#111; background-size:cover;background-position:center;overflow:hidden}
+.road-gallery-card:before{content:"";position:absolute;inset:0;background:linear-gradient(0deg,#08090b 0%,#08090b88 45%,#08090b22 100%)}
+.road-gallery-card span,.road-gallery-card b{position:relative;z-index:1}
+.road-gallery-card span{font-size:9px;letter-spacing:1.8px;color:#f0d77d;font-weight:800}
+.road-gallery-card b{font:800 clamp(19px,2.2vw,27px)/1.12 Manrope;letter-spacing:-.5px}
+.road-gallery-highway{background-image:url('https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=1000&q=85')}
+.road-gallery-fleet{background-image:url('https://images.unsplash.com/photo-1586191582151-f73872dfd183?auto=format&fit=crop&w=1000&q=85')}
+.road-gallery-convoy{background-image:url('https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=1000&q=85')}
+@media(max-width:800px){.road-gallery{grid-template-columns:1fr;padding-top:20px;padding-bottom:25px;gap:10px}.road-gallery-card{min-height:165px}.nav{height:76px}.nav .brand{gap:9px}.nav .brand img{width:50px!important;height:50px!important}.nav .brand b{font-size:11px;letter-spacing:1.4px}.nav .brand small{font-size:8px;letter-spacing:2.5px}}

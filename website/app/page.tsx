@@ -18,7 +18,7 @@ export default function Home() {
   return <main>
     <div className="announcement"><span className="live-dot" /> AMERICAN TRUCK SIMULATOR <i /> MULTIPLAYER VTC <i /> ORGANIZED COMPANY CONVOYS</div>
     <header className="wrap nav">
-      <Link href="/" className="brand"><img src="/bc-gold-logistics-logo.svg" alt="BC Gold Logistics" style={{ width: 54, height: 54, objectFit: "contain" }} /><span><b>BC GOLD LOGISTICS</b><small>DRIVE WITH PURPOSE</small></span></Link>
+      <Link href="/" className="brand"><img src="/BC%20Gold%20Logistics%20Emblem.png" alt="BC Gold Logistics" style={{ width: 54, height: 54, objectFit: "contain" }} /><span><b>BC GOLD LOGISTICS</b><small>DRIVE WITH PURPOSE</small></span></Link>
       <nav aria-label="Main navigation">
         <a href="#company">COMPANY</a><a href="#operations">OPERATIONS</a><a href="#standards">OUR STANDARD</a>
         <Link href="/convoys">CONVOYS</Link><Link href="/driver">DRIVER PORTAL</Link>
@@ -34,7 +34,7 @@ export default function Home() {
         <h1>Every mile has<br />a <em>purpose.</em></h1>
         <p>BC Gold Logistics is a multiplayer American Truck Simulator virtual trucking company built around coordinated company convoys, professional drivers, and organized freight operations.</p>
         <div className="hero-actions"><Link className="btn gold" href="/apply">APPLY TO THE COMPANY <span>↗</span></Link><Link className="btn outline" href="/convoys">EXPLORE CONVOYS</Link></div>
-        <img src="/bc-gold-logistics-logo.svg" alt="BC Gold Logistics gold truck emblem" style={{ display: "block", width: "min(220px, 42vw)", height: "auto", marginTop: 28, border: "1px solid #d7b34a88", borderRadius: 10, padding: 8, background: "#08090bcc" }} />
+        <img src="/BC%20Gold%20Logistics%20Emblem.png" alt="BC Gold Logistics gold truck emblem" style={{ display: "block", width: "min(220px, 42vw)", height: "auto", marginTop: 28, border: "1px solid #d7b34a88", borderRadius: 10, padding: 8, background: "#08090bcc" }} />
         <div className="hero-meta"><span>AMERICAN TRUCK SIMULATOR</span><b /> <span>MULTIPLAYER VTC</span><b /> <span>DRIVER APPLICATIONS OPEN</span></div>
       </div>
     </section>
@@ -92,6 +92,6 @@ export default function Home() {
       <div className="wrap career-inner"><div><div className="section-kicker">RECRUITMENT · DRIVER APPLICATIONS</div><h2>Your next route<br/>could start <em>here.</em></h2><p>Interested in joining BC Gold Logistics? Submit your application through the website. Management reviews applications, and approved drivers receive access to company driver resources.</p></div><div className="career-action"><Link className="btn gold" href="/apply">START YOUR APPLICATION <span>↗</span></Link><a href={discordInvite} target="_blank" rel="noopener noreferrer" className="text-link">JOIN OUR DISCORD <span>↗</span></a><small>Discord sign-in required · Management approval required</small></div></div>
     </section>
 
-    <footer className="footer"><div className="wrap footer-top"><Link href="/" className="brand"><img src="/bc-gold-logistics-logo.svg" alt="BC Gold Logistics" style={{ width: 54, height: 54, objectFit: "contain" }} /><span><b>BC GOLD LOGISTICS</b><small>DRIVE WITH PURPOSE</small></span></Link><p>American Truck Simulator · Virtual Trucking Company</p><div className="footer-links"><Link href="/apply">Apply</Link><Link href="/convoys">Convoys</Link><Link href="/standards">Standards</Link><Link href="/driver">Driver Portal</Link><a href={discordInvite} target="_blank" rel="noopener noreferrer">Discord ↗</a></div></div><div className="wrap footer-bottom"><span>© {new Date().getFullYear()} BC GOLD LOGISTICS</span><span>REAL DRIVERS. REAL DELIVERIES. ONE TEAM.</span></div></footer>
+    <footer className="footer"><div className="wrap footer-top"><Link href="/" className="brand"><img src="/BC%20Gold%20Logistics%20Emblem.png" alt="BC Gold Logistics" style={{ width: 54, height: 54, objectFit: "contain" }} /><span><b>BC GOLD LOGISTICS</b><small>DRIVE WITH PURPOSE</small></span></Link><p>American Truck Simulator · Virtual Trucking Company</p><div className="footer-links"><Link href="/apply">Apply</Link><Link href="/convoys">Convoys</Link><Link href="/standards">Standards</Link><Link href="/driver">Driver Portal</Link><a href={discordInvite} target="_blank" rel="noopener noreferrer">Discord ↗</a></div></div><div className="wrap footer-bottom"><span>© {new Date().getFullYear()} BC GOLD LOGISTICS</span><span>REAL DRIVERS. REAL DELIVERIES. ONE TEAM.</span></div></footer>
   </main>;
 }

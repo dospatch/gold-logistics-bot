@@ -132,20 +132,16 @@ jobs:
           if not entries:
               entries = [f"- **Update** — Company changes published in commit {after[:7]}"]
 
-          repo = os.environ["GITHUB_REPOSITORY"]
-          ref = os.environ.get("GITHUB_REF_NAME", "main")
-          heading = "## 🏆 BC GOLD LOGISTICS CHANGELOG"
-          footer = f"Repository: `{repo}` · Branch: `{ref}`"
+          heading = "🏆 BC GOLD LOGISTICS CHANGELOG"
           role_mention = f"<@&{role['id']}>"
 
-          # Discord message content is limited to 2,000 characters. Split long histories
-          # into numbered continuation messages while keeping each commit on one line.
-          max_length = 1850
+          # Keep each embed concise and split long histories into numbered continuations.
+          max_length = 1450
           chunks = []
           current = []
           for entry in entries:
               candidate = "\n".join(current + [entry])
-              if current and len(candidate) > 1450:
+              if current and len(candidate) > max_length:
                   chunks.append(current)
                   current = [entry]
               else:
@@ -155,21 +151,27 @@ jobs:
 
           total = len(chunks)
           recent_messages = api("GET", f"/channels/{channel['id']}/messages?limit=100")
-          existing_contents = {item.get("content", "") for item in recent_messages}
+          existing_embeds = {
+              (embed.get("title", ""), embed.get("description", ""))
+              for item in recent_messages
+              for embed in item.get("embeds", [])
+          }
           published = 0
           skipped = 0
           for index, chunk in enumerate(chunks, start=1):
               part = f" — continued ({index}/{total})" if total > 1 else ""
-              prefix = f"{role_mention}\n{heading}{part}\n"
-              suffix = f"\n\n{footer}"
-              message = prefix + "\n".join(chunk) + suffix
-              if len(message) > max_length:
-                  raise RuntimeError("A changelog message exceeded the safe Discord message length.")
-              if message in existing_contents:
+              embed = {
+                  "title": heading + part,
+                  "description": "\n".join(chunk),
+                  "color": 0xD7B34A,
+              }
+              signature = (embed["title"], embed["description"])
+              if signature in existing_embeds:
                   skipped += 1
                   continue
               api("POST", f"/channels/{channel['id']}/messages", {
-                  "content": message,
+                  "content": role_mention,
+                  "embeds": [embed],
                   "allowed_mentions": {"parse": [], "roles": [role["id"]]},
               })
               published += 1

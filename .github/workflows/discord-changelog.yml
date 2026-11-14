@@ -154,7 +154,7 @@ jobs:
           chunks = []
           current = ""
           for line in lines:
-              candidate = line if not current else current + "\\n" + line
+              candidate = line if not current else "\n".join((current, line))
               if len(candidate) > 1900:
                   if current:
                       chunks.append(current)

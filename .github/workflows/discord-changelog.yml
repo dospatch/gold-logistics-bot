@@ -3,8 +3,6 @@ name: BC Gold Logistics Discord changelog
 on:
   push:
     branches: [main]
-    paths-ignore:
-      - ".github/workflows/discord-changelog.yml"
   workflow_dispatch:
 
 permissions:

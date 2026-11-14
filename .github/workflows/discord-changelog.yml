@@ -26,6 +26,7 @@ jobs:
           GITHUB_REF_NAME: ${{ github.ref_name }}
           GITHUB_EVENT_BEFORE: ${{ github.event.before }}
           GITHUB_EVENT_NAME: ${{ github.event_name }}
+          GITHUB_EVENT_HEAD_COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
           GITHUB_SERVER_URL: ${{ github.server_url }}
         run: |
           python3 - <<'PY'
@@ -93,7 +94,14 @@ jobs:
           before = os.environ.get("GITHUB_EVENT_BEFORE", "")
           after = os.environ["GITHUB_SHA"]
           zero_sha = "0" * 40
-          if before and before != zero_sha and os.environ.get("GITHUB_EVENT_NAME") == "push":
+          event_name = os.environ.get("GITHUB_EVENT_NAME", "")
+          head_message = os.environ.get("GITHUB_EVENT_HEAD_COMMIT_MESSAGE", "").strip()
+          is_backfill = event_name == "workflow_dispatch" or head_message.startswith("changelog: backfill full history")
+          if is_backfill:
+              # One-time backfill: include every commit reachable from the selected main-branch SHA.
+              revision_range = after
+          elif before and before != zero_sha and event_name == "push":
+              # Normal updates include only commits introduced by this push.
               revision_range = f"{before}..{after}"
           else:
               revision_range = after

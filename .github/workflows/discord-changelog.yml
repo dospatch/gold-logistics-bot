@@ -33,6 +33,7 @@ jobs:
           import json
           import os
           import subprocess
+          import time
           import urllib.error
           import urllib.request
 
@@ -51,15 +52,23 @@ jobs:
           def api(method, path, payload=None):
               data = None if payload is None else json.dumps(payload).encode()
               request = urllib.request.Request(base + path, data=data, headers=headers, method=method)
-              try:
-                  with urllib.request.urlopen(request, timeout=25) as response:
-                      raw = response.read()
-                      return json.loads(raw) if raw else None
-              except urllib.error.HTTPError as error:
-                  detail = error.read().decode("utf-8", errors="replace")
-                  raise RuntimeError(
-                      f"Discord API {method} {path} returned HTTP {error.code}: {detail[:600]}"
-                  ) from None
+              for attempt in range(6):
+                  try:
+                      with urllib.request.urlopen(request, timeout=25) as response:
+                          raw = response.read()
+                          return json.loads(raw) if raw else None
+                  except urllib.error.HTTPError as error:
+                      detail = error.read().decode("utf-8", errors="replace")
+                      if error.code == 429 and attempt < 5:
+                          try:
+                              wait = float(json.loads(detail).get("retry_after", 1))
+                          except (ValueError, TypeError):
+                              wait = 1
+                          time.sleep(max(wait, 1) + 0.25)
+                          continue
+                      raise RuntimeError(
+                          f"Discord API {method} {path} returned HTTP {error.code}: {detail[:600]}"
+                      ) from None
 
           guild_path = f"/guilds/{guild_id}"
           channels = api("GET", guild_path + "/channels")
@@ -145,6 +154,10 @@ jobs:
               chunks.append(current)
 
           total = len(chunks)
+          recent_messages = api("GET", f"/channels/{channel['id']}/messages?limit=100")
+          existing_contents = {item.get("content", "") for item in recent_messages}
+          published = 0
+          skipped = 0
           for index, chunk in enumerate(chunks, start=1):
               part = f" — continued ({index}/{total})" if total > 1 else ""
               prefix = f"{role_mention}\n{heading}{part}\n"
@@ -152,10 +165,15 @@ jobs:
               message = prefix + "\n".join(chunk) + suffix
               if len(message) > max_length:
                   raise RuntimeError("A changelog message exceeded the safe Discord message length.")
+              if message in existing_contents:
+                  skipped += 1
+                  continue
               api("POST", f"/channels/{channel['id']}/messages", {
                   "content": message,
                   "allowed_mentions": {"parse": [], "roles": [role["id"]]},
               })
+              published += 1
+              time.sleep(1.1)
 
-          print(f"Published {len(entries)} dated commit entries in {total} Discord message(s).")
+          print(f"Processed {len(entries)} dated commit entries across {total} message(s): published {published}, skipped {skipped} already-present message(s).")
           PY

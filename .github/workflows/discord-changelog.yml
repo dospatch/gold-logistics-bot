@@ -105,7 +105,7 @@ jobs:
           zero_sha = "0" * 40
           event_name = os.environ.get("GITHUB_EVENT_NAME", "")
           head_message = os.environ.get("GITHUB_EVENT_HEAD_COMMIT_MESSAGE", "").strip()
-          is_reset = event_name == "push" and head_message.startswith(("changelog: reset channel and rebuild from top", "changelog: publish complete history as plain text"))
+          is_reset = event_name == "push" and head_message.startswith(("changelog: reset channel and rebuild from top", "changelog: publish complete history as plain text", "changelog: rebuild complete history as gold embeds"))
           is_backfill = is_reset or event_name == "workflow_dispatch" or head_message.startswith(("changelog: backfill full history", "changelog: backfill embeds full history", "changelog: consolidate history into one Discord post", "changelog: backfill consolidated history", "changelog: fix single-post completion"))
 
           if is_reset:
@@ -146,42 +146,48 @@ jobs:
           if not entries:
               entries = [f"Update — Company changes published in commit {after[:7]}"]
 
-          heading = "BC GOLD LOGISTICS CHANGELOG"
-          
-          # Discord message content is limited to 2,000 characters. Keep a safety margin
-          # and publish ordinary text messages only, in oldest-to-newest order.
-          lines = [heading, ""] + entries if is_backfill else entries
+          heading = "🏆 BC GOLD LOGISTICS — OFFICIAL CHANGELOG"
+
+          # Discord embeds have a 4,096-character description limit. Use one clean,
+          # gold-accented embed per message, with plain text commit lines (no HTML).
+          # Keep a margin below the limit and preserve oldest-to-newest ordering.
           chunks = []
           current = ""
-          for line in lines:
-              candidate = line if not current else "\n".join((current, line))
-              if len(candidate) > 1900:
+          for entry in entries:
+              candidate = entry if not current else current + "\\n" + entry
+              if len(candidate) > 3800:
                   if current:
                       chunks.append(current)
-                  if len(line) > 1900:
-                      # Split an unusually long commit subject without losing its text.
-                      remaining = line
-                      while len(remaining) > 1900:
-                          chunks.append(remaining[:1900])
-                          remaining = remaining[1900:]
-                      current = remaining
-                  else:
-                      current = line
+                  current = entry
               else:
                   current = candidate
           if current:
               chunks.append(current)
 
           published = 0
-          for index, content in enumerate(chunks, start=1):
-              # For normal pushes, include a simple header only when the entry is a fallback.
-              api("POST", f"/channels/{channel['id']}/messages", {"content": content})
+          total = len(chunks)
+          for index, description in enumerate(chunks, start=1):
+              embed = {
+                  "title": heading if index == 1 else "🏆 BC GOLD LOGISTICS — CHANGELOG CONTINUED",
+                  "description": description,
+                  "color": 0xD7B34A,
+                  "footer": {
+                      "text": f"Official company updates • Part {index} of {total} • Oldest to newest"
+                  },
+              }
+              payload = {"embeds": [embed]}
+              if index == 1:
+                  # The role is tagged once, on the first post only.
+                  payload["content"] = f"<@&{role['id']}>"
+                  payload["allowed_mentions"] = {"parse": [], "roles": [role["id"]]}
+              api("POST", f"/channels/{channel['id']}/messages", payload)
               published += 1
-              if index < len(chunks):
-                  time.sleep(0.35)
+              if index < total:
+                  time.sleep(0.45)
 
           print(
-              f"Published {published} plain-text Discord messages containing "
-              f"{len(entries)} dated changelog entries, oldest to newest."
-          )
+              f"Published {published} gold embed message(s) containing "
+              f"{len(entries)} dated changelog entries, oldest to newest. "
+              f"Role tagged once: {role['name']}."
+          )          )
           PY

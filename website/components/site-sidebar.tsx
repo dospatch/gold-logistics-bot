@@ -26,12 +26,12 @@ export default function SiteSidebar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   return <>
-    <button className="sidebar-mobile-toggle" type="button" aria-label={open ? "Close navigation" : "Open navigation"} aria-expanded={open} onClick={() => setOpen(v => !v)}>{open ? "×" : <><img src="/bc-gold-logistics-logo.svg" alt="" /><span>MENU</span></>}</button>
+    <button className="sidebar-mobile-toggle" type="button" aria-label={open ? "Close navigation" : "Open navigation"} aria-expanded={open} onClick={() => setOpen(v => !v)}>{open ? "×" : <><img src="/BC%20Gold%20Logistics%20Emblem.png" alt="" /><span>MENU</span></>}</button>
     {open && <button className="sidebar-scrim" aria-label="Close navigation" onClick={() => setOpen(false)} />}
     <aside className={"company-sidebar " + (open ? "is-open" : "")}>
       <Link href="/" className="sidebar-brand" onClick={() => setOpen(false)}>
         <img
-          src="/bc-gold-logistics-logo.svg"
+          src="/BC%20Gold%20Logistics%20Emblem.png"
           alt="BC Gold Logistics company logo"
           width={64}
           height={64}

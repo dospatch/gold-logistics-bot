@@ -154,7 +154,7 @@ jobs:
           chunks = []
           current = ""
           for entry in entries:
-              candidate = entry if not current else current + "\\n" + entry
+              candidate = entry if not current else current + "\n" + entry
               if len(candidate) > 3800:
                   if current:
                       chunks.append(current)
@@ -189,5 +189,5 @@ jobs:
               f"Published {published} gold embed message(s) containing "
               f"{len(entries)} dated changelog entries, oldest to newest. "
               f"Role tagged once: {role['name']}."
-          )          )
+          )
           PY

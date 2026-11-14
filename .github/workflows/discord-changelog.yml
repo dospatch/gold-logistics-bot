@@ -135,47 +135,80 @@ jobs:
           heading = "🏆 BC GOLD LOGISTICS CHANGELOG"
           role_mention = f"<@&{role['id']}>"
 
-          # Keep each embed concise and split long histories into numbered continuations.
-          max_length = 1450
-          chunks = []
-          current = []
-          for entry in entries:
-              candidate = "\n".join(current + [entry])
-              if current and len(candidate) > max_length:
-                  chunks.append(current)
-                  current = [entry]
-              else:
-                  current.append(entry)
-          if current:
-              chunks.append(current)
+          # Discord limits embed text, so publish the complete history as one text attachment
+          # on a single gold embed message. This avoids splitting the history into many posts.
+          changelog_text = "\n".join(entries) + "\n"
+          preview = "\n".join(entries[:2])
+          if len(entries) > 2:
+              preview += "\n…"
+          if entries:
+              preview += "\n" + entries[-1]
+          description = f"{len(entries)} dated changes\n{preview}"
 
-          total = len(chunks)
           recent_messages = api("GET", f"/channels/{channel['id']}/messages?limit=100")
-          existing_embeds = {
-              (embed.get("title", ""), embed.get("description", ""))
+          signature = (heading, description)
+          already_present = any(
+              (embed.get("title", ""), embed.get("description", "")) == signature
               for item in recent_messages
               for embed in item.get("embeds", [])
-          }
+          )
+
           published = 0
           skipped = 0
-          for index, chunk in enumerate(chunks, start=1):
-              part = f" — continued ({index}/{total})" if total > 1 else ""
+          if already_present:
+              skipped = 1
+          else:
               embed = {
-                  "title": heading + part,
-                  "description": "\n".join(chunk),
+                  "title": heading,
+                  "description": description,
                   "color": 0xD7B34A,
               }
-              signature = (embed["title"], embed["description"])
-              if signature in existing_embeds:
-                  skipped += 1
-                  continue
-              api("POST", f"/channels/{channel['id']}/messages", {
+              boundary = "----BCGoldLogisticsChangelogBoundary"
+              payload = {
                   "content": role_mention,
                   "embeds": [embed],
                   "allowed_mentions": {"parse": [], "roles": [role["id"]]},
-              })
-              published += 1
-              time.sleep(1.1)
+              }
+              parts = [
+                  f"--{boundary}\r\n"
+                  'Content-Disposition: form-data; name="payload_json"\r\n'
+                  "Content-Type: application/json\r\n\r\n"
+                  + json.dumps(payload)
+                  + "\r\n",
+                  f"--{boundary}\r\n"
+                  'Content-Disposition: form-data; name="files[0]"; filename="bc-gold-logistics-changelog.txt"\r\n'
+                  "Content-Type: text/plain; charset=utf-8\r\n\r\n",
+              ]
+              body = "".join(parts).encode("utf-8") + changelog_text.encode("utf-8") + f"\r\n--{boundary}--\r\n".encode()
+              request = urllib.request.Request(
+                  base + f"/channels/{channel['id']}/messages",
+                  data=body,
+                  headers={
+                      "Authorization": f"Bot {token}",
+                      "Content-Type": f"multipart/form-data; boundary={boundary}",
+                      "User-Agent": "BC-Gold-Logistics-Changelog/2.0",
+                  },
+                  method="POST",
+              )
+              for attempt in range(6):
+                  try:
+                      with urllib.request.urlopen(request, timeout=45) as response:
+                          response.read()
+                      published = 1
+                      break
+                  except urllib.error.HTTPError as error:
+                      detail = error.read().decode("utf-8", errors="replace")
+                      if error.code == 429 and attempt < 5:
+                          try:
+                              wait = float(json.loads(detail).get("retry_after", 1))
+                          except (ValueError, TypeError):
+                              wait = 1
+                          time.sleep(max(wait, 1) + 0.25)
+                          continue
+                      raise RuntimeError(
+                          f"Discord API POST message returned HTTP {error.code}: {detail[:600]}"
+                      ) from None
 
+          print(f"Processed {len(entries)} dated commit entries in one message: published {published}, skipped {skipped} already-present message(s).")
           print(f"Processed {len(entries)} dated commit entries across {total} message(s): published {published}, skipped {skipped} already-present message(s).")
           PY

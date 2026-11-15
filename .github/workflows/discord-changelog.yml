@@ -1,5 +1,5 @@
 name: BC Gold Logistics Discord changelog
-# Rebuild the complete Discord archive as gold embeds on this commit.
+# Rebuild and consolidate the complete Discord archive into one persistent gold embed on every deployment.
 
 on:
   push:

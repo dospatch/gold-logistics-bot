@@ -80,7 +80,13 @@ const data = new SlashCommandBuilder()
       .addChannelTypes(ChannelType.GuildText, ChannelType.GuildAnnouncement)))
   .addSubcommand(sub => sub.setName("set-welcome-message").setDescription("Customize the automatic welcome message.")
     .addStringOption(option => option.setName("message").setDescription("Use {user} for the member and {server} for the server name.").setRequired(true).setMaxLength(1500)))
-  .addSubcommand(sub => sub.setName("set-auto-role").setDescription("Choose the role new members receive automatically.")
+  .addSubcommand(sub => sub.setName("set-auto-roles").setDescription("Choose up to five roles new members receive automatically.")
+    .addRoleOption(option => option.setName("role-1").setDescription("First starter role").setRequired(true))
+    .addRoleOption(option => option.setName("role-2").setDescription("Second starter role").setRequired(false))
+    .addRoleOption(option => option.setName("role-3").setDescription("Third starter role").setRequired(false))
+    .addRoleOption(option => option.setName("role-4").setDescription("Fourth starter role").setRequired(false))
+    .addRoleOption(option => option.setName("role-5").setDescription("Fifth starter role").setRequired(false)))
+  .addSubcommand(sub => sub.setName("set-auto-role").setDescription("Set one automatic role (legacy single-role option).")
     .addRoleOption(option => option.setName("role").setDescription("Starter role for new members").setRequired(true)))
   .addSubcommand(sub => sub.setName("clear-auto-role").setDescription("Stop automatically assigning a role to new members."))
   .addSubcommand(sub => sub.setName("configure-defaults").setDescription("Map company features to the existing server channels without changing channels or permissions."))
@@ -151,7 +157,8 @@ async function execute(interaction) {
       const id = settings.channels?.[key];
       return "**" + label + ":** " + (id ? "<#" + id + ">" : "Not configured");
     });
-    lines.push("**Automatic role:** " + (settings.autoRoleId ? "<@&" + settings.autoRoleId + ">" : "Off"));
+    const autoRoleIds = Array.isArray(settings.autoRoleIds) ? settings.autoRoleIds : (settings.autoRoleId ? [settings.autoRoleId] : []);
+    lines.push("**Automatic roles:** " + (autoRoleIds.length ? autoRoleIds.map(id => "<@&" + id + ">").join(", ") : "Off"));
     lines.push("**Welcome message:** " + (settings.welcomeMessage || "Default welcome message"));
     return interaction.reply({ content: lines.join("\n"), ephemeral: true });
   }
@@ -167,17 +174,24 @@ async function execute(interaction) {
     await saveSettings(interaction.guild, storage, settings);
     return interaction.reply({ content: "Your automatic welcome message has been saved. Use {user} and {server} as placeholders.", ephemeral: true });
   }
-  if (action === "set-auto-role") {
-    const role = interaction.options.getRole("role", true);
-    if (role.managed || role.position >= interaction.guild.members.me.roles.highest.position) {
-      return interaction.reply({ content: "I can't assign that role because it is managed or is above my bot role. Move the bot role above the selected role, then try again.", ephemeral: true });
+  if (action === "set-auto-roles" || action === "set-auto-role") {
+    const roles = action === "set-auto-role"
+      ? [interaction.options.getRole("role", true)]
+      : ["role-1", "role-2", "role-3", "role-4", "role-5"].map(name => interaction.options.getRole(name)).filter(Boolean);
+    const uniqueRoles = [...new Map(roles.map(role => [role.id, role])).values()];
+    const botHighest = interaction.guild.members.me.roles.highest.position;
+    const invalid = uniqueRoles.find(role => role.managed || role.position >= botHighest);
+    if (invalid) {
+      return interaction.reply({ content: "I can't assign " + invalid.toString() + " because it is managed or is at/above my bot role. Move the bot role above it, then try again.", ephemeral: true });
     }
-    settings.autoRoleId = role.id;
+    settings.autoRoleIds = uniqueRoles.map(role => role.id);
+    delete settings.autoRoleId;
     await saveSettings(interaction.guild, storage, settings);
-    return interaction.reply({ content: "New members will now receive " + role.toString() + " automatically when they join.", ephemeral: true });
+    return interaction.reply({ content: "New members will automatically receive: " + uniqueRoles.map(role => role.toString()).join(", ") + ".", ephemeral: true });
   }
   if (action === "clear-auto-role") {
     delete settings.autoRoleId;
+    delete settings.autoRoleIds;
     await saveSettings(interaction.guild, storage, settings);
     return interaction.reply({ content: "Automatic role assignment has been turned off.", ephemeral: true });
   }
@@ -186,10 +200,17 @@ async function execute(interaction) {
 async function handleMemberJoin(member) {
   try {
     const { settings } = await readSettings(member.guild);
-    if (settings.autoRoleId) {
-      const role = await member.guild.roles.fetch(settings.autoRoleId);
-      if (role && !role.managed && role.position < member.guild.members.me.roles.highest.position) {
-        await member.roles.add(role, "BC Gold Logistics automatic new-member role");
+    const autoRoleIds = Array.isArray(settings.autoRoleIds) ? settings.autoRoleIds : (settings.autoRoleId ? [settings.autoRoleId] : []);
+    if (autoRoleIds.length) {
+      const botHighest = member.guild.members.me.roles.highest.position;
+      const assignableRoles = [];
+      for (const roleId of autoRoleIds) {
+        const role = await member.guild.roles.fetch(roleId).catch(() => null);
+        if (role && !role.managed && role.position < botHighest) assignableRoles.push(role);
+        else console.warn("BC Logistics automatic role skipped (missing, managed, or above bot): " + roleId);
+      }
+      if (assignableRoles.length) {
+        await member.roles.add(assignableRoles, "BC Gold Logistics automatic new-member roles");
       }
     }
     const channelId = settings.channels?.welcome;

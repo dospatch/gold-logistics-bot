@@ -168,14 +168,14 @@ async function handleRequest(req, res) {
   // Authenticated telemetry intake from each driver's local ATS/ETS2 companion.
   if (req.method === "POST" && url.pathname === "/api/telemetry/event") {
     const expectedKey = process.env.TELEMETRY_API_KEY || "";
-    const suppliedKey = (req.headers.authorization || "").replace(/^Bearer\\s+/i, "");
+    const suppliedKey = (req.headers.authorization || "").replace(/^Bearer\s+/i, "");
     if (!expectedKey || suppliedKey.length !== expectedKey.length ||
         !crypto.timingSafeEqual(Buffer.from(suppliedKey), Buffer.from(expectedKey))) {
       return send(res, 401, { error: "Telemetry authentication failed." });
     }
     const body = await readBody(req);
     const allowedTypes = ["job-started", "job-finished"];
-    if (!allowedTypes.includes(body.type) || !/^\\d{17,20}$/.test(String(body.driverId || "")) ||
+    if (!allowedTypes.includes(body.type) || !/^\d{17,20}$/.test(String(body.driverId || "")) ||
         !["ATS", "ETS2"].includes(body.game) || typeof body.eventId !== "string" || body.eventId.length > 100) {
       return send(res, 400, { error: "Invalid telemetry event." });
     }

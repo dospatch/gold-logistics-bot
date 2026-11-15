@@ -12,14 +12,35 @@ export async function GET(request:NextRequest) {
     console.error("[BCGL OAuth] Discord token exchange failed",{status:tokenResponse.status,error:token.error,description:token.error_description});
     return NextResponse.redirect(new URL(returnTo+"?error=discord_auth",origin));
   }
-  const guildId=process.env.DISCORD_GUILD_ID||"";
-  const [userResponse,memberResponse]=await Promise.all([fetch("https://discord.com/api/v10/users/@me",{headers:{authorization:"Bearer "+token.access_token}}),fetch("https://discord.com/api/v10/users/@me/guilds/"+guildId+"/member",{headers:{authorization:"Bearer "+token.access_token}})]);
+  const guildId=process.env.DISCORD_GUILD_ID||process.env.GUILD_ID||"";
+  const botToken=process.env.DISCORD_BOT_TOKEN||process.env.DISCORD_TOKEN||"";
+  const userResponse=await fetch("https://discord.com/api/v10/users/@me",{headers:{authorization:"Bearer "+token.access_token}});
   const user=await userResponse.json();
-  if(!userResponse.ok||!user.id||!memberResponse.ok) {
-    const memberError=memberResponse.ok?"":await memberResponse.text();
-    console.error("[BCGL OAuth] Discord membership verification failed",{userStatus:userResponse.status,memberStatus:memberResponse.status,memberError,guildConfigured:Boolean(guildId)});
+  if(!userResponse.ok||!user.id) {
+    console.error("[BCGL OAuth] Discord user lookup failed",{status:userResponse.status});
+    return NextResponse.redirect(new URL(returnTo+"?error=discord_auth",origin));
+  }
+  if(!guildId) {
+    console.error("[BCGL OAuth] Discord membership verification is missing DISCORD_GUILD_ID");
     return NextResponse.redirect(new URL(returnTo+"?error=server_membership",origin));
   }
+
+  // Prefer checking membership with the company bot. This avoids rejecting valid
+  // applicants when Discord's user-scoped guild-members endpoint is unavailable.
+  let memberResponse:Response|null=null;
+  if(botToken) {
+    memberResponse=await fetch("https://discord.com/api/v10/guilds/"+guildId+"/members/"+user.id,{headers:{authorization:"Bot "+botToken}});
+  }
+  if(!memberResponse?.ok) {
+    const oauthMemberResponse=await fetch("https://discord.com/api/v10/users/@me/guilds/"+guildId+"/member",{headers:{authorization:"Bearer "+token.access_token}});
+    if(oauthMemberResponse.ok) memberResponse=oauthMemberResponse;
+    else {
+      const memberError=await oauthMemberResponse.text();
+      console.error("[BCGL OAuth] Discord membership verification failed",{userStatus:userResponse.status,botMemberStatus:memberResponse?.status??"not_configured",oauthMemberStatus:oauthMemberResponse.status,memberError,guildConfigured:true,botConfigured:Boolean(botToken)});
+      return NextResponse.redirect(new URL(returnTo+"?error=server_membership",origin));
+    }
+  }
+
   const response=NextResponse.redirect(new URL(returnTo,origin));
   response.cookies.set(APPLICANT_COOKIE,applicantCookie({id:user.id,username:user.username,globalName:user.global_name||user.username}),{httpOnly:true,secure:true,sameSite:"lax",path:"/",maxAge:7200});
   response.cookies.delete("bcgl_apply_state"); response.cookies.delete("bcgl_apply_origin"); response.cookies.delete("bcgl_apply_return");

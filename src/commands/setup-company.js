@@ -209,7 +209,7 @@ async function execute(interaction) {
       if (existing) {
         try {
           if (existing.parentId !== category.id) {
-            await existing.setParent(category.id, { lockPermissions: true, reason: "Organize BC Gold Logistics VTC channels" });
+            await existing.setParent(category.id, { lockPermissions: isPrivate, reason: "Organize BC Gold Logistics VTC channels while preserving public-channel overrides" });
           }
           if (isPrivate) {
             await existing.permissionOverwrites.set(overwrites, "Sync private channel access with BC Gold Logistics category");

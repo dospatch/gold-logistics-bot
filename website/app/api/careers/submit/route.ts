@@ -16,9 +16,9 @@ export async function POST(request:NextRequest){
   if(entries.length<5||entries.length>60||entries.some(([q,a])=>!q||q.length>250||!a||a.length>1500)||entries.reduce((n,[q,a])=>n+q.length+a.length,0)>30000)return NextResponse.json({error:"Complete all application questions. Each answer must be 1–1,500 characters."},{status:400});
   const [cr,rr]=await Promise.all([discord("/guilds/"+guild+"/channels"),discord("/guilds/"+guild+"/roles")]);
   if(!cr.ok||!rr.ok)throw new Error("The bot cannot read Discord channels or roles. Check the bot token and View Channels permission.");
-  const channels=await cr.json(),roles=await rr.json(),category=channels.find((c:any)=>c.type===4&&c.name==="👥 HUMAN RESOURCES");
+  const channels=await cr.json(),roles=await rr.json(),category=channels.find((c:any)=>c.type===4&&c.name==="🔒 HR PRIVATE");
   if(!category)throw new Error("The Human Resources category was not found. Run /setup-company.");
-  const staffNames=["Owner","President","Chief Executive Officer","Chief Operating Officer","HR Director","HR Manager","Recruiter"];
+  const staffNames=["Owner","President","Chief Executive Officer","Chief Operating Officer","Executive Director","HR Director","HR Manager","Recruiter"];
   const staffRoles=roles.filter((r:any)=>staffNames.includes(r.name));if(!staffRoles.length)throw new Error("No HR access roles were found. Create an HR Director, HR Manager, or Recruiter role before accepting applications.");
   const overwrites=[{id:guild,type:0,deny:"1024"},...staffRoles.map((r:any)=>({id:r.id,type:0,allow:"68608"})),{id:applicant.id,type:1,allow:"68608"}];
   if(process.env.CLIENT_ID)overwrites.push({id:process.env.CLIENT_ID,type:1,allow:"68608"} as any);

@@ -9,7 +9,9 @@ const data=new SlashCommandBuilder().setName("carrier-register").setDescription(
 .addStringOption(o=>o.setName("dot-mc").setDescription("USDOT or MC identifier, if applicable").setRequired(false).setMaxLength(50));
 async function execute(i){
  await i.deferReply({ephemeral:true});
- const guild=i.guild,category=guild.channels.cache.find(c=>c.type===ChannelType.GuildCategory&&c.name==="🤝 CARRIER SERVICES");
+ const guild=i.guild;
+ await Promise.all([guild.channels.fetch(),guild.roles.fetch()]);
+ const category=guild.channels.cache.find(c=>c.type===ChannelType.GuildCategory&&c.name==="🤝 CARRIER SERVICES");
  if(!category)return i.editReply("The Carrier Services category was not found. Run /setup-company first.");
  const safe=i.options.getString("company",true).toLowerCase().replace(/[^a-z0-9-]/g,"").slice(0,18)||"carrier";
  const existing=guild.channels.cache.find(c=>c.parentId===category.id&&c.topic?.startsWith("BCGL_CARRIER|"+i.user.id+"|Pending"));

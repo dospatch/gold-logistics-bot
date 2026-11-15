@@ -12,7 +12,7 @@ const principles = [
   ["Progress", "Build experience through consistent driving, reliable communication, and recorded deliveries."],
 ];
 
-const discordInvite = "https://discord.gg/uPvQNgHCr";
+const discordInvite = "https://discord.gg/kuKWZ5BUFH";
 
 export default function Home() {
   return <main>

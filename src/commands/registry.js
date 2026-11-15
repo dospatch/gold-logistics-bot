@@ -1,7 +1,7 @@
-// BC Gold Logistics — clean guild slash-command registry.
-// This is the single source of truth used by bot startup and commands:deploy.
-// The registry intentionally excludes the destructive reset-company command.
+// BC Gold Logistics — single source of truth for the complete guild slash-command set.
+// Discord's bulk-overwrite endpoint replaces the old command list with exactly this registry.
 const commandModules = [
+  require("./help"),
   require("./setup-company"),
   require("./apply"),
   require("./convoy"),
@@ -17,15 +17,11 @@ const commandModules = [
 ];
 
 const names = commandModules.map(command => command?.data?.name);
-if (names.some(name => !name)) {
-  throw new Error("Every command module must export data with a slash-command name.");
-}
+if (names.some(name => !name)) throw new Error("Every command must export a slash-command builder.");
 const duplicates = names.filter((name, index) => names.indexOf(name) !== index);
-if (duplicates.length) {
-  throw new Error("Duplicate slash command names: " + [...new Set(duplicates)].join(", "));
-}
+if (duplicates.length) throw new Error("Duplicate slash command names: " + [...new Set(duplicates)].join(", "));
 if (commandModules.some(command => typeof command.execute !== "function")) {
-  throw new Error("Every registered slash command must export an execute() function.");
+  throw new Error("Every registered command must export execute().");
 }
 
 module.exports = commandModules;

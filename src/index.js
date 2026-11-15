@@ -232,7 +232,7 @@ async function handleRequest(req, res) {
       const body = await readBody(req);
       if (!["approve", "deny"].includes(body.decision)) return send(res, 400, { error: "Choose approve or deny." });
       const guild = await client.guilds.fetch(process.env.GUILD_ID);
-      const channel = getReviewChannel(guild);
+      const channel = await getReviewChannel(guild);
       if (!channel) return send(res, 404, { error: "Private applications-review channel was not found." });
       const message = await channel.messages.fetch(decisionMatch[1]);
       const app = parseApplication(message);
@@ -289,3 +289,8 @@ async function start() {
   await rest.put(Routes.applicationGuildCommands(readyClient.user.id, process.env.GUILD_ID), { body: commandPayload });
   console.log("Replaced the complete BC Gold Logistics guild slash-command list with " + commandPayload.length + " commands: " + commandPayload.map(command => "/" + command.name).join(", "));
 }
+
+start().catch(error => {
+  console.error("BC Gold Logistics Discord startup failed:", error);
+  process.exit(1);
+});

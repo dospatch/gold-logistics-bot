@@ -49,7 +49,7 @@ const layout = {
   ],
   "🚛 DRIVER OPERATIONS": [
     "driver-check-in", "driver-chat", "driver-resources",
-    "delivery-logs", "driver-support", "leave-requests", "company-handbook"
+    "delivery-logs", "driver-support", "employee-support", "leave-requests", "company-handbook"
   ],
   "🚚 FLEET MANAGEMENT": [
     "fleet-overview", "vehicle-assignments", "maintenance-reports",

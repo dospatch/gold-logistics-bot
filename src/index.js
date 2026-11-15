@@ -5,21 +5,9 @@ const path = require("node:path");
 const crypto = require("node:crypto");
 const { Client, GatewayIntentBits, Collection, Events, REST, Routes, EmbedBuilder } = require("discord.js");
 
-const applyCommand = require("./commands/apply");
+const commandModules = require("./commands/registry");
+const applyCommand = commandModules.find(command => command.data.name === "apply");
 const companySettingsCommand = require("./commands/company-settings");
-const commandModules = [
-  require("./commands/reset-company"),
-  applyCommand,
-  require("./commands/convoy"),
-  require("./commands/delivery"),
-  require("./commands/roster"),
-  require("./commands/convoy-cancel"),
-  require("./commands/load"),
-  require("./commands/carrier-register"),
-  require("./commands/carrier-review"),
-  companySettingsCommand,
-  require("./commands/company-embed"),
-];
 const commandPayload = commandModules.map(command => command.data.toJSON());
 
 for (const key of ["DISCORD_TOKEN", "CLIENT_ID", "GUILD_ID"]) {

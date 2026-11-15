@@ -1,5 +1,5 @@
 import { NextRequest,NextResponse } from "next/server";
-import { discordApi,requireManager } from "@/lib/management";
+import { discordApi,discordGuildId,requireManager } from "@/lib/management";
 export const runtime="nodejs";
 export async function POST(request:NextRequest,context:{params:Promise<{id:string}>}){
  const {session,response}=await requireManager(request);if(!session)return response!;
@@ -7,7 +7,7 @@ export async function POST(request:NextRequest,context:{params:Promise<{id:strin
   const {id}=await context.params;if(!/^\d{17,20}$/.test(id))return NextResponse.json({error:"Invalid application ticket."},{status:400});
   const body=await request.json();const decisions=["approve","deny","request-info","hold"];
   if(!decisions.includes(body.decision))return NextResponse.json({error:"Choose a valid staff decision."},{status:400});
-  const guildId=process.env.GUILD_ID;
+  const guildId=discordGuildId();
   const channelsResponse=await discordApi("/guilds/"+guildId+"/channels");if(!channelsResponse.ok)throw new Error("Could not load Discord channels.");
   const channels=await channelsResponse.json();const channel=channels.find((c:any)=>c.id===id&&String(c.topic||"").startsWith("BCGL_APP|"));
   if(!channel)return NextResponse.json({error:"Application ticket was not found."},{status:404});
@@ -25,8 +25,7 @@ export async function POST(request:NextRequest,context:{params:Promise<{id:strin
    if(!roleToAssign)return NextResponse.json({error:isDriver?'The "Company Driver" Discord role is missing. Run /setup-company or create the role before approving ATS drivers.':'The "Employee" Discord role is missing. Create it before approving this application.'},{status:409});
   }
   const statusMap:any={approve:"Approved",deny:"Denied","request-info":"More Information Requested",hold:"On Hold"};
-  const status=statusMap[body.decision];
-  const staffNote=String(body.note||"").trim().slice(0,1000);
+  const status=statusMap[body.decision];const staffNote=String(body.note||"").trim().slice(0,1000);
   const embed={...message.embeds[0],color:approved?0x2ecc71:body.decision==="deny"?0xe74c3c:0xd4af37,fields:[...fields.filter((f:any)=>!["Status","Decision","Staff note"].includes(f.name)),{name:"Status",value:status,inline:true},{name:"Decision",value:"Reviewed by "+session.username+" on the website",inline:true}]};
   const edit=await discordApi("/channels/"+id+"/messages/"+message.id,{method:"PATCH",body:JSON.stringify({embeds:[embed]})});
   if(!edit.ok)return NextResponse.json({error:"Could not update the application ticket."},{status:502});
@@ -47,8 +46,8 @@ export async function POST(request:NextRequest,context:{params:Promise<{id:strin
    if(dmChannel.ok){
     const dm=await dmChannel.json();
     const title=approved?"🎉 BC Gold Logistics — You're approved!":body.decision==="deny"?"BC Gold Logistics — Application Update":body.decision==="request-info"?"BC Gold Logistics — More information needed":"BC Gold Logistics — Application on hold";
-    const details=approved?"Welcome to the fleet! Your next step is to review the driver standards, connect to the company Discord, and watch for dispatch or onboarding instructions.":body.decision==="deny"?"Thank you for taking the time to apply. You may contact recruitment if you have questions about this decision.":body.decision==="request-info"?"Please reply in your private application ticket with the additional details requested by recruitment.": "No action is needed right now. We will send another DM when management resumes the review.";
-    const dmEmbed={title,color:approved?0x2ecc71:body.decision==="deny"?0xe74c3c:0xd4af37,description:details,fields:[{name:"Application",value:"#"+(topicParts[2]||"") ,inline:true},{name:"Status",value:status,inline:true},{name:"Your private ticket",value:"https://discord.com/channels/"+guildId+"/"+id}],footer:{text:"BC Gold Logistics · Driven by Excellence. United by the Road."},timestamp:new Date().toISOString()};
+    const details=approved?"Welcome to the fleet! Your next step is to review the driver standards, connect to the company Discord, and watch for dispatch or onboarding instructions.":body.decision==="deny"?"Thank you for taking the time to apply. You may contact recruitment if you have questions about this decision.":body.decision==="request-info"?"Please reply in your private application ticket with the additional details requested by recruitment.":"No action is needed right now. We will send another DM when management resumes the review.";
+    const dmEmbed={title,color:approved?0x2ecc71:body.decision==="deny"?0xe74c3c:0xd4af37,description:details,fields:[{name:"Application",value:"#"+(topicParts[2]||""),inline:true},{name:"Status",value:status,inline:true},{name:"Your private ticket",value:"https://discord.com/channels/"+guildId+"/"+id}],footer:{text:"BC Gold Logistics · Driven by Excellence. United by the Road."},timestamp:new Date().toISOString()};
     const sent=await discordApi("/channels/"+dm.id+"/messages",{method:"POST",body:JSON.stringify({embeds:[dmEmbed]})});dmSent=sent.ok;
    }
   }catch(e){console.error("Applicant status DM failed:",e);}

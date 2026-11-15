@@ -12,7 +12,7 @@ export async function POST(request:NextRequest,context:{params:Promise<{id:strin
   const channels=await channelsResponse.json();const channel=channels.find((c:any)=>c.id===id&&String(c.topic||"").startsWith("BCGL_APP|"));
   if(!channel)return NextResponse.json({error:"Application ticket was not found."},{status:404});
   const messagesResponse=await discordApi("/channels/"+id+"/messages?limit=50");if(!messagesResponse.ok)return NextResponse.json({error:"Application record was not found."},{status:404});
-  const messages=await messagesResponse.json();const message=messages.find((m:any)=>["🚛 BC Gold Logistics — Driver Application","🏢 BC Gold Logistics — VTC Employment Application"].includes(m.embeds?.[0]?.title));if(!message?.embeds?.[0])return NextResponse.json({error:"Application details are missing."},{status:422});
+  const messages=await messagesResponse.json();const message=messages.find((m:any)=>String(m.embeds?.[0]?.title||"").includes("BC Gold Logistics —")&&String(m.embeds?.[0]?.title||"").includes("Application"));if(!message?.embeds?.[0])return NextResponse.json({error:"Application details are missing."},{status:422});
   const isDriver=String(message.embeds[0].title).includes("Driver Application");
   const fields=message.embeds[0].fields||[];const applicantId=String(channel.topic).split("|")[1];
   const get=(name:string)=>fields.find((f:any)=>f.name===name)?.value||"";

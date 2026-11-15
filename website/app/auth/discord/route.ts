@@ -4,8 +4,11 @@ export const runtime = "nodejs";
 export async function GET(request: NextRequest) {
   const clientId = process.env.CLIENT_ID;
   const base = process.env.WEB_BASE_URL || request.nextUrl.origin;
-  if (!clientId || !process.env.DISCORD_CLIENT_SECRET || !process.env.WEB_SESSION_SECRET || !process.env.DISCORD_TOKEN || !process.env.GUILD_ID) {
-    return NextResponse.json({ error: "Website sign-in is not configured. Add the required environment variables in Vercel." }, { status: 503 });
+  const clientSecret = process.env.CLIENT_SECRET || process.env.DISCORD_CLIENT_SECRET;
+  const botToken = process.env.DISCORD_BOT_TOKEN || process.env.DISCORD_TOKEN;
+  const guildId = process.env.DISCORD_GUILD_ID || process.env.GUILD_ID;
+  if (!clientId || !clientSecret || !process.env.WEB_SESSION_SECRET || !botToken || !guildId) {
+    return NextResponse.json({ error: "Website sign-in is not configured. Check the required Vercel environment variables." }, { status: 503 });
   }
   const state = randomBytes(24).toString("hex");
   const url = new URL("https://discord.com/oauth2/authorize");

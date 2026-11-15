@@ -1,14 +1,14 @@
-// Single source of truth for every BC Gold Logistics guild slash command.
-// Both the running bot and the manual deploy script import this registry.
+// BC Gold Logistics — clean guild slash-command registry.
+// This is the single source of truth used by bot startup and commands:deploy.
+// The registry intentionally excludes the destructive reset-company command.
 const commandModules = [
   require("./setup-company"),
-  require("./reset-company"),
   require("./apply"),
   require("./convoy"),
-  require("./delivery"),
-  require("./roster"),
   require("./convoy-cancel"),
+  require("./delivery"),
   require("./load"),
+  require("./roster"),
   require("./carrier-register"),
   require("./carrier-review"),
   require("./company-settings"),

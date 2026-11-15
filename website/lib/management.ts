@@ -42,13 +42,17 @@ export async function requireManager(request: NextRequest) {
   return { session, response: null };
 }
 export function discordHeaders() {
-  const token = process.env.DISCORD_TOKEN;
-  if (!token) throw new Error("DISCORD_TOKEN is not configured in Vercel.");
+  const token = process.env.DISCORD_BOT_TOKEN || process.env.DISCORD_TOKEN;
+  if (!token) throw new Error("DISCORD_BOT_TOKEN is not configured in Vercel.");
   return { Authorization: "Bot " + token, "Content-Type": "application/json" };
 }
+export function discordGuildId() {
+  const guildId = process.env.DISCORD_GUILD_ID || process.env.GUILD_ID;
+  if (!guildId) throw new Error("DISCORD_GUILD_ID is not configured in Vercel.");
+  return guildId;
+}
 export async function reviewChannelId() {
-  const guildId = process.env.GUILD_ID;
-  if (!guildId) throw new Error("GUILD_ID is not configured in Vercel.");
+  const guildId = discordGuildId();
   const response = await fetch("https://discord.com/api/v10/guilds/" + guildId + "/channels", { headers: discordHeaders(), cache: "no-store" });
   if (!response.ok) throw new Error("Unable to read Discord server channels (" + response.status + ").");
   const channels = await response.json();

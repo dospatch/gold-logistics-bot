@@ -8,6 +8,8 @@ const data=new SlashCommandBuilder().setName("carrier-review").setDescription("A
 async function execute(i){
  if(!i.memberPermissions.has(PermissionFlagsBits.Administrator)&&!i.member.roles.cache.some(r=>STAFF.has(r.name)))return i.reply({content:"Carrier Services management only.",ephemeral:true});
  await i.deferReply({ephemeral:true});
+ await i.guild.channels.fetch();
+ await i.guild.roles.fetch();
  const applicant=i.options.getUser("applicant",true),ticket=i.guild.channels.cache.find(c=>c.topic?.startsWith("BCGL_CARRIER|"+applicant.id+"|Pending"));
  if(!ticket)return i.editReply("No pending carrier registration ticket was found for that applicant.");
  const approved=i.options.getString("decision")==="approve",status=approved?"Approved":"Declined";

@@ -279,9 +279,13 @@ http.createServer((req, res) => {
 }).listen(port, "0.0.0.0", () => console.log("BC Gold Logistics dashboard and health server listening on " + port));
 
 async function start() {
-  const rest = new REST({ version: "10" }).setToken(process.env.DISCORD_TOKEN);
-  await rest.put(Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.GUILD_ID), { body: commandPayload });
-  console.log("Guild slash commands registered.");
+  const ready = new Promise(resolve => client.once(Events.ClientReady, resolve));
   await client.login(process.env.DISCORD_TOKEN);
+  const readyClient = client.isReady() ? client : await ready;
+  if (readyClient.user.id !== process.env.CLIENT_ID) {
+    throw new Error("Discord application mismatch: CLIENT_ID does not match the bot user authenticated by DISCORD_TOKEN. Slash commands were not registered.");
+  }
+  const rest = new REST({ version: "10" }).setToken(process.env.DISCORD_TOKEN);
+  await rest.put(Routes.applicationGuildCommands(readyClient.user.id, process.env.GUILD_ID), { body: commandPayload });
+  console.log("Replaced the complete BC Gold Logistics guild slash-command list with " + commandPayload.length + " commands: " + commandPayload.map(command => "/" + command.name).join(", "));
 }
-start().catch(error => { console.error("Bot startup failed:", error); process.exitCode = 1; });

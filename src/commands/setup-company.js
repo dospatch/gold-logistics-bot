@@ -41,7 +41,7 @@ const layout = {
     "driver-handbook", "frequently-asked-questions", "bc-logistics-changelog"
   ],
   "📝 RECRUITMENT & HUMAN RESOURCES": [
-    "open-positions", "how-to-apply", "application-support", "onboarding",
+    "open-positions", "how-to-apply", "employment-applications", "application-support", "onboarding",
     "hr-announcements"
   ],
   "🔒 HR PRIVATE": [

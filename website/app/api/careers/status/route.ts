@@ -1,13 +1,16 @@
 import {NextRequest,NextResponse} from "next/server";
 import {getApplicant} from "@/lib/applicant";
 export const runtime="nodejs";
+const guildId=()=>process.env.DISCORD_GUILD_ID||process.env.GUILD_ID||"";
+const botToken=()=>process.env.DISCORD_BOT_TOKEN||process.env.DISCORD_TOKEN||"";
 export async function GET(request:NextRequest){
  const applicant=getApplicant(request);
  if(!applicant)return NextResponse.json({authenticated:false,applications:[]},{headers:{"Cache-Control":"no-store"}});
- if(!process.env.DISCORD_TOKEN||!process.env.GUILD_ID)return NextResponse.json({error:"Application tracking is not configured."},{status:503});
- const headers={Authorization:"Bot "+process.env.DISCORD_TOKEN};
+ const guild=guildId(),token=botToken();
+ if(!token||!guild)return NextResponse.json({error:"Application tracking is not configured."},{status:503});
+ const headers={Authorization:"Bot "+token};
  try{
-  const channelsResponse=await fetch("https://discord.com/api/v10/guilds/"+process.env.GUILD_ID+"/channels",{headers,cache:"no-store"});
+  const channelsResponse=await fetch("https://discord.com/api/v10/guilds/"+guild+"/channels",{headers,cache:"no-store"});
   if(!channelsResponse.ok)return NextResponse.json({error:"Could not load your application records."},{status:502});
   const channels=await channelsResponse.json();
   const category=channels.find((c:any)=>c.type===4&&c.name==="👥 HUMAN RESOURCES");

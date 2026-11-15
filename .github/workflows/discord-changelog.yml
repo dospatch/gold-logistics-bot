@@ -153,45 +153,33 @@ jobs:
           # to 4,096 characters, so very large histories are compacted into one post.
           # Keep oldest and newest entries, with an explicit omission marker if needed.
           max_description = 3900
-          lines = entries[:]
-          description = "\\n".join(lines)
+          description = "\n".join(entries)
           if len(description) > max_description:
-              marker_template = "\\n… {omitted} older/middle entries omitted to fit Discord's single-post limit …\\n"
-              kept = []
-              left = 0
-              right = len(lines) - 1
-              while left <= right:
-                  omitted = max(0, len(lines) - len(kept) - 1)
-                  marker = marker_template.format(omitted=omitted)
-                  candidate_left = "\\n".join(kept + [lines[left]])
-                  candidate_right = "\\n".join([lines[right]] + kept[::-1])
-                  if len(candidate_left) + len(candidate_right) + len(marker) + 1 > max_description:
+              kept_count = len(entries) - 1
+              while kept_count > 0:
+                  left_count = (kept_count + 1) // 2
+                  right_count = kept_count // 2
+                  first = entries[:left_count]
+                  last = entries[len(entries) - right_count:] if right_count else []
+                  omitted_count = len(entries) - len(first) - len(last)
+                  candidate = "\n".join(first + [f"… {omitted_count} middle entries omitted to fit Discord's single-post limit …"] + last)
+                  if len(candidate) <= max_description:
+                      description = candidate
                       break
-                  kept.append(lines[left])
-                  left += 1
-                  if left <= right and len("\\n".join(kept + [lines[right]])) + len(marker) <= max_description:
-                      kept.append(lines[right])
-                      right -= 1
-              if kept:
-                  left_count = (len(kept) + 1) // 2
-                  right_count = len(kept) // 2
-                  first = lines[:left_count]
-                  last = lines[len(lines)-right_count:] if right_count else []
-                  omitted_count = len(lines) - len(first) - len(last)
-                  description = "\\n".join(first + [marker_template.format(omitted=omitted_count).strip()] + last)
-              else:
-                  description = lines[-1][:max_description]
+                  kept_count -= 1
+              if len(description) > max_description:
+                  description = entries[-1][:max_description]
 
           embed = {
               "title": heading,
-              "description": description[:4096],
+              "description": description,
               "color": 0xD7B34A,
               "footer": {
                   "text": f"Official company updates • {len(entries)} dated entries • Oldest to newest"
               },
           }
           payload = {
-              "content": f"<@&{role['id']}> \\n",
+              "content": f"<@&{role['id']}>",
               "embeds": [embed],
               "allowed_mentions": {"parse": [], "roles": [role["id"]]},
           }

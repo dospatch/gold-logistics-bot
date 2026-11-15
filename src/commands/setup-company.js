@@ -11,6 +11,11 @@ const roles = [
   ["Fleet Director", 0x3498DB],
   ["Dispatch Director", 0x1F8A70],
   ["Safety & Training Director", 0xC0392B],
+  ["Transportation Manager", 0x2980B9],
+  ["Dispatch Supervisor", 0x1F8A70],
+  ["Carrier Services Director", 0x8E6E53],
+  ["Carrier Relations Coordinator", 0x8E6E53],
+  ["Carrier Partner", 0x777777],
   ["Department Manager", 0xB8860B],
   ["Shift Manager", 0xA67C52],
   ["Supervisor", 0xA67C52],
@@ -44,7 +49,7 @@ const layout = {
   ],
   "🚛 DRIVER OPERATIONS": [
     "driver-check-in", "driver-chat", "driver-resources",
-    "delivery-logs", "driver-support", "leave-requests"
+    "delivery-logs", "driver-support", "leave-requests", "company-handbook"
   ],
   "🚚 FLEET MANAGEMENT": [
     "fleet-overview", "vehicle-assignments", "maintenance-reports",
@@ -52,10 +57,10 @@ const layout = {
   ],
   "📦 DISPATCH & FREIGHT": [
     "dispatch-board", "load-assignments", "active-deliveries",
-    "delivery-confirmations", "dispatch-reports"
+    "delivery-confirmations", "dispatch-reports", "wholesale-load-board", "active-shipments"
   ],
   "🗓️ CONVOY OPERATIONS": [
-    "convoy-announcements", "convoy-schedule", "route-briefings",
+    "convoy-announcements", "company-session-announcements", "convoy-schedule", "route-briefings",
     "convoy-chat", "convoy-media"
   ],
   "🦺 SAFETY & TRAINING": [
@@ -67,8 +72,11 @@ const layout = {
     "suggestions", "off-topic"
   ],
   "🔒 LEADERSHIP": [
-    "executive-office", "management-chat", "department-reports",
+    "executive-office", "management-chat", "management-discussions", "department-reports",
     "company-planning"
+  ],
+  "🤝 CARRIER SERVICES": [
+    "carrier-registration", "carrier-appointments", "carrier-support"
   ],
   "🔊 COMPANY VOICE": [
     "company-lounge", "driver-room", "convoy-staging",
@@ -113,6 +121,7 @@ async function execute(interaction) {
     return interaction.editReply("I need Manage Channels and Manage Roles. Move my bot role above the company roles, then retry.");
   }
 
+  await guild.roles.fetch();
   let rolesCreated = 0;
   let categoriesCreated = 0;
   let channelsCreated = 0;

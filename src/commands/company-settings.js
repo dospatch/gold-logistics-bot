@@ -23,9 +23,9 @@ const CHANNEL_TYPES = [
   ["carrier-appointments", "Carrier appointments"]
 ];
 const DEFAULT_CHANNELS = {
-  welcome: "welcome", rules: "company-rules", handbook: "company-handbook",
-  announcements: "company-announcements", careers: "employment-applications",
-  freight: "freight-announcements", carriers: "carrier-registration", support: "customer-support",
+  welcome: "welcome", rules: "company-rules", handbook: "driver-handbook",
+  announcements: "announcements", careers: "employment-applications",
+  freight: "wholesale-load-board", carriers: "carrier-registration", support: "carrier-support",
   "load-board": "wholesale-load-board", "dispatch-log": "dispatch-reports",
   "active-shipments": "active-shipments", "employee-support": "employee-support",
   "applications-review": "applications-review", "carrier-appointments": "carrier-appointments"

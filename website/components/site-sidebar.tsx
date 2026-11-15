@@ -46,7 +46,7 @@ export default function SiteSidebar() {
           return <Link key={link.href} href={link.href} onClick={() => setOpen(false)} className={active ? "sidebar-link active" : "sidebar-link"} aria-current={active ? "page" : undefined}><span className="sidebar-icon">{link.icon}</span><span>{link.title}</span>{active && <i className="sidebar-active-mark" />}</Link>;
         })}</section>)}
       </nav>
-      <div className="sidebar-bottom"><a href="https://discord.gg/uPvQNgHCr" target="_blank" rel="noopener noreferrer" style={{ color: "#e4c15b", fontSize: 10, letterSpacing: 1.3, fontWeight: 800 }}>JOIN OUR DISCORD ↗</a><span>DRIVE WITH PURPOSE</span><small>BC GOLD LOGISTICS © {new Date().getFullYear()}</small></div>
+      <div className="sidebar-bottom"><a href="https://discord.gg/kuKWZ5BUFH" target="_blank" rel="noopener noreferrer" style={{ color: "#e4c15b", fontSize: 10, letterSpacing: 1.3, fontWeight: 800 }}>JOIN OUR DISCORD ↗</a><span>DRIVE WITH PURPOSE</span><small>BC GOLD LOGISTICS © {new Date().getFullYear()}</small></div>
     </aside>
   </>;
 }

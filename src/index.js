@@ -8,7 +8,6 @@ const { Client, GatewayIntentBits, Collection, Events, REST, Routes, EmbedBuilde
 const applyCommand = require("./commands/apply");
 const companySettingsCommand = require("./commands/company-settings");
 const commandModules = [
-  require("./commands/setup-company"),
   require("./commands/reset-company"),
   applyCommand,
   require("./commands/convoy"),

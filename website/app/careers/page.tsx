@@ -30,7 +30,7 @@ const resources = [
 
 export default function Careers() {
   return <main className="careers-v2">
-    <a className="cv2-back" href="/">← BC GOLD LOGISTICS</a>
+    <a className="cv2-back cv2-brand-back" href="/"><img src="/BC%20Gold%20Logistics%20Emblem.png" alt="BC Gold Logistics" /> <span>BC GOLD LOGISTICS</span></a>
     <section className="cv2-hero">
       <div className="cv2-kicker">CAREERS & RECRUITMENT <span>•</span> PEOPLE. OPERATIONS. PROGRESS.</div>
       <h1>Find your place<br/><em>on the open road.</em></h1>

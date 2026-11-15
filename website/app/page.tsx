@@ -18,7 +18,7 @@ export default function Home() {
   return <main>
     <div className="announcement"><span className="live-dot" /> AMERICAN TRUCK SIMULATOR <i /> MULTIPLAYER VTC <i /> ORGANIZED COMPANY CONVOYS</div>
     <header className="wrap nav">
-      <Link href="/" className="brand"><img src="/BC%20Gold%20Logistics%20Emblem.png" alt="BC Gold Logistics" style={{ width: 54, height: 54, objectFit: "contain" }} /><span><b>BC GOLD LOGISTICS</b><small>DRIVE WITH PURPOSE</small></span></Link>
+      <Link href="/" className="brand"><img src="/BC%20Gold%20Logistics%20Emblem.png" alt="BC Gold Logistics" style={{ width: 62, height: 62, objectFit: "contain", border: "1px solid #d7b34a", borderRadius: 8, padding: 3, background: "#050505" }} /><span><b>BC GOLD LOGISTICS</b><small>DRIVE WITH PURPOSE</small></span></Link>
       <nav aria-label="Main navigation">
         <a href="#company">COMPANY</a><a href="#operations">OPERATIONS</a><a href="#standards">OUR STANDARD</a>
         <Link href="/convoys">CONVOYS</Link><Link href="/driver">DRIVER PORTAL</Link>

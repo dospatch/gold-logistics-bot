@@ -101,34 +101,10 @@ jobs:
               })
               print("Created @BC Logistics Changelog role.")
 
-          before = os.environ.get("GITHUB_EVENT_BEFORE", "")
           after = os.environ["GITHUB_SHA"]
-          zero_sha = "0" * 40
-          event_name = os.environ.get("GITHUB_EVENT_NAME", "")
-          head_message = os.environ.get("GITHUB_EVENT_HEAD_COMMIT_MESSAGE", "").strip()
-          is_reset = event_name == "push" and head_message.startswith(("changelog: reset channel and rebuild from top", "changelog: publish complete history as plain text", "changelog: rebuild complete history as gold embeds"))
-          is_backfill = is_reset or event_name == "workflow_dispatch" or head_message.startswith(("changelog: backfill full history", "changelog: backfill embeds full history", "changelog: consolidate history into one Discord post", "changelog: backfill consolidated history", "changelog: fix single-post completion"))
-
-          if is_reset:
-              print("Reset requested: clearing every existing message in #bc-logistics-changelog.")
-              deleted = 0
-              while True:
-                  batch = api("GET", f"/channels/{channel['id']}/messages?limit=100")
-                  if not batch:
-                      break
-                  for message in batch:
-                      api("DELETE", f"/channels/{channel['id']}/messages/{message['id']}")
-                      deleted += 1
-                  print(f"Deleted {deleted} old changelog messages.")
-              print(f"Channel reset complete: deleted {deleted} messages.")
-          if is_backfill:
-              # One-time backfill: include every commit reachable from the selected main-branch SHA.
-              revision_range = after
-          elif before and before != zero_sha and event_name == "push":
-              # Normal updates include only commits introduced by this push.
-              revision_range = f"{before}..{after}"
-          else:
-              revision_range = after
+          # Rebuild the complete archive on every deployment so the single post
+          # always contains every dated commit, oldest to newest.
+          revision_range = after
 
           log_format = "%cs%x1f%s"
           raw_log = subprocess.check_output(
@@ -149,9 +125,8 @@ jobs:
 
           heading = "🏆 BC GOLD LOGISTICS — OFFICIAL CHANGELOG"
 
-          # Publish one Discord message per update. Discord limits an embed description
-          # to 4,096 characters, so very large histories are compacted into one post.
-          # Keep oldest and newest entries, with an explicit omission marker if needed.
+          # Keep exactly one bot-owned master changelog post. Edit it on every
+          # deployment instead of creating a separate message for each push.
           max_description = 3900
           description = "\n".join(entries)
           if len(description) > max_description:
@@ -183,12 +158,32 @@ jobs:
               "embeds": [embed],
               "allowed_mentions": {"parse": [], "roles": [role["id"]]},
           }
-          api("POST", f"/channels/{channel['id']}/messages", payload)
-          published = 1
+
+          bot_user = api("GET", "/users/@me")
+          messages = api("GET", f"/channels/{channel['id']}/messages?limit=100")
+          owned_posts = [
+              message for message in messages
+              if message.get("author", {}).get("id") == bot_user["id"]
+              and any(
+                  item.get("title") == heading
+                  for item in message.get("embeds", [])
+              )
+          ]
+
+          if owned_posts:
+              # Keep the oldest master post so its location in the channel stays stable.
+              master = min(owned_posts, key=lambda item: int(item["id"]))
+              api("PATCH", f"/channels/{channel['id']}/messages/{master['id']}", payload)
+              for duplicate in owned_posts:
+                  if duplicate["id"] != master["id"]:
+                      api("DELETE", f"/channels/{channel['id']}/messages/{duplicate['id']}")
+              print(f"Updated the existing master changelog post ({master['id']}); removed {len(owned_posts) - 1} duplicate bot posts.")
+          else:
+              master = api("POST", f"/channels/{channel['id']}/messages", payload)
+              print(f"Created the single master changelog post ({master['id']}).")
 
           print(
-              f"Published {published} gold embed message(s) containing "
-              f"{len(entries)} dated changelog entries, oldest to newest. "
-              f"Role tagged once: {role['name']}."
+              f"Master changelog contains {len(entries)} dated commit entries, oldest to newest. "
+              f"Role mention appears once in the master post: {role['name']}."
           )
           PY

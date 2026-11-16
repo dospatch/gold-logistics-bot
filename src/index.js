@@ -215,6 +215,69 @@ async function handleRequest(req, res) {
     return send(res, 200, { ok: true });
   }
 
+  // Authenticated ATS/ETS2 crash diagnostics from the local Windows companion.
+  if (req.method === "POST" && url.pathname === "/api/telemetry/diagnostic") {
+    const expectedKey = process.env.TELEMETRY_API_KEY || "";
+    const suppliedKey = (req.headers.authorization || "").replace(/^Bearer\\s+/i, "");
+    if (!expectedKey || suppliedKey.length !== expectedKey.length ||
+        !crypto.timingSafeEqual(Buffer.from(suppliedKey), Buffer.from(expectedKey))) {
+      return send(res, 401, { error: "Diagnostics authentication failed." });
+    }
+    const body = await readBody(req);
+    if (!/^\\d{17,20}$/.test(String(body.driverId || "")) ||
+        !["ATS", "ETS2"].includes(body.game) ||
+        !["crash-suspected", "game-exit"].includes(body.kind) ||
+        typeof body.reportId !== "string" || body.reportId.length > 100) {
+      return send(res, 400, { error: "Invalid game diagnostic report." });
+    }
+    const excerpt = typeof body.logExcerpt === "string" ? body.logExcerpt.slice(0, 6500) : "";
+    const crashExcerpt = typeof body.crashExcerpt === "string" ? body.crashExcerpt.slice(0, 2500) : "";
+    if (!excerpt && !crashExcerpt) return send(res, 400, { error: "The report contains no diagnostic log excerpts." });
+    if (!global.gameDiagnosticIds) global.gameDiagnosticIds = new Map();
+    const now = Date.now();
+    for (const [id, time] of global.gameDiagnosticIds) if (now - time > 7 * 24 * 60 * 60 * 1000) global.gameDiagnosticIds.delete(id);
+    if (global.gameDiagnosticIds.has(body.reportId)) return send(res, 200, { ok: true, duplicate: true });
+    const guild = await client.guilds.fetch(process.env.GUILD_ID);
+    const channel = guild.channels.cache.find(c => c.name === "game-diagnostics" && c.isTextBased());
+    if (!channel) return send(res, 404, { error: "Create a private #game-diagnostics text channel and allow the bot to view and send messages there." });
+    const { createEmbed } = require("./lib/embeds");
+    const suspicious = Array.isArray(body.findings) ? body.findings.slice(0, 8).map(x => String(x).slice(0, 180)) : [];
+    const embed = createEmbed({
+      title: body.kind === "crash-suspected" ? "⚠️ ATS/ETS2 Crash Suspected" : "ℹ️ ATS/ETS2 Game Exit",
+      description: "A local BC Gold Logistics companion submitted a game diagnostic report. A suspected crash is not a confirmed root cause; review the attached log excerpts.",
+      color: body.kind === "crash-suspected" ? 0xE67E22 : 0x3498DB,
+      fields: [
+        { name: "Driver", value: "<@" + body.driverId + ">", inline: true },
+        { name: "Game", value: body.game, inline: true },
+        { name: "Detected", value: new Date(body.detectedAt || now).toISOString(), inline: true },
+        { name: "Game version", value: String(body.gameVersion || "Not found").slice(0, 200), inline: true },
+        { name: "Findings", value: suspicious.length ? suspicious.join("\\n").slice(0, 1000) : "No specific fatal marker found; inspect attached excerpts.", inline: false }
+      ],
+      timestamp: true
+    });
+    const { AttachmentBuilder } = require("discord.js");
+    const reportText = [
+      "BC GOLD LOGISTICS — GAME DIAGNOSTICS",
+      "Report: " + body.reportId,
+      "Driver ID: " + body.driverId,
+      "Game: " + body.game,
+      "Detected: " + new Date(body.detectedAt || now).toISOString(),
+      "Game version: " + String(body.gameVersion || "Not found"),
+      "",
+      "=== game.log.txt excerpt ===",
+      excerpt || "No matching game.log.txt excerpt supplied.",
+      "",
+      "=== game.crash.txt excerpt ===",
+      crashExcerpt || "No crash file excerpt supplied."
+    ].join("\\n");
+    await channel.send({
+      embeds: [embed],
+      files: [new AttachmentBuilder(Buffer.from(reportText, "utf8"), { name: "bcgl-diagnostic-" + body.reportId.slice(0, 12) + ".txt" })]
+    });
+    global.gameDiagnosticIds.set(body.reportId, now);
+    return send(res, 200, { ok: true, channel: "game-diagnostics" });
+  }
+
   if (url.pathname.startsWith("/api/")) {
     const session = await requireManager(req, res);
     if (!session) return;

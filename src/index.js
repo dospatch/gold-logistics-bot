@@ -218,13 +218,13 @@ async function handleRequest(req, res) {
   // Authenticated ATS/ETS2 crash diagnostics from the local Windows companion.
   if (req.method === "POST" && url.pathname === "/api/telemetry/diagnostic") {
     const expectedKey = process.env.TELEMETRY_API_KEY || "";
-    const suppliedKey = (req.headers.authorization || "").replace(/^Bearer\\s+/i, "");
+    const suppliedKey = (req.headers.authorization || "").replace(/^Bearer\s+/i, "");
     if (!expectedKey || suppliedKey.length !== expectedKey.length ||
         !crypto.timingSafeEqual(Buffer.from(suppliedKey), Buffer.from(expectedKey))) {
       return send(res, 401, { error: "Diagnostics authentication failed." });
     }
     const body = await readBody(req);
-    if (!/^\\d{17,20}$/.test(String(body.driverId || "")) ||
+    if (!/^\d{17,20}$/.test(String(body.driverId || "")) ||
         !["ATS", "ETS2"].includes(body.game) ||
         !["crash-suspected", "game-exit"].includes(body.kind) ||
         typeof body.reportId !== "string" || body.reportId.length > 100) {
@@ -251,7 +251,7 @@ async function handleRequest(req, res) {
         { name: "Game", value: body.game, inline: true },
         { name: "Detected", value: new Date(body.detectedAt || now).toISOString(), inline: true },
         { name: "Game version", value: String(body.gameVersion || "Not found").slice(0, 200), inline: true },
-        { name: "Findings", value: suspicious.length ? suspicious.join("\\n").slice(0, 1000) : "No specific fatal marker found; inspect attached excerpts.", inline: false }
+        { name: "Findings", value: suspicious.length ? suspicious.join("\n").slice(0, 1000) : "No specific fatal marker found; inspect attached excerpts.", inline: false }
       ],
       timestamp: true
     });
@@ -269,7 +269,7 @@ async function handleRequest(req, res) {
       "",
       "=== game.crash.txt excerpt ===",
       crashExcerpt || "No crash file excerpt supplied."
-    ].join("\\n");
+    ].join("\n");
     await channel.send({
       embeds: [embed],
       files: [new AttachmentBuilder(Buffer.from(reportText, "utf8"), { name: "bcgl-diagnostic-" + body.reportId.slice(0, 12) + ".txt" })]

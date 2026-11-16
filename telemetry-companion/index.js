@@ -100,13 +100,13 @@ function gameLogDirectory() {
 }
 function readTail(file, maxLines = 100) {
   try {
-    const lines = fs.readFileSync(file, "utf8").split(/\\r?\\n/);
-    return lines.slice(-maxLines).join("\\n").slice(-6500);
+    const lines = fs.readFileSync(file, "utf8").split(/\r?\n/);
+    return lines.slice(-maxLines).join("\n").slice(-6500);
   } catch { return ""; }
 }
 function getFindings(logText, crashText) {
-  const lines = (logText + "\\n" + crashText).split(/\\r?\\n/);
-  const matches = lines.filter(line => /\\b(error|warning|fatal|exception|failed|missing)\\b/i.test(line));
+  const lines = (logText + "\n" + crashText).split(/\r?\n/);
+  const matches = lines.filter(line => /\b(error|warning|fatal|exception|failed|missing)\b/i.test(line));
   return [...new Set(matches.slice(-8).map(line => line.trim().slice(0, 180)))];
 }
 async function isGameRunning() {
@@ -130,11 +130,11 @@ async function uploadDiagnostic(kind) {
   const findings = getFindings(logExcerpt, crashExcerpt);
   const reportId = crypto.createHash("sha256").update([DRIVER_ID, GAME, gameSessionStartedAt, kind].join("|")).digest("hex");
   if (diagnosticIds.has(reportId)) return;
-  const fatal = /fatal error|unhandled exception|exception_access_violation|game crashed/i.test(crashExcerpt + "\\n" + logExcerpt);
+  const fatal = /fatal error|unhandled exception|exception_access_violation|game crashed/i.test(crashExcerpt + "\n" + logExcerpt);
   const payload = {
     reportId, kind: fatal || crashExcerpt ? "crash-suspected" : kind,
     driverId: DRIVER_ID, game: GAME, detectedAt: new Date().toISOString(),
-    gameVersion: ((logExcerpt + "\\n" + crashExcerpt).match(/(?:Game version|version)[:= ]+([^\\r\\n]+)/i) || [])[1] || "",
+    gameVersion: ((logExcerpt + "\n" + crashExcerpt).match(/(?:Game version|version)[:= ]+([^\r\n]+)/i) || [])[1] || "",
     findings, logExcerpt, crashExcerpt
   };
   try {

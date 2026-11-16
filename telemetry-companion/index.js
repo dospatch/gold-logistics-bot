@@ -95,6 +95,7 @@ let gameSessionStartedAt = 0;
 let monitorBusy = false;
 
 function gameLogDirectory() {
+  if (process.env.GAME_LOG_DIRECTORY) return path.resolve(process.env.GAME_LOG_DIRECTORY);
   const documents = path.join(os.homedir(), "Documents");
   return path.join(documents, GAME === "ATS" ? "American Truck Simulator" : "Euro Truck Simulator 2");
 }
@@ -122,7 +123,8 @@ async function uploadDiagnostic(kind) {
   const logPath = path.join(directory, "game.log.txt");
   const crashPath = path.join(directory, "game.crash.txt");
   const logExcerpt = readTail(logPath, 130);
-  let crashExcerpt = "";\n  try { if (fs.statSync(crashPath).mtimeMs >= gameSessionStartedAt) crashExcerpt = readTail(crashPath, 60); } catch {}
+  let crashExcerpt = "";
+  try { if (fs.statSync(crashPath).mtimeMs >= gameSessionStartedAt) crashExcerpt = readTail(crashPath, 60); } catch {}
   if (!logExcerpt && !crashExcerpt) {
     console.log("No ATS/ETS2 diagnostic logs found at " + directory);
     return;

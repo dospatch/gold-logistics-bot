@@ -54,11 +54,26 @@ export async function GET(request:NextRequest){
   }
  }
 
+ const diagnosticsChannel=channels.find((c:any)=>c.name==="game-diagnostics"&&c.type===0);
+ let diagnostics:any[]=[];
+ if(diagnosticsChannel){
+  const diagnosticResponse=await fetch("https://discord.com/api/v10/channels/"+diagnosticsChannel.id+"/messages?limit=100",{headers:auth,cache:"no-store"});
+  if(diagnosticResponse.ok){
+   const diagnosticMessages=await diagnosticResponse.json();
+   diagnostics=diagnosticMessages.map((m:any)=>{
+    const embed=m.embeds?.[0];if(!embed)return null;
+    const fields=embed.fields||[];const field=(name:string)=>fields.find((f:any)=>String(f.name).toLowerCase()===name.toLowerCase())?.value||"";
+    const driverId=String(field("Driver")).match(/\\d{17,20}/)?.[0];
+    if(driverId!==user.id)return null;
+    return {title:String(embed.title||"Game diagnostic"),game:String(field("Game")||"ATS"),detected:String(field("Detected")||m.timestamp),findings:String(field("Findings")||"Open the diagnostic report in Discord for details."),hasAttachment:(m.attachments||[]).length>0};
+   }).filter(Boolean).slice(0,20);
+  }
+ }
  const leaderboard=completed.reduce((acc:any,x:any)=>{acc[x.driverId]=(acc[x.driverId]||0)+1;return acc;},{});
  const roster=await fetch("https://discord.com/api/v10/guilds/"+guildId+"/members?limit=1000",{headers:auth,cache:"no-store"});
  const memberList=roster.ok?await roster.json():[];
  const drivers=memberList.filter((m:any)=>(m.roles||[]).some((id:string)=>driverRoles.includes(String(roleById.get(id)||"")))).map((m:any)=>{
   const id=m.user.id;return {id,name:m.nick||m.user.global_name||m.user.username,username:m.user.username,roles:(m.roles||[]).map((r:string)=>roleById.get(r)).filter((r:string)=>driverRoles.includes(r)),deliveries:leaderboard[id]||0};
  }).sort((a:any,b:any)=>b.deliveries-a.deliveries||a.name.localeCompare(b.name));
- return NextResponse.json({driver:{id:user.id,name:member.nick||user.globalName||user.username,username:user.username,roles:roleNames,joinedAt:member.joined_at||null},stats:{completedDeliveries:own.length,recordedMiles:own.filter((x:any)=>x.unit==="mi").reduce((sum:number,x:any)=>sum+x.distanceValue,0),recordedKilometers:own.filter((x:any)=>x.unit==="km").reduce((sum:number,x:any)=>sum+x.distanceValue,0),unlabeledDistance:own.filter((x:any)=>x.unit==="unknown").reduce((sum:number,x:any)=>sum+x.distanceValue,0),recentDeliveries:own.slice(0,10)},roster:drivers,leaderboard:drivers.slice(0,10),assignedLoads,recordsAvailable:!!logChannel},{headers:{"Cache-Control":"no-store"}});
+ return NextResponse.json({driver:{id:user.id,name:member.nick||user.globalName||user.username,username:user.username,roles:roleNames,joinedAt:member.joined_at||null},stats:{completedDeliveries:own.length,recordedMiles:own.filter((x:any)=>x.unit==="mi").reduce((sum:number,x:any)=>sum+x.distanceValue,0),recordedKilometers:own.filter((x:any)=>x.unit==="km").reduce((sum:number,x:any)=>sum+x.distanceValue,0),unlabeledDistance:own.filter((x:any)=>x.unit==="unknown").reduce((sum:number,x:any)=>sum+x.distanceValue,0),recentDeliveries:own.slice(0,10)},roster:drivers,leaderboard:drivers.slice(0,10),assignedLoads,recordsAvailable:!!logChannel,diagnostics,diagnosticsAvailable:!!diagnosticsChannel},{headers:{"Cache-Control":"no-store"}});
 }

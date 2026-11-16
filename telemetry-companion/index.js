@@ -122,7 +122,7 @@ async function uploadDiagnostic(kind) {
   const logPath = path.join(directory, "game.log.txt");
   const crashPath = path.join(directory, "game.crash.txt");
   const logExcerpt = readTail(logPath, 130);
-  const crashExcerpt = readTail(crashPath, 60);
+  let crashExcerpt = "";\n  try { if (fs.statSync(crashPath).mtimeMs >= gameSessionStartedAt) crashExcerpt = readTail(crashPath, 60); } catch {}
   if (!logExcerpt && !crashExcerpt) {
     console.log("No ATS/ETS2 diagnostic logs found at " + directory);
     return;

@@ -177,7 +177,8 @@ function startGameMonitor() {
   monitorGame().catch(error => console.error("Game monitor error:", error.message));
   setInterval(() => monitorGame().catch(error => console.error("Game monitor error:", error.message)), 5000);
 }
-\nasync function main() {
+
+async function main() {
   startGameMonitor();
   const { truckSimTelemetry } = await import("trucksim-telemetry");
   telemetry = truckSimTelemetry();

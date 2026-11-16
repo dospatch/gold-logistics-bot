@@ -178,6 +178,7 @@ function startGameMonitor() {
   setInterval(() => monitorGame().catch(error => console.error("Game monitor error:", error.message)), 5000);
 }
 \nasync function main() {
+  startGameMonitor();
   const { truckSimTelemetry } = await import("trucksim-telemetry");
   telemetry = truckSimTelemetry();
   telemetry.on("connected", () => console.log("SCS telemetry connected. Waiting for an ATS/ETS2 delivery..."));
